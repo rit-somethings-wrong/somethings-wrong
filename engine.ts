@@ -2,6 +2,8 @@
 // 0 Manages moving from level to level
 // Loop that checks where the player is/ if an event triggers
 
+// current level var
+
 function Switch()
 {}
 
@@ -13,7 +15,7 @@ function Clicked()
 function DrawGUI()
 {
 	// tells the level to draw
-	// draw HUD uf enabled
+	// draw HUD if enabled
 }
 
 function CreateObject()

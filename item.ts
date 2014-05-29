@@ -1,0 +1,10 @@
+// Item
+
+name; 
+
+id;
+
+
+
+// constructor
+
