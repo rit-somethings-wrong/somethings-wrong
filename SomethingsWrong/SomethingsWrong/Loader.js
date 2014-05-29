@@ -42,7 +42,6 @@ Modernizr.load(
 			{
 				//game.paused = false;
 				//game.update(); // resume game play
-				drawOnce();
 			};
 			
 			//------- event listeners
