@@ -1,77 +1,33 @@
-<<<<<<< HEAD
-class Player 
+class Player
 {
-	private name: string;
-	private WALKING : boolean; // Whether or not we are walking at the moment
-	private FACE_LEFT : boolean;
-	private ANIMATION_NUM : number;
-	private width: number;
-	private height: number;
-	constructor(_name : string)
+	var name :String;
+	var inventory : {};
+
+	//-- movement states
+	var animationType : enum
 	{
-		this.WALKING = false;
-		this.FACE_LEFT = false;
-		console.log("Player created, name: " + _name);
+		IDLE, 
+		WALKLEFT, 
+		WALKRIGHT,
 	}
 	
-	// Draws the character according to his current
-	// animation style and frame number
-	Draw()
+	var animationFrame:number = 0;
+	
+	// Draws player at specified screen location.
+	function Draw(screenlocation)
 	{
-		if(this.WALKING == true)
+		// draw at the screen location whichever animation frame we need or whatever
+		if(this.animationType == 0)
 		{
-			if(this.FACE_LEFT)
-			{
-				switch(this.ANIMATION_NUM)
-				{
-					case 0: break;
-					case 1: break;
-					case 2: break;
-					case 3: break;
-				}
-			}
-			else 
-			{
-				switch(this.ANIMATION_NUM)
-				{
-					switch(this.ANIMATION_NUM)
-					{
-						case 0: break;
-						case 1: break;
-						case 2: break;
-						case 3: break;
-					}
-				}
-			}
-		} // end if idling
-		else if(this.WALKING == false)
+			// Draw the idling animation in the appropriate direction
+		}
+		else if(this.animationType == 1)
 		{
-			if(this.FACE_LEFT)
-			{
-				switch(this.ANIMATION_NUM)
-				{
-					case 0: break;
-					case 1: break;
-					case 2: break;
-					case 3: break;
-				}
-			}
-			else
-			{
-				switch(this.ANIMATION_NUM)
-				{
-					case 0: break;
-					case 1: break;
-					case 2: break;
-					case 3: break;
-				}
-			}
-		} // end if we're walking
+		}
+		else if(this.animationType == 2)
+		{
+		}
 	}
-	
-	
-}
-=======
 /// <reference path="inventory.ts" />
 
 interface IPlayer {
@@ -123,4 +79,3 @@ class Player implements IPlayer {
 
     }
 }
->>>>>>> ab1e955012f29790ef9b652decb6e5a3ca8a8ae4
