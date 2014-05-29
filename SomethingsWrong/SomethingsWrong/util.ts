@@ -212,3 +212,22 @@ function createNavigationRoute()
     
     return navRoute;
 }
+
+function intersectionTest()
+{
+    var route = createNavigationRoute();
+
+    route.addPoint( createVector( 0, 0 ) );
+    route.addPoint( createVector( 999, 999 ) );
+
+    var targetPos = route.calculateNearestPoint( createVector( 0, 400 ) );
+
+    var outputText = "nothing";
+
+    if ( targetPos != null )
+    {
+        outputText = targetPos.toString();
+    }
+}
+
+document.write( "<div>" + outputText + "</div>" );
