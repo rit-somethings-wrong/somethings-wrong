@@ -9,7 +9,6 @@ function contains(list, obj): boolean {
             return true;
         }
     }
-
     return false;
 }
 

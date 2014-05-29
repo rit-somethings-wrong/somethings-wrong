@@ -1,0 +1,3 @@
+var foo = new Image(); 
+foo.src = "pic.png";
+ctx.drawImage(foo, 0, 0);

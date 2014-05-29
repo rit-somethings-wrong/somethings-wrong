@@ -1,32 +1,72 @@
-class Player
+class Player 
 {
-	var name :String;
-	var inventory : {};
-
-	//-- movement states
-	var animationType : enum
+	private name: string;
+	private WALKING : boolean; // Whether or not we are walking at the moment
+	private FACE_LEFT : boolean;
+	private ANIMATION_NUM : number;
+	private width: number;
+	private height: number;
+	constructor(_name : string)
 	{
-		IDLE, 
-		WALKLEFT, 
-		WALKRIGHT,
+		this.WALKING = false;
+		this.FACE_LEFT = false;
+		console.log("Player created, name: " + _name);
 	}
 	
-	var animationFrame:number = 0;
-	
-	// Draws player at specified screen location.
-	function Draw(screenlocation)
+	// Draws the character according to his current
+	// animation style and frame number
+	Draw()
 	{
-		// draw at the screen location whichever animation frame we need or whatever
-		if(this.animationType == 0)
+		if(this.WALKING == true)
 		{
-			// Draw the idling animation in the appropriate direction
-		}
-		else if(this.animationType == 1)
+			if(this.FACE_LEFT)
+			{
+				switch(this.ANIMATION_NUM)
+				{
+					case 0: break;
+					case 1: break;
+					case 2: break;
+					case 3: break;
+				}
+			}
+			else 
+			{
+				switch(this.ANIMATION_NUM)
+				{
+					switch(this.ANIMATION_NUM)
+					{
+						case 0: break;
+						case 1: break;
+						case 2: break;
+						case 3: break;
+					}
+				}
+			}
+		} // end if idling
+		else if(this.WALKING == false)
 		{
-		}
-		else if(this.animationType == 2)
-		{
-		}
+			if(this.FACE_LEFT)
+			{
+				switch(this.ANIMATION_NUM)
+				{
+					case 0: break;
+					case 1: break;
+					case 2: break;
+					case 3: break;
+				}
+			}
+			else
+			{
+				switch(this.ANIMATION_NUM)
+				{
+					case 0: break;
+					case 1: break;
+					case 2: break;
+					case 3: break;
+				}
+			}
+		} // end if we're walking
 	}
-
+	
+	
 }
