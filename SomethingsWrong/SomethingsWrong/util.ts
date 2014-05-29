@@ -6,7 +6,7 @@ class Vector
     private x : number;
     private y : number;
     
-    constructor( theX, theY )
+    constructor( theX : number, theY : number )
     {
         this.x = theX;
         this.y = theY;
@@ -22,17 +22,17 @@ class Vector
         return this.y;
     }
     
-    setX(xLoc)
+    setX(xLoc : number)
     {
         this.x = xLoc;
     }
 
-    setY(yLoc)
+    setY(yLoc : number)
     {
         this.y = yLoc;
     }
     
-    add(otherVec)
+    add(otherVec : Vector)
     {
         return new Vector(
             this.x + otherVec.getX(),
@@ -40,7 +40,7 @@ class Vector
         );
     }
     
-    subtract(otherVec)
+    subtract(otherVec : Vector)
     {
         return new Vector(
             this.x - otherVec.getX(),
@@ -48,7 +48,7 @@ class Vector
         );
     }
     
-    multiply(factor)
+    multiply(factor : number)
     {
         return new Vector(
             this.x * factor,
@@ -74,8 +74,8 @@ class Vector
     normal()
     {
         return new Vector(
-            -y,
-            x
+            -this.y,
+            this.x
         );
     }
     
@@ -141,7 +141,7 @@ class NavRoute
         this.infinity = 999999;
     }
     
-    addPoint(thePoint)
+    addPoint(thePoint : Vector)
     {
         this.points.push( thePoint );
     }
@@ -152,7 +152,7 @@ class NavRoute
         return this.points;
     }
     
-    calculateNearestPoint(proxyPoint)
+    calculateNearestPoint(proxyPoint : Vector)
     {
         // If there are not atleast two points, this test will always return null
         if ( this.points.length < 2 )
