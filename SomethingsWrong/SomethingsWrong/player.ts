@@ -1,9 +1,7 @@
 /// <reference path="inventory.ts" />
 
-interface IPlayer {
-    name: string;
+interface IPlayer extends IEntity {
     inventory: IInventory;
-    Draw(x: number, y: number): void;
 }
 
 //-- movement states
@@ -13,21 +11,15 @@ enum AnimationType {
     WALKRIGHT
 };
 
-class Player implements IPlayer {
-    private _name: string;
+class Player extends Entity implements IPlayer {
     private _inventory: IInventory;
 
     private animaionFrame: number = 0;
     private animationType: AnimationType = AnimationType.IDLE;
 
-    constructor(name: string) {
-        this._name = name;
+    constructor(id: number, name: string) {
+        super(id, name);
         this._inventory = new Inventory();
-    }
-
-    //Gets the name of this player
-    get name(): string {
-        return this._name;
     }
 
     //Gets the inventory of this player
@@ -36,9 +28,9 @@ class Player implements IPlayer {
     }
 
     //Draws this player at the given screen location
-    Draw(x: number, y: number): void {
+    Draw(location: Vector): void {
         if (this.animationType === AnimationType.IDLE) {
-            //Draw the idling animation in the appropriate direction
+            //TODO daw the idling animation in the appropriate direction
         } else if (this.animationType === AnimationType.WALKLEFT) {
             //TODO
         } else if (this.animationType === AnimationType.WALKRIGHT) {
