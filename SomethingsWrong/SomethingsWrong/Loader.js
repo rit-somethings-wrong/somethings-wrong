@@ -1,7 +1,7 @@
 "use strict";
 
 // CONSTANTS
-this.KEYBOARD = {
+var KEYBOARD = {
 	"KEY_LEFT": 37, 
 	"KEY_UP": 38, 
 	"KEY_RIGHT": 39, 
@@ -9,9 +9,9 @@ this.KEYBOARD = {
 	"KEY_SPACE": 32
 };
 
-this.IMAGES = 
+var IMAGES = 
 {
-	sampleImg : "assets/sampleanimation.png", 
+	sampleImg : "assets/sampleanimation.png"
 };
 
 
@@ -22,16 +22,15 @@ Modernizr.load(
 		[
 			'http://code.createjs.com/soundjs-0.5.2.min.js',
 			'SoundLoader.js',
-			this.IMAGES['sampleImg'],
 			// also load other class files here
 		],
 			
 			// on complete
 		complete: function()
 		{
-			//console.log("Loading complete with Modernizr.");
-			// and other stuff you might need upon everything having been loaded
 			
+			console.log("Loading complete with Modernizr.");
+			// and other stuff you might need upon everything having been loaded
 			window.onblur = function()
 			{
 				//game.paused = true;
@@ -48,12 +47,12 @@ Modernizr.load(
 			//------- event listeners
 			
 			window.addEventListener("keydown",function(e){
-				//console.log("keydown=" + e.keyCode);
+				console.log("keydown=" + e.keyCode);
 				//game.keydown[e.keyCode] = true;
 			});
 				
 			window.addEventListener("keyup",function(e){
-				//console.log("keyup=" + e.keyCode);
+				console.log("keyup=" + e.keyCode);
 				//game.keydown[e.keyCode] = false;
 			});
 			

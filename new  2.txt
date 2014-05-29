@@ -1,0 +1,5 @@
+// sample runner
+
+var canvas; 
+var ctx; 
+
