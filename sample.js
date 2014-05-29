@@ -13,7 +13,7 @@ function init(img)
 	ctx.fillStyle = "white";
 	ctx.fillRect(0,0,300,300);
 	
-	drawOnce();
+	//drawOnce();
 }
 
 function drawOnce(imgg)

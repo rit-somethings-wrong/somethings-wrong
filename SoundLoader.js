@@ -8,6 +8,7 @@ createjs.Sound.registerSound( { id:"shoom", src:"js/sound/shoom.ogg" } );
 createjs.Sound.registerSound( { id:"l1", src:"js/sound/lazer_1.ogg" } );
 createjs.Sound.registerSound( { id:"death", src:"js/sound/lostlife.ogg" } );
 createjs.Sound.registerSound( { id:"pow", src:"js/sound/splode.ogg" } );*/
+createjs.Sound.registerSound( { id: "bg1", src:"KaiEngel_VintageFrames.ogg" } );
 createjs.Sound.addEventListener("fileload", handleFileLoad);
 
 //console.log("Sound loader accessed.");
@@ -16,13 +17,12 @@ createjs.Sound.addEventListener("fileload", handleFileLoad);
 function handleFileLoad(e)
 {
 	//console.log("Preloaded Sound: ", e.id, e.src);
-	if(e.src == "js/muzak/Goto80_-_3kr.ogg")
+	if(e.src == "KaiEngel_VintageFrames.ogg")
 	{
+		console.log("LOADED SHIT");
 		// start the soundtrack
-		//createjs.Sound.play("bgm1", {loop:-1, volume:0.3});
+		createjs.Sound.play("bgm1", {loop:-1, volume:0.3});
 		
 	}
 }
 
-"use strict";
-var game = game || {};
