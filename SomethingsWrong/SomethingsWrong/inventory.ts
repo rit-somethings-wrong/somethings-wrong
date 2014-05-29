@@ -1,4 +1,8 @@
+/// <reference path="item.ts" />
+
+
 // Inventory
+
 
 //Helper function
 //Returns true if the given list contains the given object, else false
@@ -12,12 +16,6 @@ function contains(list, obj): boolean {
     return false;
 }
 
-
-interface IItem {
-    name: string;
-    id: number;
-    weight: number;
-}
 
 interface IInventory {
     GetAllItems(): IItem[];
