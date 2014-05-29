@@ -1,7 +1,7 @@
 "use strict";
 
 // CONSTANTS
-game.KEYBOARD = {
+this.KEYBOARD = {
 	"KEY_LEFT": 37, 
 	"KEY_UP": 38, 
 	"KEY_RIGHT": 39, 
@@ -9,7 +9,7 @@ game.KEYBOARD = {
 	"KEY_SPACE": 32
 };
 
-IMAGES = 
+this.IMAGES = 
 {
 	sampleImg : "assets/sampleanimation.png", 
 };
@@ -22,7 +22,7 @@ Modernizr.load(
 		[
 			'http://code.createjs.com/soundjs-0.5.2.min.js',
 			'SoundLoader.js',
-			IMAGES['sampleImg'],
+			this.IMAGES['sampleImg'],
 			// also load other class files here
 		],
 			
@@ -35,13 +35,13 @@ Modernizr.load(
 			window.onblur = function()
 			{
 				//game.paused = true;
-				game.keydown = []; // clear key daemon
+				//game.keydown = []; // clear key daemon
 				//game.update(); // show pause screen
 			};
 			
 			window.onfocus = function()
 			{
-				game.paused = false;
+				//game.paused = false;
 				//game.update(); // resume game play
 			};
 			
@@ -49,17 +49,17 @@ Modernizr.load(
 			
 			window.addEventListener("keydown",function(e){
 				//console.log("keydown=" + e.keyCode);
-				game.keydown[e.keyCode] = true;
+				//game.keydown[e.keyCode] = true;
 			});
 				
 			window.addEventListener("keyup",function(e){
 				//console.log("keyup=" + e.keyCode);
-				game.keydown[e.keyCode] = false;
+				//game.keydown[e.keyCode] = false;
 			});
 			
 			
 			// init game
-			game.keydown = []; // clear key demon
+			//game.keydown = []; // clear key demon
 			//game.init(); // init game
 			
 		},
