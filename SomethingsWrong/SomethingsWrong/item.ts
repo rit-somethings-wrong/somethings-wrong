@@ -1,33 +1,28 @@
+/// <reference path="entity.ts" />
 
 
-interface IItem {
-    name: string;
-    id: number;
+interface IStorable extends IEntity {
     weight: number;
+
+    Pickup(): void;
 }
 
 //Represents a generic item in the game
-class Item implements IItem {
-    private _name: string;
-    private _id: number;
+class Item extends Entity implements IStorable {
     private _weight: number;
 
     constructor(id: number, name: string, weight: number) {
-        this._id = id;
-        this._name = name;
+        super(id, name);
         this._weight = weight;
-    }
-
-    get name(): string {
-        return this._name;
-    }
-
-    get id(): number {
-        return this._id;
     }
 
     get weight(): number {
         return this._weight;
+    }
+
+    //Clear this entity's location data
+    Pickup(): void {
+        this.Place(null);
     }
 
 }
