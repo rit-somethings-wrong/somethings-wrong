@@ -16,3 +16,4 @@ function AddItem(item)
 function RemoveItem(item)
 
 var weight = 0;
+
