@@ -1,83 +1,88 @@
 // Functions that are shared across the project for utility purposes.
 
 // 2D position information.
-function createVector(x, y)
+class Vector
 {
-    var vector = {};
+    private x : number;
+    private y : number;
     
-    vector.getX = function()
+    constructor( theX : number, theY : number )
     {
-        return x;
+        this.x = theX;
+        this.y = theY;
     }
     
-    vector.getY = function()
+    getX()
     {
-        return y;
+        return this.x;
     }
     
-    vector.setX = function(xLoc)
+    getY()
     {
-        x = xLoc;
+        return this.y;
+    }
+    
+    setX(xLoc : number)
+    {
+        this.x = xLoc;
     }
 
-    vector.setY = function(yLoc)
+    setY(yLoc : number)
     {
-        y = yLoc;
+        this.y = yLoc;
     }
     
-    vector.add = function(otherVec)
+    add(otherVec : Vector)
     {
-        return createVector(
-            x + otherVec.getX(),
-            y + otherVec.getY()
+        return new Vector(
+            this.x + otherVec.getX(),
+            this.y + otherVec.getY()
         );
     }
     
-    vector.subtract = function(otherVec)
+    subtract(otherVec : Vector)
     {
-        return createVector(
-            x - otherVec.getX(),
-            y - otherVec.getY()
+        return new Vector(
+            this.x - otherVec.getX(),
+            this.y - otherVec.getY()
         );
     }
     
-    vector.multiply = function(factor)
+    multiply(factor : number)
     {
-        return createVector(
-            x * factor,
-            y * factor
+        return new Vector(
+            this.x * factor,
+            this.y * factor
         );
     }
     
-    vector.length = function()
+    length()
     {
-        return Math.sqrt( x * x + y * y );
+        return Math.sqrt( this.x * this.x + this.y * this.y );
     }
     
-    vector.normalize = function()
+    normalize()
     {
-        var vecLength = vector.length();
+        var vecLength = this.length();
         
-        x /= vecLength;
-        y /= vecLength;
+        this.x /= vecLength;
+        this.y /= vecLength;
         
         return vecLength;
     }
     
-    vector.normal = function()
+    normal()
     {
-        return createVector(
-            -y,
-            x
+        return new Vector(
+            -this.y,
+            this.x
         );
     }
     
-    vector.toString = function()
+    toString()
     {
-        return "x: " + x + ", y: " + y;
+        return "x: " + this.x + ", y: " + this.y;
     }
-
-    return vector;
 };
 
 // Thanks to http://jsfiddle.net/justin_c_rounds/Gd2S2/light/
@@ -125,46 +130,47 @@ function distPoints(point1, point2)
     return ( point1.subtract( point2 ) ).length();
 }
 
-function createNavigationRoute()
+class NavRoute
 {
-    var points = [];
-    
-    var navRoute = {};
-    
-    navRoute.addPoint = function(thePoint)
+    private infinity : number;
+    private points : any;
+        
+    constructor()
     {
-        points.push( thePoint );
+        this.points = [];
+        this.infinity = 999999;
+    }
+    
+    addPoint(thePoint : Vector)
+    {
+        this.points.push( thePoint );
     }
     
     // Returns a table to the points that should NOT be modified!
-    navRoute.getPoints = function()
+    getPoints()
     {
-        return points;
+        return this.points;
     }
     
-    var infinity = 9999999;
-    
-    navRoute.calculateNearestPoint = function(proxyPoint)
+    calculateNearestPoint(proxyPoint : Vector)
     {
         // If there are not atleast two points, this test will always return null
-        if ( points.length < 2 )
+        if ( this.points.length < 2 )
         {
             return null;
         }
         
         // Check for every line in this navigation route and check for which this intersection test
         // returns the closest match.
-        var index;
-        
         var nearestCollisionPoint = null;
         var proxyDistance = null;
         
-        for ( index = 0; index < points.length - 1; index++ )
+        for ( var index = 0; index < this.points.length - 1; index++ )
         {
             // Construct a line between beginPoint and endPoint.
             // This one is the navigation line.
-            var beginPoint = points[ index ];
-            var endPoint = points[ index + 1 ];
+            var beginPoint = this.points[ index ];
+            var endPoint = this.points[ index + 1 ];
             
             // Get the directional vector of the line and construct a vector normal.
             var navLineDir = beginPoint.subtract( endPoint );
@@ -192,7 +198,7 @@ function createNavigationRoute()
             
             if ( collResult != null && collResult.x != null && collResult.y != null )
             {
-                var resultPoint = createVector(
+                var resultPoint = new Vector(
                     collResult.x,
                     collResult.y
                 );
@@ -209,18 +215,16 @@ function createNavigationRoute()
         
         return nearestCollisionPoint;
     }
-    
-    return navRoute;
-}
+};
 
 function intersectionTest()
 {
-    var route = createNavigationRoute();
+    var route = new NavRoute();
 
-    route.addPoint( createVector( 0, 0 ) );
-    route.addPoint( createVector( 999, 999 ) );
+    route.addPoint( new Vector( 0, 0 ) );
+    route.addPoint( new Vector( 999, 999 ) );
 
-    var targetPos = route.calculateNearestPoint( createVector( 0, 400 ) );
+    var targetPos = route.calculateNearestPoint( new Vector( 0, 400 ) );
 
     var outputText = "nothing";
 
@@ -228,6 +232,6 @@ function intersectionTest()
     {
         outputText = targetPos.toString();
     }
+    
+    document.write( "<div>" + outputText + "</div>" );
 }
-
-document.write( "<div>" + outputText + "</div>" );
