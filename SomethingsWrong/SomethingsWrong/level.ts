@@ -9,9 +9,9 @@ class Level
     private backgroundImage : any;  // JS image file (background)
     private exits : any;  // list of ids to levels
     private readyToLeave : boolean;
-    private locationPlayer : any;
-    private navLineInfo : any;
-    private levelSize : any;
+    private locationPlayer : Vector;
+    private navLineInfo : NavRoute;
+    private levelSize : Vector;
     
     // Constructor.
     constructor( theEngine : Engine, thePlayer : Player )
@@ -27,7 +27,7 @@ class Level
     // Common methods, makes sense.
     getName()
     {
-        return id;
+        return this.id;
     }
 
     // places player can go
@@ -38,7 +38,7 @@ class Level
     {
         // Render the background image.
         context.drawImage(
-            backgroundImage,
+            this.backgroundImage,
             renderX, renderY,
             renderWidth, renderHeight
         );
@@ -61,8 +61,8 @@ class Level
         this.ourPlayer = player;
         
         // Create general level information.
-        this.navLineInfo = createNavigationRoute();
-        this.locationPlayer = createVector( 0, 0 );
+        this.navLineInfo = new NavRoute();
+        this.locationPlayer = new Vector( 0, 0 );
         
         this.backgroundImage = levelConfig.img;
         
@@ -70,17 +70,17 @@ class Level
         {
             // Example level details.
             this.id = "test_level";
-            this.levelSize = createVector(600, 350);
+            this.levelSize = new Vector(600, 350);
             
             // Set up a basic navmesh.
-            this.navLineInfo.addPoint( createVector( 0, 50 ) );
-            this.navLineInfo.addPoint( createVector( levelSize.getX(), 50 ) );
+            this.navLineInfo.addPoint( new Vector( 0, 50 ) );
+            this.navLineInfo.addPoint( new Vector( levelSize.getX(), 50 ) );
         }
         else
         {
             // Load level meta data.
             this.id = levelConfig.name;
-            this.levelSize = createVector(
+            this.levelSize = new Vector(
                 levelConfig.rectSize[0],
                 levelConfig.rectSize[1]
             );
@@ -94,7 +94,7 @@ class Level
                 for ( var n = 0; n < concurrentLine.length; n++ )
                 {
                     var pointToAdd = concurrentLine[ n ];
-                    var pointClass = createVector(
+                    var pointClass = new Vector(
                         pointToAdd[0],
                         pointToAdd[1]
                     );
@@ -123,14 +123,14 @@ class Level
     }
 
     // Clicked somewhere in the level - check to see if something is there?
-    Clicked(mx, my)
+    Clicked(mx : number, my : number)
     {
-        var pointToMoveTo = createVector( mx, my );
+        var pointToMoveTo = new Vector( mx, my );
         
-        var closestPointToClick = navLineInfo.calculateNearestPoint( pointToMoveTo );
+        var closestPointToClick = this.navLineInfo.calculateNearestPoint( pointToMoveTo );
         
         // We want to move to the closest point we clicked to that corresponds to the navigation line.
-        ourPlayer.moveTo( closestPointToClick );
+        this.ourPlayer.moveTo( closestPointToClick );
     }
 };
 
