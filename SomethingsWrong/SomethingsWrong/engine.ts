@@ -32,6 +32,7 @@ class GameEngine {
     private _click: { x: number; y: number } = null;
     private _chars: string = null;
 
+    private _loadCountId: number;
     private _gameLoopId: number;
     private _gameSteps = 0;
 
@@ -93,6 +94,16 @@ class GameEngine {
         requestID = requestAnimationFrame(animate);
     }
 
+    //Doesn't start the game loop until everything that's pending loading has been loaded
+    private actuallyStartNewGame(): void {
+        if (loadingCount > 0) {
+            return;
+        }
+
+        clearInterval(this._loadCountId);
+        this._gameLoopId = setInterval(this.genGameLoop(), 1000 / 1);  //TODO make the game loop better
+    }
+
     startNewGame(playerName: string = "Player 1"): void {
         this._curInteraction = null;
         this._nextInteraction = null;
@@ -100,7 +111,9 @@ class GameEngine {
         this._nextLevelId = GameEngine.StartingLevel;
         this.player = new Player(NextId(), playerName, IMAGES.playerImg);
 
-        this._gameLoopId = setInterval(this.genGameLoop(), 1000 / 1);  //TODO make the game loop better
+
+        //pause until everything has been loaded
+        this._loadCountId = setInterval(this.actuallyStartNewGame, 1000 / 5);
     }
 
     genGameLoop(): any {
