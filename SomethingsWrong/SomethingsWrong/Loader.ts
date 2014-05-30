@@ -21,6 +21,7 @@ Modernizr.load(
 	{
 		load: 
 		[
+			// core code files
 			'createjs.js',
 			'SoundLoader.js',
 			'interfaces.js',
@@ -33,6 +34,11 @@ Modernizr.load(
 			'interaction.js',
 			'level.js',
 			'levelscene.js',
+
+			// level definitions - must be loaded after the core code files
+			'./levels/airport/airport.js',
+
+			// game start - must be loaded last
 			'engine.js',
 			
 			IMAGES.playerImg,

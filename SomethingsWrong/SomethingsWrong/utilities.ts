@@ -7,6 +7,16 @@ function NextId(): number {
     return _nextId++;
 }
 
+var LevelMap: { [id: string]: ILevel } = { };  // levelName -> levelObj
+
+function RegisterLevel(levelConfig: ILevelConfig) {
+    var level = new Level(levelConfig);
+    LevelMap[level.GetName()] = level;
+
+    console.log("Finished loading level:", level.GetName(), level);
+}
+console.log("RegisterLevel() defined");
+
 //Returns true if the given list contains the given object, else false
 function contains(list, obj): boolean {
     var i;
@@ -56,7 +66,6 @@ function intersectionTest() {
 
     document.write("<div>" + outputText + "</div>");
 }
-
 
 
 
