@@ -1,3 +1,5 @@
+"use strict";
+
 /// <reference path="player.ts" />
 /// <reference path="utilities.ts" />
 
@@ -10,6 +12,7 @@
 class GameEngine {
     private static StartingLevel = 0;
     private static CanvasId: string = "gameCanvas";
+    private static DefaultPlayerImgUrl: string = "./TODO/playerImgUrl";
 
     private ctx: CanvasRenderingContext2D;
 
@@ -95,7 +98,7 @@ class GameEngine {
         this._nextInteraction = null;
         this._curLevelId = null;
         this._nextLevelId = GameEngine.StartingLevel;
-        this.player = new Player(NextId(), playerName, "./TODO/playerImageURL");
+        this.player = new Player(NextId(), playerName, IMAGES.playerImg);
 
         this._gameLoopId = setInterval(this.genGameLoop(), 1000 / 1);  //TODO make the game loop better
     }
@@ -296,39 +299,6 @@ function gameloop() {
 
 }
 
-
-*/
-
-/*
-// Game engine
-// 0 Manages moving from level to level
-// Loop that checks where the player is/ if an event triggers
-
-// current level var
-
-function Switch()
-{}
-
-// Called upon mouseclick event on the canvas
-function Clicked()
-{
-}
-
-function DrawGUI()
-{
-    // tells the level to draw
-    // draw HUD if enabled
-}
-
-function CreateObject()
-{
-    // create object (type and location)
-}
-
-function toggleHUD()
-{
-    
-}
 */
 
 var engine = new GameEngine();

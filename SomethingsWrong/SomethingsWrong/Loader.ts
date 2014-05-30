@@ -12,11 +12,12 @@ var KEYBOARD = {
 var IMAGES = 
 {
 	playerImg: "assets/testchar.png",
-	
+	pl: ""
 };
 
 
 // load everything
+declare var Modernizr: any;
 Modernizr.load(
 	{
 		load: 
