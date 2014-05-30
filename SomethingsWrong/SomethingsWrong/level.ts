@@ -143,7 +143,10 @@ class Level
         this.id = "";
         this.img = null;
         this.exits = null;
-        this.locationPlayer = new Vector( 50, 100 ); // use generic position to see the player sprite
+        this.levelItems = null;
+        this.locationPlayer = new Vector( 50, 100 ); // DEBUG: use generic position to see the player sprite
+        this.navLineInfo = null;
+        this.levelSize = null;
         this.viewport = new ViewportTranform();
         
         // Set up the scrollable viewport.
@@ -248,7 +251,18 @@ class Level
     // concurrentLine : [ [ x, y ], [ x, y, ], [ x, y ], ... , [ x, y ] ], // navigation information
     // name : "level_name", // id of the level
     // rectSize : [ width, height ],
-    // img: any, // background image information
+    // img : any, // background image information
+    // levelItems : [
+    //      {
+    //          itemID : any, // not sure which type we need
+    //          name : string, // in-game display friendly name of the item
+    //          itemWeight : number, // weight number for Inventory logic
+    //          x : number,
+    //          y : number
+    //      },
+    //      { ... },
+    //      ...
+    // ]
     // };
     // TODO: ANYTHING else?
     // 
@@ -264,6 +278,7 @@ class Level
         this.navLineInfo = new NavRoute();
         this.locationPlayer = new Vector( 0, 0 );
         this.exits = [];
+        this.levelItems = [];
         
         this.backgroundImage = levelConfig.img;
         
@@ -325,6 +340,35 @@ class Level
                     this.exits.push( entryExitNative );
                 }
             }
+            
+            // Load level items (actual item entities).
+            var levelItems = levelConfig.levelItems;
+            
+            if ( levelItems != null )
+            {
+                // Loop through all placed level items and make them active.
+                for ( var n = 0; n < levelItems.length; n++ )
+                {
+                    var itemData = levelItems[ n ];
+                    
+                    var itemNative =
+                        new Item(
+                            itemData.itemID, 
+                            itemData.name,
+                            itemData.itemWeight
+                        );
+                    
+                    // Position the item in the level.
+                    itemNative.location =
+                        new Vector(
+                            itemData.x,
+                            itemData.y
+                        );
+                    
+                    // Push it into the active native item entities list.
+                    this.levelItems.push( itemNative );
+                }
+            }
         }
         
         // Make sure we can use methods that require a loaded level.
@@ -349,6 +393,7 @@ class Level
         this.navLineInfo = null;
         this.locationPlayer = null;
         this.exits = null;
+        this.levelItems = null;
         this.levelSize = null;
         this.backgroundImage = null;
         
@@ -362,7 +407,7 @@ class Level
         checkInitialized();
         
         // Update the player location.
-        this.locationPlayer = ourPlayer.location;
+        this.locationPlayer = this.ourPlayer.location;
         
         // todo: add more sofisticated effects?
         
@@ -414,6 +459,7 @@ class Level
             var defaultItemRadius = 5.0f;
             
             var itemClickedAt = null;
+            var itemComesFromLevelList = false;
             
             // To properly process a click, we must transform the mouse-click to viewport space.
             var transformedMouseClick =
@@ -436,6 +482,7 @@ class Level
                     if ( itemBounds.intersectWithPoint( transformedMouseClick ) )
                     {
                         itemClickedAt = theItem;
+                        itemComesFromLevelList = true;
                         break;
                     }
                 }
@@ -445,6 +492,14 @@ class Level
             if ( itemClickedAt != null )
             {
                 // TODO: perform the action.
+                itemClickedAt.Pickup();
+                
+                // If we clicked on an item that comes from the level items list.
+                if ( levelItemsList != null && itemComesFromLevelList )
+                {
+                    // Remove the item from our list of active item entities.
+                    ArrayRemoveValue( levelItemsList, itemClickedAt );
+                }
                 
                 // we have processed the click, so turn the flag to true.
                 hasClickBeenProcessed = true;

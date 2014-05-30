@@ -2,16 +2,16 @@
 
 var level_airport =
 {
-    name = "airport",
-    rectSize = [ 640, 480 ],
-    img = new Image(),
-    concurrentLine = [
+    name : "airport",
+    rectSize : [ 640, 480 ],
+    img : new Image(),
+    concurrentLine : [
         [ 0, 200 ],
         [ 200, 200 ],
         [ 200, 400 ],
         [ 640, 400 ]
     ],
-    entryExits = [
+    entryExits : [
         {
             entryX = 640, entryY = 400,
             entryRange = 25,
@@ -23,6 +23,12 @@ var level_airport =
             entryRange = 10,
             exitId = "secret",
             exitX = 255, exitY = 127
+        }
+    ],
+    levelItems : [
+        {
+            itemID : 1, name : "The Key", itemWeight : 10,
+            x : 20, y : 10
         }
     ]
 };
