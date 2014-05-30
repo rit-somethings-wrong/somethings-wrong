@@ -85,12 +85,12 @@ Modernizr.load(
             //------- event listeners
             
             window.addEventListener("keydown",function(e){
-                console.log("keydown=" + e.keyCode);
+                //console.log("keydown=" + e.keyCode);
                 //game.keydown[e.keyCode] = true;
             });
                 
             window.addEventListener("keyup",function(e){
-                console.log("keyup=" + e.keyCode);
+                //console.log("keyup=" + e.keyCode);
                 //game.keydown[e.keyCode] = false;
             });
             

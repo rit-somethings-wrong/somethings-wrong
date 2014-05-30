@@ -35,7 +35,8 @@
     <Content Include="assets\testchar.png" />
     <Content Include="createjs.js" />
     <Content Include="index.html" />
-    <Content Include="levels\airport.js" />
+    <Content Include="levels\airport\airport.js" />
+    <TypeScriptCompile Include="gui_interface.ts" />
     <TypeScriptCompile Include="Loader.ts" />
     <Content Include="modernizr.custom.js" />
     <Content Include="SoundLoader.js" />

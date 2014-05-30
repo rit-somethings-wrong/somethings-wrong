@@ -15,7 +15,17 @@ function RegisterLevel(levelConfig: ILevelConfig) {
 
     console.log("Finished loading level:", level.GetName(), level);
 }
-console.log("RegisterLevel() defined");
+
+
+//Gets the given image and calls onload with the loaded image
+function GetImage(name: string, onload: (image: HTMLImageElement) => void): void {
+    var image = new Image();
+    image.onload = () => {
+        onload(image);
+    };
+    image.src = name;
+}
+
 
 //Returns true if the given list contains the given object, else false
 function contains(list, obj): boolean {

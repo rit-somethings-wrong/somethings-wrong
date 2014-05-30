@@ -1,3 +1,5 @@
+/// <reference path="utilities.ts" />
+
 // Level - just data
 
 // Class that specifies a teleport spot on a map.
@@ -84,38 +86,42 @@ class ViewportTransform
     
     TransformPos( vecPos : Vector ) : Vector
     {
-        return vecPos.add( this.position );
+        if (vecPos === null) {
+            return this.position;
+        }
+        return vecPos.add(this.position);
     }
     
     InverseTransformPos( vecPos : Vector ) : Vector
     {
+        if (vecPos === null) {
+            return this.position;
+        }
         return vecPos.subtract( this.position );
     }
     
     // Draws an image that scrolls using viewport properties.
     DrawImageUsingViewport(
-        context : any, img : any,
+        context : CanvasRenderingContext2D, img : HTMLImageElement,
         offsetWorld : Vector,
         contextDrawX : number, contextDrawY : number,
         contextDrawWidth : number, contextDrawHeight : number
     )
     {
-        if (img != null) {
-            var backgroundDrawPos =
-                this.InverseTransformPos(
-                    offsetWorld
-                    );
+        var backgroundDrawPos =
+            this.InverseTransformPos(
+                offsetWorld
+            );
 
-            context.drawImage(
-                img,
-                // drawing settings about the clipped part of the image.
-                backgroundDrawPos.getX(), backgroundDrawPos.getY(),
-                this.GetWidth(), this.GetHeight(),
+        context.drawImage(
+            img,
+            // drawing settings about the clipped part of the image.
+            backgroundDrawPos.getX(), backgroundDrawPos.getY(),
+            this.GetWidth(), this.GetHeight(),
             // drawing settings on the canvas.
-                contextDrawX, contextDrawY,
-                contextDrawWidth, contextDrawHeight
-                );
-        }
+            contextDrawX, contextDrawY,
+            contextDrawWidth, contextDrawHeight
+        );
     }
 };
 
@@ -127,7 +133,7 @@ class Level implements ILevel
     private ourPlayer: IPlayer = null;
     private ourEngine: GameEngine = null;
     private id : string; 
-    private backgroundImage: any;  // JS image file (background)
+    private backgroundImageName: string;  // JS image file (background)
     private exits : any;  // list of EntryExit class objects
     private locationPlayer : Vector;
     private navLineInfo : NavRoute;
@@ -142,7 +148,7 @@ class Level implements ILevel
         
         ////this.ourEngine = theEngine
         this.id = levelConfig.name;
-        this.backgroundImage = levelConfig.img;
+        this.backgroundImageName = levelConfig.img;
         this.exits = null;
         this.levelItems = null;
         this.locationPlayer = new Vector( 50, 100 ); // DEBUG: use generic position to see the player sprite
@@ -280,18 +286,20 @@ class Level implements ILevel
     
     // Experimental function.
     DrawImageOnViewport(
-        context, image,
+        context: CanvasRenderingContext2D, imageName: string,
         drawPos : Vector,
         renderX : number, renderY : number,
         renderWidth : number, renderHeight : number
     )
     {
-        this.viewport.DrawImageUsingViewport(
-            context, image,
-            drawPos,
-            renderX, renderY,
-            renderWidth, renderHeight
-        );
+        GetImage(imageName, (image) => {
+            this.viewport.DrawImageUsingViewport(
+                context, image,
+                drawPos,
+                renderX, renderY,
+                renderWidth, renderHeight
+                );
+        });
     }
     
     private DrawEntity( drawingContext : CanvasRenderingContext2D, theEntity : IEntity )
@@ -322,18 +330,15 @@ class Level implements ILevel
         if (context == null) {
             throw "no context exception";
         }
-
-        // Only render if we have a background image.
-        if (this.backgroundImage != null) {
-            // Render the background image.
-            // The viewport wraps around the image clipping functionality.
-            this.DrawImageOnViewport(
-                context, this.backgroundImage,
-                new Vector(0, 0),
-                renderX, renderY,
-                renderWidth, renderHeight
-                );
-        }
+        
+        // Render the background image.
+        // The viewport wraps around the image clipping functionality.
+        this.DrawImageOnViewport(
+            context, this.backgroundImageName,
+            new Vector( 0, 0 ),
+            renderX, renderY,
+            renderWidth, renderHeight
+        );
         
         // todo: draw player.
         this.DrawEntity( context, this.ourPlayer );

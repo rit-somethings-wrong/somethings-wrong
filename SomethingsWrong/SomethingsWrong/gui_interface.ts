@@ -149,7 +149,7 @@ class GUIPauseScreen extends GUIPanel {
         }
 
         if (hasClickedButton) {
-            this.ourEngine.ClearConversation();
+            this.ourEngine.ClearInteraction();
         }
 
         return true;
