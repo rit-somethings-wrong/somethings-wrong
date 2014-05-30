@@ -45,6 +45,8 @@ class Player extends Entity implements IPlayer {
     
     //Draws this player at the given screen location
     Draw(context: CanvasRenderingContext2D, location?: Vector): void {
+        console.log("drawing player");
+
         if (this.animationType === AnimationType.IDLE) {
         
             //Draw the idling animation in the appropriate direction http://www.w3schools.com/tags/canvas_drawimage.asp

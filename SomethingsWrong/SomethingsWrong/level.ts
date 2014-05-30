@@ -111,17 +111,21 @@ class ViewportTransform
         var backgroundDrawPos =
             this.InverseTransformPos(
                 offsetWorld
-            );
+                );
 
         context.drawImage(
             img,
             // drawing settings about the clipped part of the image.
             backgroundDrawPos.getX(), backgroundDrawPos.getY(),
-            this.GetWidth(), this.GetHeight(),
+            this.GetWidth(), this.GetHeight()
+            /*,
             // drawing settings on the canvas.
             contextDrawX, contextDrawY,
-            contextDrawWidth, contextDrawHeight
-        );
+            2560, 1000
+            */
+            );
+
+        console.log("w: " + contextDrawWidth + ", h: " + contextDrawHeight);
     }
 };
 
@@ -134,6 +138,7 @@ class Level implements ILevel
     private ourEngine: GameEngine = null;
     private id : string; 
     private backgroundImageName: string;  // JS image file (background)
+    private backgroundImage: any;
     private exits : any;  // list of EntryExit class objects
     private locationPlayer : Vector;
     private navLineInfo : NavRoute;
@@ -160,10 +165,7 @@ class Level implements ILevel
         this.viewport = new ViewportTransform(5, 5);
         this.OnViewportChange(5, 5);
 
-
-        if (this.isInitialized == true) {
-            throw "illegal level state: tried to initialize already initialized level";
-        }
+        // LEVEL LOGIC LOADER.
 
         // Create general level information.
         this.navLineInfo = new NavRoute();
@@ -293,6 +295,8 @@ class Level implements ILevel
     )
     {
         GetImage(imageName, (image) => {
+            console.log("drawing image: " + imageName);
+
             this.viewport.DrawImageUsingViewport(
                 context, image,
                 drawPos,
@@ -307,7 +311,7 @@ class Level implements ILevel
         var drawingPosition =
             this.viewport.InverseTransformPos( theEntity.location );
         
-        theEntity.Draw( drawingContext, drawingPosition );
+        theEntity.Draw(drawingContext, drawingPosition);
     }
 
     Draw(context: CanvasRenderingContext2D, location?: Vector): void {
@@ -330,18 +334,18 @@ class Level implements ILevel
         if (context == null) {
             throw "no context exception";
         }
-        
+
         // Render the background image.
         // The viewport wraps around the image clipping functionality.
         this.DrawImageOnViewport(
             context, this.backgroundImageName,
-            new Vector( 0, 0 ),
+            new Vector(0, 0),
             renderX, renderY,
             renderWidth, renderHeight
         );
-        
+
         // todo: draw player.
-        this.DrawEntity( context, this.ourPlayer );
+        this.DrawEntity(context, this.ourPlayer);
         
         // probably draw items too?
         var levelItemsList = this.levelItems;
