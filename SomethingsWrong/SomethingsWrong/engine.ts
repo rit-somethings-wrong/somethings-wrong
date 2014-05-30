@@ -52,13 +52,8 @@ class GameEngine {
             } else {
                 this._chars = this._chars.concat(String.fromCharCode(ev.keyCode));
             }
-<<<<<<< HEAD
-        }
-=======
-
             console.log("keyboard input: ", this._chars);
         });
->>>>>>> 7767e085b7f57449ebaf822b3bc53f5d46090134
 
         var ctx = canvas.getContext('2d');
 
