@@ -53,8 +53,6 @@ class GameEngine {
                 this._chars = this._chars.concat(ev.char);
             }
         }
-        
-
 
         var ctx = canvas.getContext('2d');
 

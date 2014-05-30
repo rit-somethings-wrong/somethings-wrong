@@ -11,7 +11,8 @@ var KEYBOARD = {
 
 var IMAGES = 
 {
-	playerImg: "assets/testchar.png"
+	playerImg: "assets/testchar.png",
+	
 };
 
 
@@ -32,7 +33,8 @@ Modernizr.load(
 			'levelscene.js',
 			'engine.js',
 			
-			IMAGES.playerImg
+			IMAGES.playerImg,
+			IMAGES.pl
 			// also load other class files here
 		],
 			
