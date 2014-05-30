@@ -48,24 +48,4 @@ function ArrayDeleteValue(theArray, theValue) {
     return theArray;
 }
 
-// Random integrity tests start here.
-// Can be transformed into unit tests.
-function intersectionTest() {
-    var route = new NavRoute();
-
-    route.addPoint(new Vector(0, 0));
-    route.addPoint(new Vector(999, 999));
-
-    var targetPos = route.calculateNearestPoint(new Vector(0, 400));
-
-    var outputText = "nothing";
-
-    if (targetPos != null) {
-        outputText = targetPos.toString();
-    }
-
-    document.write("<div>" + outputText + "</div>");
-}
-
-
 

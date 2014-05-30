@@ -1,4 +1,7 @@
-﻿
+﻿/// <reference path="engine.ts" />
+/// <reference path="utilities.ts" />
+/// <reference path="collision.ts" />
+
 
 
 
