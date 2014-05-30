@@ -289,17 +289,17 @@ var dialogue =
 	 {id: 88,
 	 dialog: "Hickery Pickery, in a row\nWhere will this young man go?\nHe'll go east, he'll go west,\nnever ever give it a rest.\nHe’ll go whisper, he’ll go shout\nhe'll go find the girl’s hide-out.\nHickery Pickery, Hickery Pickery...", speak:false,
 	 connection: undefined},
-
-/* Bielefeld */
-
 	 {id: 89,
-	 dialog: "...two hours later...", speak:false, link:90,
+	 dialog: "", speak:false, 
 	 connection: undefined},
+	 
+	 /* Bielefeld */
+	 
 	 {id: 90,
-	 dialog: "Bielefeld main shopping street", speak:true,
+	 dialog: "...two hours later...", speak:true, link:91,
 	 connection: undefined},
 	 {id: 91,
-	 dialog: "", speak:false,
+	 dialog: "Bielefeld main shopping street", speak:false,
 	 connection: undefined},
 	 {id: 92,
 	 dialog: "", speak:false,
