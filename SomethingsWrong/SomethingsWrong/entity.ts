@@ -29,7 +29,7 @@ class Entity implements IEntity {
     }
 
     //Draws this entity at the given location.
-    Draw(location: Vector): void {
+    Draw(cxt: CanvasRenderingContext2D, location?: Vector): void {
         //TODO draw this entity at the given location.  Note: We're not using our this._location because we might be getting drawn on an overlay or in a list.
     }
 

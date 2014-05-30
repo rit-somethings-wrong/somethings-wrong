@@ -180,10 +180,10 @@ class NavRoute
             
             // Construct the collision line for the nearest match.
             var collBeginPoint = proxyPoint.add(
-                vectorNormalNav.multiply( -infinity )
+                vectorNormalNav.multiply( -Infinity )
             );
             var collEndPoint = proxyPoint.add(
-                vectorNormalNav.multiply( infinity )
+                vectorNormalNav.multiply( Infinity )
             );
             
             // Get a collision result.
