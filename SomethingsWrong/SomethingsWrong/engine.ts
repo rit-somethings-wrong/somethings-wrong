@@ -12,31 +12,29 @@
 
 
 class GameEngine {
-    private static StartingLevel = 0;
+    private static StartingLevel = "airport";
     private static CanvasId: string = "gameCanvas";
     private static DefaultPlayerImgUrl: string = "./TODO/playerImgUrl";
+    private static MaxGameSteps = 5;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
 
     private ctx: CanvasRenderingContext2D;
 
 
     private player: IPlayer;   //represents the human user's avatar
 
-    private _curLevelId: number;  //where we are
-    private _nextLevelId: number; //where we're going to go on the next update
+    private _curLevelId: string;  //where we are
+    private _nextLevelId: string; //where we're going to go on the next update
 
     private _curInteraction: IInteraction;  //the interaction state to use
     private _nextInteraction: IInteraction; //the interaction state to transition to on the next update
 
     private _animationFn: () => boolean;  //function that returns false when the animation should stop, else true
 
-    private levelMap: { [id: number]: ILevel } = {};  // levelId -> levelObj
-
     private _click: { x: number; y: number } = null;
     private _chars: string = null;
 
     private _gameLoopId: number;
     private _gameSteps = 0;
-    private static MaxGameSteps = 15;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
 
     //-----  -----//
 
@@ -131,6 +129,7 @@ class GameEngine {
                 level.Enter(this.player, this);
             }
             this._curLevelId = this._nextLevelId;
+            console.log("Switched to level: ", this._curLevelId);
         }
 
         //switch interactions if needed
@@ -230,8 +229,8 @@ class GameEngine {
 
     //----- Engine helper functions -----//
 
-    private GetLevel(id: number): ILevel {
-        return this.levelMap[id] || null;
+    private GetLevel(id: string): ILevel {
+        return LevelMap[id] || null;
     }
 
     get size(): { height: number; width: number } {
@@ -256,7 +255,7 @@ class GameEngine {
     }
 
     //Specifies the level to switch to on the next update
-    NextLevel(id: number): void {
+    NextLevel(id: string): void {
         this._nextLevelId = id;
     }
 

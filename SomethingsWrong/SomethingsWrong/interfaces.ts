@@ -33,6 +33,17 @@ interface ILevel extends IUIHandler, IDrawable {
     Leave(): void;
 }
 
+interface ILevelConfig {
+    name: string;
+    rectSize: number[];
+    img: string;
+
+    //TODO type info
+    concurrentLine: any[];
+    entryExits: any[];
+    levelItems: any[]; //TODO spit this off
+}
+
 //Things in the game
 interface IEntity extends IDrawable {
     location?: Vector;
