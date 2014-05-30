@@ -284,12 +284,12 @@ class BoundingRectangle
     getLocalCoordinates( thePoint : Vector ) : Vector
     {
         // If the point is not inside our bounding rectangle.
-        if ( intersectWithPoint( thePoint ) == false )
+        if ( this.intersectWithPoint( thePoint ) == false )
         {
             return null;
         }
         
-        return thePoint:substract( this.position );
+        return thePoint.subtract( this.position );
     }
 };
 

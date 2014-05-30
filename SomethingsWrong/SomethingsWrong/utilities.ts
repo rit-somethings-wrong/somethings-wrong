@@ -22,7 +22,9 @@ function contains(list, obj): boolean {
 
 
 
-
+interface Scene {
+    //TODO do we need this?
+}
 
 //Ingame location data
 //interface Vector {
@@ -38,8 +40,8 @@ interface IDrawable {
 interface IUIHandler {
     //returns true if they consume the ui event
 
-    clicked(x: number, y: number): boolean;
-    typed(char: string): boolean;
+    Clicked(x: number, y: number): boolean;
+    Typed(char: string): boolean;
 }
 
 //
@@ -80,8 +82,6 @@ interface IInventory {
 
 
 interface IInteraction extends IUIHandler, IDrawable {
-
-    SetDetails(player: IPlayer, level): void;
 
     //call the callback function to send results back to the level after the user does something
     RegisterResult(callback: any): void;

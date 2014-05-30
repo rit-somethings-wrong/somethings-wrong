@@ -101,7 +101,7 @@ class ViewportTransform
     )
     {
         var backgroundDrawPos =
-            this.inverseTransformPos(
+            this.InverseTransformPos(
                 offsetWorld
             );
         
@@ -109,7 +109,7 @@ class ViewportTransform
             img,
             // drawing settings about the clipped part of the image.
             backgroundDrawPos.getX(), backgroundDrawPos.getY(),
-            this.getWidth(), this.getHeight(),
+            this.GetWidth(), this.GetHeight(),
             // drawing settings on the canvas.
             contextDrawX, contextDrawY,
             contextDrawWidth, contextDrawHeight
@@ -141,20 +141,18 @@ class Level
         this.ourEngine = theEngine
         this.ourPlayer = thePlayer;
         this.id = "";
-        this.img = null;
+        this.backgroundImage = null;
         this.exits = null;
         this.levelItems = null;
         this.locationPlayer = new Vector( 50, 100 ); // DEBUG: use generic position to see the player sprite
         this.navLineInfo = null;
         this.levelSize = null;
-        this.viewport = new ViewportTranform();
-        
+
         // Set up the scrollable viewport.
         // This is done by triggering a viewport change.
-        OnViewportChange(
-            theEngine.getViewportWidth(),
-            theEngine.getViewportHeight()
-        );
+        var size = theEngine.size;
+        this.viewport = new ViewportTransform(size.width, size.height);
+        this.OnViewportChange(size.width, size.height);
     }
     
     // Called by the engine when the viewport changes.
@@ -162,7 +160,7 @@ class Level
     OnViewportChange( newWidth : number, newHeight : number ) : void
     {
         this.viewport.SetWidth( newWidth );
-        this.viewport.SetHeight( newHeight );
+        this.viewport.SetHeigth( newHeight );
     }
     
     // Common methods, makes sense.
@@ -202,25 +200,25 @@ class Level
         );
     }
     
-    private DrawEntity( drawingContext : any, theEntity : Entity )
+    private DrawEntity( drawingContext : CanvasRenderingContext2D, theEntity : Entity )
     {
         var drawingPosition =
             this.viewport.InverseTransformPos( theEntity.location );
         
-        theEntity.Draw( drawingPosition );
+        theEntity.Draw( drawingContext, drawingPosition );
     }
     
     Draw(
-        context : any,
+        context : CanvasRenderingContext2D,
         renderX : number, renderY : number,
         renderWidth : number, renderHeight : number
     ) : void
     {
-        checkInitialized();
+        this.checkInitialized();
         
         // Render the background image.
         // The viewport wraps around the image clipping functionality.
-        DrawImageOnViewport(
+        this.DrawImageOnViewport(
             context, this.backgroundImage,
             new Vector( 0, 0 ),
             renderX, renderY,
@@ -228,7 +226,7 @@ class Level
         );
         
         // todo: draw player.
-        DrawEntity( this.ourPlayer );
+        this.DrawEntity( context, this.ourPlayer );
         
         // probably draw items too?
         var levelItemsList = this.levelItems;
@@ -240,7 +238,7 @@ class Level
                 var anItem = levelItemsList[ n ];
                 
                 // Transform the item into viewport space.
-                DrawEntity( anItem );
+                this.DrawEntity( context, anItem );
             }
         }
     }
@@ -290,7 +288,7 @@ class Level
             
             // Set up a basic navmesh.
             this.navLineInfo.addPoint( new Vector( 0, 50 ) );
-            this.navLineInfo.addPoint( new Vector( levelSize.getX(), 50 ) );
+            this.navLineInfo.addPoint( new Vector( this.levelSize.getX(), 50 ) );
         }
         else
         {
@@ -404,7 +402,7 @@ class Level
     // Pulse function - used to update level activity (events, entryExits, interactions, etc)
     Update() : void
     {
-        checkInitialized();
+        this.checkInitialized();
         
         // Update the player location.
         this.locationPlayer = this.ourPlayer.location;
@@ -429,13 +427,13 @@ class Level
         if ( anyEntryExit != null )
         {
             var switchLevelID = anyEntryExit.getExitID();
-            var switchLevelTargetLoc = anyEntryExit.getExitPosition();
+            //var switchLevelTargetLoc = anyEntryExit.getExitPosition();
             
             // Call into the engine so it can perform the unloading and reloading.
             // The engine should keep in mind to switch the level (a boolean?)
-            this.ourEngine.notifyLevelSwitch(
-                switchLevelID,
-                switchLevelTargetLoc.getX(), switchLevelTargetLoc.getY()
+            this.ourEngine.NextLevel(
+                switchLevelID
+                //, switchLevelTargetLoc.getX(), switchLevelTargetLoc.getY()
             );
         }
     }
@@ -443,7 +441,7 @@ class Level
     // Clicked somewhere in the level - check to see if something is there?
     Clicked(mx : number, my : number) : void
     {
-        checkInitialized();
+        this.checkInitialized();
         
         // Has the click been already processed?
         var hasClickBeenProcessed = false;
@@ -456,7 +454,7 @@ class Level
             // Check whether our click lands on any item in the level.
             var levelItemsList = this.levelItems;
             
-            var defaultItemRadius = 5.0f;
+            var defaultItemRadius = 5.0;
             
             var itemClickedAt = null;
             var itemComesFromLevelList = false;
@@ -498,7 +496,7 @@ class Level
                 if ( levelItemsList != null && itemComesFromLevelList )
                 {
                     // Remove the item from our list of active item entities.
-                    ArrayRemoveValue( levelItemsList, itemClickedAt );
+                    ArrayDeleteValue( levelItemsList, itemClickedAt );
                 }
                 
                 // we have processed the click, so turn the flag to true.
@@ -514,7 +512,7 @@ class Level
             var closestPointToClick = this.navLineInfo.calculateNearestPoint( pointToMoveTo );
             
             // We want to move to the closest point we clicked to that corresponds to the navigation line.
-            this.ourPlayer.moveTo( closestPointToClick );
+            this.ourPlayer.Place(closestPointToClick);
         }
     }
 };

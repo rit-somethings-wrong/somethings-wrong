@@ -32,9 +32,9 @@ class ItemList
     // the appropriate logic for an item is called through here.
     TriggerItemAction( itemID : any, theItem : Item, thePlayer : Player )
     {
-        for ( var n = 0; n < gameItemCallbacks.length; n++ )
+        for ( var n = 0; n < this.gameItemCallbacks.length; n++ )
         {
-            var itemRegister = gameItemCallbacks[ n ];
+            var itemRegister = this.gameItemCallbacks[ n ];
             
             if ( itemRegister.itemID == itemID )
             {

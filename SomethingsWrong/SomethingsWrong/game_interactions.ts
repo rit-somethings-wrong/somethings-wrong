@@ -23,7 +23,7 @@ class CanvasNotification
     
     constructor( bgImage, theText, thePos, theWidth, theHeight )
     {
-        this.bgImage = theBackground;
+        this.bgImage = bgImage;
         this.text = theText;
         this.pos = thePos;
         this.width = theWidth;
@@ -64,27 +64,29 @@ class CanvasNotification
 
 class DoorOpenInteraction implements IInteraction
 {
-    private ourPlayer : Player;
-    private ourLevel : Level;
-    
-    SetDetails( player : IPlayer, level : Level ) : void
-    {
-        
-    }
+    private ourEngine: GameEngine;
+    private ourPlayer : IPlayer;
+    private ourLevel : ILevel;
     
     RegisterResult( callback : any ) : void
     {
         
     }
-    
-    Clicked( x : number, y : number ) : void 
+
+    Typed(chars: string): boolean {
+        return false;
+    }
+
+    Clicked( x : number, y : number ) : boolean
     {
-    
+        return false;
     }
     
-    Enter() : void
+    Enter(player: IPlayer, engine: GameEngine, level: ILevel) : void
     {
-    
+        this.ourEngine = engine;
+        this.ourPlayer = player;
+        this.ourLevel = level;
     }
     
     Leave() : void
@@ -92,7 +94,7 @@ class DoorOpenInteraction implements IInteraction
     
     }
     
-    Draw( ctx : CanvasRenderingContext2D ) : void
+    Draw( ctx : CanvasRenderingContext2D, location?: Vector ) : void
     {
     
     }
@@ -100,30 +102,30 @@ class DoorOpenInteraction implements IInteraction
 
 class ItemPickupInteraction implements IInteraction
 {
-    private ourPlayer : Player;
-    private ourLevel : Level;
+    private ourEngine: GameEngine;
+    private ourPlayer: IPlayer;
+    private ourLevel: ILevel;
     
     private notification : CanvasNotification;
     
-    SetDetails( player : IPlayer, level : Level ) : void
+
+        RegisterResult( callback : any ) : void
     {
+        
+    }
+
+    Typed(chars: string): boolean {
+        return false;
+    }
+
+    Clicked(x: number, y: number): boolean {
+        return false;
+    }
+
+    Enter(player: IPlayer, engine: GameEngine, level: ILevel): void {
+        this.ourEngine = engine;
         this.ourPlayer = player;
         this.ourLevel = level;
-    }
-    
-    RegisterResult( callback : any ) : void
-    {
-        
-    }
-    
-    Clicked( x : number, y : number ) : void 
-    {
-        
-    }
-    
-    Enter() : void
-    {
-        
     }
     
     Leave() : void
@@ -131,44 +133,41 @@ class ItemPickupInteraction implements IInteraction
         
     }
     
-    Draw( ctx : CanvasRenderingContext2D ) : void
+    Draw(ctx: CanvasRenderingContext2D, location?: Vector): void
     {
         this.notification.Draw( ctx );
     }
 };
 
-class KonversationInteraction : implements IInteraction
+class KonversationInteraction implements IInteraction
 {
-    private ourPlayer : Player;
-    private ourLevel : Level;
-    
-    SetDetails( player : IPlayer, level : Level ) : void
-    {
-        
+    private ourEngine: GameEngine;
+    private ourPlayer: IPlayer;
+    private ourLevel: ILevel;
+
+    RegisterResult(callback: any): void {
+
     }
-    
-    RegisterResult( callback : any ) : void
-    {
-        
+
+    Typed(chars: string): boolean {
+        return false;
     }
-    
-    Clicked( x : number, y : number ) : void 
-    {
-    
+
+    Clicked(x: number, y: number): boolean {
+        return false;
     }
-    
-    Enter() : void
-    {
-    
+
+    Enter(player: IPlayer, engine: GameEngine, level: ILevel): void {
+        this.ourEngine = engine;
+        this.ourPlayer = player;
+        this.ourLevel = level;
     }
-    
-    Leave() : void
-    {
-    
+
+    Leave(): void {
+
     }
-    
-    Draw( ctx : CanvasRenderingContext2D ) : void
-    {
-    
+
+    Draw(ctx: CanvasRenderingContext2D, location?: Vector): void {
+
     }
 };

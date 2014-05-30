@@ -9,6 +9,7 @@
 
 class GameEngine {
     private static StartingLevel = 0;
+    private static CanvasId: string = "gameCanvas";
 
     private ctx: CanvasRenderingContext2D;
 
@@ -35,7 +36,7 @@ class GameEngine {
     //-----  -----//
 
     constructor() {
-        var canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('gameCanvas');
+        var canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(GameEngine.CanvasId);
 
         //listen for ui events
         canvas.onclick = (ev: MouseEvent): void => {
@@ -168,10 +169,10 @@ class GameEngine {
                 }
 
                 if (this._chars !== null) {
-                    handled = handled || uiHandlers[i].typed(this._chars);
+                    handled = handled || uiHandlers[i].Typed(this._chars);
                 }
                 if (this._click !== null) {
-                    handled = uiHandlers[i].clicked(this._click.x, this._click.y);
+                    handled = uiHandlers[i].Clicked(this._click.x, this._click.y);
                 }
 
                 if (handled) {
@@ -227,6 +228,14 @@ class GameEngine {
 
     private GetLevel(id: number): ILevel {
         return this.levelMap[id] || null;
+    }
+
+    get size(): { height: number; width: number } {
+        var canvas = <HTMLCanvasElement>document.getElementById(GameEngine.CanvasId);
+        return {
+            width: canvas.width,
+            height: canvas.height
+        };
     }
 
     //----- Called by a level or interaction to send info to the game engine -----//
