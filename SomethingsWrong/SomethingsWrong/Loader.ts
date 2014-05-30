@@ -12,7 +12,6 @@ var KEYBOARD = {
 var IMAGES = 
 {
 	playerImg: "assets/testchar.png",
-	pl: ""
 };
 
 
@@ -37,7 +36,7 @@ Modernizr.load(
 			'engine.js',
 			
 			IMAGES.playerImg,
-			IMAGES.pl
+
 			// also load other class files here
 		],
 			
