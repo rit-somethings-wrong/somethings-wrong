@@ -23,6 +23,8 @@ Modernizr.load(
 		[
 			'http://code.createjs.com/soundjs-0.5.2.min.js',
 			'SoundLoader.js',
+			'interfaces.js',
+			'collision.js',
 			'utilities.js',
 			'entity.js',
 			'item.js',

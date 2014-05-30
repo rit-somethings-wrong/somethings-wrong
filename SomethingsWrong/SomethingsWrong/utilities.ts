@@ -1,13 +1,11 @@
 ﻿
 
 
-//Generates all IDs used in the game
+//Generates all IDs used in the game?
 var _nextId = 0;
 function NextId(): number {
     return _nextId++;
 }
-
-
 
 //Returns true if the given list contains the given object, else false
 function contains(list, obj): boolean {
@@ -20,85 +18,44 @@ function contains(list, obj): boolean {
     return false;
 }
 
+// Removes any instances of a value from an array.
+function ArrayDeleteValue(theArray, theValue) {
+    var index;
+    var actualArraySize = theArray.length;
 
+    for (index = 0; index < actualArraySize; index++) {
+        var curValue = theArray[index];
 
-interface Scene {
-    //TODO do we need this?
+        if (curValue == theValue) {
+            theArray.splice(index, 1);
+
+            // Make sure we account for the shrunken array.
+            index--;
+            actualArraySize--;
+        }
+    }
+
+    return theArray;
 }
 
-//Ingame location data
-//interface Vector {
-    //TODO extract info from the vector file
-//}
+// Random integrity tests start here.
+// Can be transformed into unit tests.
+function intersectionTest() {
+    var route = new NavRoute();
 
-//Things that can be drawn on the canvas
-interface IDrawable {
-    Draw(cxt: CanvasRenderingContext2D, location?: Vector): void;
+    route.addPoint(new Vector(0, 0));
+    route.addPoint(new Vector(999, 999));
+
+    var targetPos = route.calculateNearestPoint(new Vector(0, 400));
+
+    var outputText = "nothing";
+
+    if (targetPos != null) {
+        outputText = targetPos.toString();
+    }
+
+    document.write("<div>" + outputText + "</div>");
 }
-
-//Things that accept mouse clicks/presses and typed characters
-interface IUIHandler {
-    //returns true if they consume the ui event
-
-    Clicked(x: number, y: number): boolean;
-    Typed(char: string): boolean;
-}
-
-//
-interface ILevel extends IUIHandler, IDrawable {
-    Enter(player: IPlayer, engine: GameEngine): void;
-    Leave(): void;
-}
-
-//Things in the game
-interface IEntity extends IDrawable {
-    location?: Vector;
-    name: string;
-    id: number;
-
-    Place(location: Vector): void;
-}
-
-//Represents the human user's avatar
-interface IPlayer extends IEntity {
-    inventory: IInventory;
-}
-
-//Things that can be put into an IInventory
-interface IStorable extends IEntity {
-    weight: number;
-
-    Pickup(): void;
-}
-
-//A collection of IStorables
-interface IInventory {
-    GetAllItems(): IStorable[];
-    Has(item: IStorable): boolean;
-    AddItem(item: IStorable): boolean;
-    RemoveItem(item: IStorable): boolean;
-}
-
-
-
-interface IInteraction extends IUIHandler, IDrawable {
-
-    //call the callback function to send results back to the level after the user does something
-    RegisterResult(callback: any): void;
-
-    Enter(player: IPlayer, engine: GameEngine, level: ILevel): void;
-    Leave(): void;
-}
-
-
-
-
-
-
-
-
-
-
 
 
 
