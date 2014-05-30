@@ -1,3 +1,5 @@
+/// <reference path="Loader.ts" />
+/// <reference path="interfaces.ts" />
 "use strict";
 
 /// <reference path="player.ts" />
