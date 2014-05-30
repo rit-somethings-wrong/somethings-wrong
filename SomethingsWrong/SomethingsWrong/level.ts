@@ -1,14 +1,56 @@
 // Level - just data
 
+// Class that specifies a teleport spot on a map.
+// It makes the player switch maps.
+class EntryExit
+{
+    private entryPos : Vector;
+    private entryRange : number;
+    private exitId : string;
+    private exitPos : Vector;
+    
+    constructor(
+        entryX : number, entryY : number, entryRange : number,
+        exitId : string,
+        exitX : number, exitY : number )
+    {
+        this.entryPos = new Vector( entryX, entryY );
+        this.entryRange = entryRange;
+        this.exitId = exitId;
+        this.exitPos = new Vector( exitX, exitY );
+    }
+    
+    isPointInRange( thePoint : Vector ) : boolean
+    {
+        return ( thePoint.subtract( this.pos ).length() < this.range );
+    }
+    
+    getEntryPosition() : Vector
+    {
+        return this.entryPos;
+    }
+    
+    getExitPosition() : Vector
+    {
+        return this.exitPos;
+    }
+    
+    getExitID() : string
+    {
+        return this.exitId;
+    }
+};
+
 // Level class.
 class Level
 {
+    private isInitialized : boolean;
+    
     private ourEngine : Engine;
     private ourPlayer : Player;
     private id : string; 
     private backgroundImage : any;  // JS image file (background)
-    private exits : any;  // list of ids to levels
-    private readyToLeave : boolean;
+    private exits : any;  // list of EntryExit class objects
     private locationPlayer : Vector;
     private navLineInfo : NavRoute;
     private levelSize : Vector;
@@ -16,32 +58,62 @@ class Level
     // Constructor.
     constructor( theEngine : Engine, thePlayer : Player )
     {
-        this.ourEngine = theEngine;
+        this.isInitialized = false;
+        
+        this.ourEngine = theEngine
+        this.ourPlayer = thePlayer;
         this.id = "";
         this.img = null;
-        this.exits = [];
-        this.readyToLeave = false;
-        this.locationPlayer = createVector( 0, 0 );
+        this.exits = null;
+        this.locationPlayer = createVector( 50, 100 ); // use generic position to see the player sprite
     }
     
     // Common methods, makes sense.
-    getName()
+    getName() : string
     {
         return this.id;
+    }
+    
+    getSize() : Vector
+    {
+        return this.levelSize;
     }
 
     // places player can go
 
     // Using the camera info, draws the background at a certain place
     
-    Render( context, renderX, renderY, renderWidth, renderHeight )
+    private checkInitialized() : void
     {
+        if ( this.isInitialized == false )
+            throw "illegal level state: not initialized";
+    }
+    
+    Draw( context, renderX : number, renderY : number, renderWidth : number, renderHeight : number ) : void
+    {
+        checkInitialized();
+        
         // Render the background image.
         context.drawImage(
             this.backgroundImage,
             renderX, renderY,
             renderWidth, renderHeight
         );
+        
+        // todo: draw player.
+        this.ourPlayer.Draw(
+            this.locationPlayer
+        );
+        
+        // probably draw items too?
+        var levelItemsList = this.ourEngine.getActiveItems();
+        
+        for ( var n = 0; n < levelItemsList.length; n++ )
+        {
+            var anItem = levelItemsList[ n ];
+            
+            anItem.Draw( anItem.location );
+        }
     }
 
     // levelconfig PARAM REQUIREMENTS:
@@ -55,14 +127,17 @@ class Level
     // TODO: ANYTHING else?
     // 
 
-    Enter(player : Player, levelConfig : any)
+    Enter(levelConfig : any) : void
     {
-        // Store the pointer to the active player.
-        this.ourPlayer = player;
+        if ( this.isInitialized == true )
+        {
+            throw "illegal level state: tried to initialize already initialized level";
+        }
         
         // Create general level information.
         this.navLineInfo = new NavRoute();
         this.locationPlayer = new Vector( 0, 0 );
+        this.exits = [];
         
         this.backgroundImage = levelConfig.img;
         
@@ -103,8 +178,31 @@ class Level
                 }
             }
             
+            // Load entry/exit points.
+            var entryExits = levelConfig.entryExits;
             
+            if ( entryExits != null )
+            {
+                // Loop through all entryExit structures and create their native representation.
+                for ( var n = 0; n < entryExits.length; n++ )
+                {
+                    var entryExitData = entryExits[ n ];
+                    
+                    var entryExitNative = new EntryExit(
+                        entryExitData.entryX, entryExitData.entryY,
+                        entryExitData.entryRange,
+                        entryExitData.exitId,
+                        entryExitData.exitX, entryExitData.exitY
+                    );
+                    
+                    // Add the entryExit into our native list.
+                    this.exits.push( entryExitNative );
+                }
+            }
         }
+        
+        // Make sure we can use methods that require a loaded level.
+        this.isInitialized = true;
     }
 
     // Call to game engine
@@ -113,18 +211,69 @@ class Level
 
     // What ID are we leaving to?
     // Clean up stuff 
-    Done()
+    Done() : void
     {
+        if ( this.isInitialized == false )
+        {
+            throw "illegal level state: tried to clean up already cleaned up level";
+        }
+        
         // Clean up and then tell engine that we are ready to leave to which other level
         // It knows where we are and where the exits are / we're going to
         this.navLineInfo = null;
         this.locationPlayer = null;
+        this.exits = null;
         this.levelSize = null;
+        this.backgroundImage = null;
+        
+        // We are not loaded anymore, make sure calling methods that require us fails.
+        this.isInitialized = false;
+    }
+    
+    // Pulse function - used to update level activity (events, entryExits, interactions, etc)
+    Update() : void
+    {
+        checkInitialized();
+        
+        // Update the player location.
+        this.locationPlayer = ourPlayer.location;
+        
+        // todo: add more sofisticated effects?
+        
+        // Check whether the player is in reaching distance to any entryExit
+        var anyEntryExit = null;
+        
+        for ( var n = 0; n < this.exits.length; n++ )
+        {
+            var theExit = this.exits[ n ];
+            
+            if ( theExit.isPointInRange( this.locationPlayer ) )
+            {
+                anyEntryExit = theExit;
+                break;
+            }
+        }
+        
+        // If we have a triggering entryExit, notify the engine that we want to switch levels.
+        if ( anyEntryExit != null )
+        {
+            var switchLevelID = anyEntryExit.getExitId();
+            var switchLevelTargetLoc = anyEntryExit.getExitPosition();
+            
+            // Call into the engine so it can perform the unloading and reloading.
+            // The engine should keep in mind to switch the level (a boolean?)
+            this.ourEngine.notifyLevelSwitch(
+                switchLevelID,
+                switchLevelTargetLoc.getX(), switchLevelTargetLog.getY()
+            );
+        }
     }
 
     // Clicked somewhere in the level - check to see if something is there?
-    Clicked(mx : number, my : number)
+    Clicked(mx : number, my : number) : void
     {
+        checkInitialized();
+        
         var pointToMoveTo = new Vector( mx, my );
         
         var closestPointToClick = this.navLineInfo.calculateNearestPoint( pointToMoveTo );

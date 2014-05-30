@@ -9,8 +9,8 @@ class LevelScene implements Scene
 
     Draw( drawContext, posX, posY, width, height )
     { 
-    // If currentlvl is valid, draw it
-    // update and draw 
+        // If currentlvl is valid, draw it
+        // update and draw 
 
     }
 
