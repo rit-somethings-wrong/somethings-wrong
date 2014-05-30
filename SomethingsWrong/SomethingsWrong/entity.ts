@@ -1,4 +1,5 @@
-﻿
+﻿/// <reference path="collision.ts" />
+
 
 class Entity implements IEntity {
     private _location: Vector;

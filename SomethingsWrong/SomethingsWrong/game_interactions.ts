@@ -29,6 +29,11 @@ class CanvasNotification
         this.width = theWidth;
         this.height = theHeight;
     }
+
+    SetPosition(thePos: Vector): void
+    {
+        this.pos = thePos;
+    }
     
     Draw( drawingContext : any )
     {
@@ -66,11 +71,13 @@ class DoorOpenInteraction implements IInteraction
 {
     private ourEngine: GameEngine;
     private ourPlayer : IPlayer;
-    private ourLevel : ILevel;
+    private ourLevel: ILevel;
+    private notification: CanvasNotification;
+    private callbackProto: any;
     
     RegisterResult( callback : any ) : void
     {
-        
+        this.callbackProto = callback;
     }
 
     Typed(chars: string): boolean {
@@ -79,7 +86,8 @@ class DoorOpenInteraction implements IInteraction
 
     Clicked( x : number, y : number ) : boolean
     {
-        return false;
+        this.ourEngine.ClearInteraction();
+        return true;    // the click has been processed.
     }
     
     Enter(player: IPlayer, engine: GameEngine, level: ILevel) : void
@@ -91,12 +99,14 @@ class DoorOpenInteraction implements IInteraction
     
     Leave() : void
     {
-    
+        // nothing to clean up.
     }
     
     Draw( ctx : CanvasRenderingContext2D, location?: Vector ) : void
     {
-    
+        // draw the notification canvas.
+        this.notification.SetPosition(location);
+        this.notification.Draw(ctx);
     }
 };
 
@@ -108,8 +118,7 @@ class ItemPickupInteraction implements IInteraction
     
     private notification : CanvasNotification;
     
-
-        RegisterResult( callback : any ) : void
+    RegisterResult( callback : any ) : void
     {
         
     }
@@ -135,6 +144,7 @@ class ItemPickupInteraction implements IInteraction
     
     Draw(ctx: CanvasRenderingContext2D, location?: Vector): void
     {
+        this.notification.SetPosition(location);
         this.notification.Draw( ctx );
     }
 };
