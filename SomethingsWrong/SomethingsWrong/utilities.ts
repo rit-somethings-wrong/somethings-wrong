@@ -59,6 +59,8 @@ function RegisterImage(imageFile : string, onload?: (image: HTMLImageElement) =>
         ImageMap[imageFile] = image;
     
         loadingCount--;
+
+        console.log("finished loading " + imageFile);
         
         if ( onload !== null )
         {

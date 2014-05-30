@@ -56,6 +56,9 @@ interface IEntity extends IDrawable {
 //Represents the human user's avatar
 interface IPlayer extends IEntity {
     inventory: IInventory;
+
+    imageWidth: number;
+    imageHeight: number;
 }
 
 //Things that can be put into an IInventory

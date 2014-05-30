@@ -18,7 +18,7 @@ class Player extends Entity implements IPlayer {
     
     private animationType: AnimationType = AnimationType.IDLE;
     
-    private spriteWidth : number = 23; // for testchar
+    private spriteWidth : number = 32; // for testchar
     private spriteHeight : number = 44; // for testchar 
     
     private imgWidth : number;
@@ -41,12 +41,28 @@ class Player extends Entity implements IPlayer {
     get inventory(): IInventory {
         return this._inventory;
     }
+
+    set imageWidth(newWidth: number) {
+        console.log("setting new width");
+
+        this.imgWidth = newWidth;
+    }
+
+    set imageHeight(newHeight: number) {
+        this.imgHeight = newHeight;
+    }
+
+    get imageWidth(): number {
+        return this.imgWidth;
+    }
+
+    get imageHeight(): number {
+        return this.imgHeight;
+    }
     
     
     //Draws this player at the given screen location
     Draw(context: CanvasRenderingContext2D, location?: Vector): void {
-        console.log("drawing player");
-
         if (this.animationType === AnimationType.IDLE) {
         
             //Draw the idling animation in the appropriate direction http://www.w3schools.com/tags/canvas_drawimage.asp
