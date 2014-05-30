@@ -7,6 +7,15 @@ function NextId(): number {
     return _nextId++;
 }
 
+var LevelMap: { [id: string]: ILevel } = { };  // levelName -> levelObj
+
+function RegisterLevel(levelConfig: ILevelConfig) {
+    var level = new Level(levelConfig);
+    LevelMap[level.GetName()] = level;
+
+    console.log("Finished loading level:", level.GetName(), level);
+}
+
 //Returns true if the given list contains the given object, else false
 function contains(list, obj): boolean {
     var i;
@@ -38,5 +47,29 @@ function ArrayDeleteValue(theArray, theValue) {
     return theArray;
 }
 
+var loadingCount = 0;
 
+var ImageMap: { [id: string]: HTMLImageElement } = { };
+function RegisterImage(imageFile : string, onload?: (image: HTMLImageElement) => void) {
+    loadingCount++;
+
+    var image = new Image();
+    
+    image.onload = () => {
+        ImageMap[imageFile] = image;
+    
+        loadingCount--;
+        
+        if ( onload !== null )
+        {
+            onload(image);
+        }
+    };
+    image.src = imageFile;
+}
+
+//Gets the given image
+function GetImage(name: string): HTMLImageElement {
+    return ImageMap[ name ];
+}
 

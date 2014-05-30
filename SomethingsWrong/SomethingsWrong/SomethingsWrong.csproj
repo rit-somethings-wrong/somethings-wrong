@@ -27,9 +27,17 @@
     <Content Include="assets\sampleanimation.png" />
     <Content Include="assets\scenebg\bus-station.png" />
     <Content Include="assets\scenebg\jennys-house-outside.png" />
+    <Content Include="assets\scenebg\toolshed.png" />
+    <Content Include="assets\screens\Button.GIF" />
+    <Content Include="assets\screens\Inventory.GIF" />
+    <Content Include="assets\screens\Item_icon.GIF" />
+    <Content Include="assets\screens\Paused.GIF" />
     <Content Include="assets\testchar.png" />
+    <Content Include="createjs.js" />
     <Content Include="index.html" />
-    <Content Include="Loader.js" />
+    <Content Include="levels\airport\airport.js" />
+    <TypeScriptCompile Include="gui_interface.ts" />
+    <TypeScriptCompile Include="Loader.ts" />
     <Content Include="modernizr.custom.js" />
     <Content Include="SoundLoader.js" />
     <Content Include="web.config" />
@@ -40,13 +48,14 @@
     <TypeScriptCompile Include="entity.ts" />
     <TypeScriptCompile Include="game_interactions.ts" />
     <TypeScriptCompile Include="interaction.ts" />
+    <TypeScriptCompile Include="interfaces.ts" />
     <TypeScriptCompile Include="inventory.ts" />
     <TypeScriptCompile Include="item.ts" />
     <TypeScriptCompile Include="ItemList.ts" />
     <TypeScriptCompile Include="level.ts" />
     <TypeScriptCompile Include="levelscene.ts" />
     <TypeScriptCompile Include="player.ts" />
-    <TypeScriptCompile Include="util.ts" />
+    <TypeScriptCompile Include="collision.ts" />
     <TypeScriptCompile Include="utilities.ts" />
   </ItemGroup>
   <ItemGroup>
