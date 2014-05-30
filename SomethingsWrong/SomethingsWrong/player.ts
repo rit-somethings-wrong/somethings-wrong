@@ -43,8 +43,6 @@ class Player extends Entity implements IPlayer {
     }
 
     set imageWidth(newWidth: number) {
-        console.log("setting new width");
-
         this.imgWidth = newWidth;
     }
 

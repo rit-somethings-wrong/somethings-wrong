@@ -50,13 +50,15 @@ class ViewportTransform
 {
     private position : Vector;
     private width : number;
-    private height : number;
+    private height: number;
+    private linkedLevel: Level;
     
-    constructor( width : number, height : number )
+    constructor( width : number, height : number, theLevel : Level )
     {
         this.position = new Vector( 0, 0 );
         this.width = width;
         this.height = height;
+        this.linkedLevel = theLevel;
     }
     
     GetPosition() : Vector
@@ -125,6 +127,37 @@ class ViewportTransform
             */
             );
     }
+
+    // Viewport vector -> world vector
+    GetWorldVectorFromScreenVector( viewportVec : Vector ): Vector {
+        var backgroundDimensions = this.linkedLevel.GetBackgroundDimensions();
+
+        if (backgroundDimensions != null) {
+            var screenScalarX = viewportVec.getX() / this.width;
+            var screenScalarY = viewportVec.getY() / this.height;
+
+            // Return the new vector in world space.
+            return new Vector(backgroundDimensions.getX() * screenScalarX, backgroundDimensions.getY() * screenScalarY);
+        }
+
+        // background has not loaded yet.
+        return null;
+    }
+
+    // World vector -> viewport vector
+    GetScreenVectorFromWorldVector(worldVector: Vector): Vector {
+        var backgroundDimensions = this.linkedLevel.GetBackgroundDimensions();
+
+        if (backgroundDimensions != null) {
+            var worldScalarX = worldVector.getX() / backgroundDimensions.getX();
+            var worldScalarY = worldVector.getY() / backgroundDimensions.getY();
+
+            return new Vector(this.width * worldScalarX, this.height * worldScalarY);
+        }
+
+        // background has not loaded yet.
+        return null;
+    }
 };
 
 // Level class.
@@ -159,7 +192,7 @@ class Level implements ILevel
 
         // Set up the scrollable viewport.
         // This is done by triggering a viewport change.
-        this.viewport = new ViewportTransform(5, 5);
+        this.viewport = new ViewportTransform(5, 5, this);
         this.OnViewportChange(5, 5);
 
         // LEVEL LOGIC LOADER.
@@ -194,12 +227,13 @@ class Level implements ILevel
                 // Loop through all points and add them.
                 for (var n = 0; n < concurrentLine.length; n++) {
                     var pointToAdd = concurrentLine[n];
-                    var pointClass = new Vector(
+                    var pointClassNative = new Vector(
                         pointToAdd[0],
                         pointToAdd[1]
                         );
 
-                    this.navLineInfo.addPoint(pointToAdd);
+                    // Add the vector point class to the navigation line info.
+                    this.navLineInfo.addPoint(pointClassNative);
                 }
             }
 
@@ -254,6 +288,21 @@ class Level implements ILevel
         // Make sure we can use methods that require a loaded level.
         this.isInitialized = true;
     }
+
+    GetBackgroundImage(): HTMLImageElement {
+        return GetImage(this.backgroundImageName);
+    }
+
+    // Get background width and height.
+    GetBackgroundDimensions(): Vector {
+        var bgImg = this.GetBackgroundImage();
+
+        if (bgImg != null) {
+            return new Vector(bgImg.width, bgImg.height);
+        }
+
+        return null;
+    }
     
     // Called by the engine when the viewport changes.
     // The scrollable viewport has to be readjusted.
@@ -302,7 +351,8 @@ class Level implements ILevel
     private DrawEntity( drawingContext : CanvasRenderingContext2D, theEntity : IEntity )
     {
         var drawingPosition =
-            this.viewport.InverseTransformPos( theEntity.location );
+            //this.viewport.InverseTransformPos( theEntity.location );
+            theEntity.location;
         
         theEntity.Draw(drawingContext, drawingPosition);
     }
@@ -328,9 +378,7 @@ class Level implements ILevel
             throw "no context exception";
         }
 
-        console.log("image elem: " + this.backgroundImage);
-
-        var backgroundImage = GetImage(this.backgroundImageName);
+        var backgroundImage = this.GetBackgroundImage();
 
         if (backgroundImage != null) {
             // Render the background image.
@@ -458,72 +506,85 @@ class Level implements ILevel
         var hasClickBeenProcessed = false;
         
         // The point viewn as Vector.
-        var mouseClickAt = new Vector( mx, my );
-        
-        if ( hasClickBeenProcessed == false )
-        {
-            // Check whether our click lands on any item in the level.
-            var levelItemsList = this.levelItems;
-            
-            var defaultItemRadius = 5.0;
-            
-            var itemClickedAt = null;
-            var itemComesFromLevelList = false;
-            
+        var mouseClickAt = new Vector(mx, my);
+
+        //var worldMouseClickAt = this.viewport.GetWorldVectorFromScreenVector(mouseClickAt);
+        var worldMouseClickAt = mouseClickAt;
+
+        if (worldMouseClickAt != null) {
             // To properly process a click, we must transform the mouse-click to viewport space.
             var transformedMouseClick =
                 this.viewport.TransformPos(
-                    mouseClickAt
-                );
-            
-            if ( levelItemsList != null )
-            {
-                for ( var n = 0; n < levelItemsList.length; n++ )
-                {
-                    var theItem = levelItemsList[ n ];
-                    
-                    var itemBounds =
-                        new BoundingSphere(
-                            theItem.location,
-                            defaultItemRadius
-                        );
-                    
-                    if ( itemBounds.intersectWithPoint( transformedMouseClick ) )
-                    {
-                        itemClickedAt = theItem;
-                        itemComesFromLevelList = true;
-                        break;
+                    worldMouseClickAt
+                    );
+
+            console.log("level received some mouse click");
+
+            if (hasClickBeenProcessed == false) {
+                // Check whether our click lands on any item in the level.
+                var levelItemsList = this.levelItems;
+
+                var defaultItemRadius = 5.0;
+
+                var itemClickedAt = null;
+                var itemComesFromLevelList = false;
+
+                if (levelItemsList != null) {
+                    for (var n = 0; n < levelItemsList.length; n++) {
+                        var theItem = levelItemsList[n];
+                        var itemLocation = theItem.location;
+
+                        // Is the item added to world?
+                        if (itemLocation != null) {
+                            var itemBounds =
+                                new BoundingSphere(
+                                    itemLocation,
+                                    defaultItemRadius
+                                    );
+
+                            if (itemBounds.intersectWithPoint(transformedMouseClick)) {
+                                itemClickedAt = theItem;
+                                itemComesFromLevelList = true;
+                                break;
+                            }
+                        }
                     }
                 }
-            }
-            
-            // If we clicked at any item, we execute an action.
-            if ( itemClickedAt != null )
-            {
-                // TODO: perform the action.
-                itemClickedAt.Pickup();
-                
-                // If we clicked on an item that comes from the level items list.
-                if ( levelItemsList != null && itemComesFromLevelList )
-                {
-                    // Remove the item from our list of active item entities.
-                    ArrayDeleteValue( levelItemsList, itemClickedAt );
+
+                // If we clicked at any item, we execute an action.
+                if (itemClickedAt != null) {
+                    // TODO: perform the action.
+                    itemClickedAt.Pickup();
+
+                    // If we clicked on an item that comes from the level items list.
+                    if (levelItemsList != null && itemComesFromLevelList) {
+                        // Remove the item from our list of active item entities.
+                        ArrayDeleteValue(levelItemsList, itemClickedAt);
+                    }
+
+                    // we have processed the click, so turn the flag to true.
+                    hasClickBeenProcessed = true;
                 }
-                
-                // we have processed the click, so turn the flag to true.
-                hasClickBeenProcessed = true;
             }
-        }
-        
-        // If there has been no click processing, we execute a default move-to action.
-        if ( hasClickBeenProcessed == false )
-        {
-            var pointToMoveTo = mouseClickAt;
-            
-            var closestPointToClick = this.navLineInfo.calculateNearestPoint( pointToMoveTo );
-            
-            // We want to move to the closest point we clicked to that corresponds to the navigation line.
-            this.ourPlayer.Place(closestPointToClick);
+
+            // If there has been no click processing, we execute a default move-to action.
+            if (hasClickBeenProcessed == false) {
+                var pointToMoveTo = worldMouseClickAt;
+
+                console.log("mouseX: " + pointToMoveTo.getX() + ", mouseY: " + pointToMoveTo.getY());
+
+                var closestPointToClick = this.navLineInfo.calculateNearestPoint(pointToMoveTo).subtract(new Vector(0, 100));
+
+                if (closestPointToClick != null) {
+                    console.log("moving player to " + closestPointToClick.getX() + "," + closestPointToClick.getY());
+
+                    // We want to move to the closest point we clicked to that corresponds to the navigation line.
+                    this.ourPlayer.Place(closestPointToClick);
+                }
+                else {
+                    console.log("could not determine collision line");
+                }
+            }
         }
 
         return true;
