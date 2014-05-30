@@ -15,7 +15,14 @@ function RegisterLevel(levelConfig: ILevelConfig) {
 
     console.log("Finished loading level:", level.GetName(), level);
 }
-console.log("RegisterLevel() defined");
+
+
+function GetImage(name: string): HTMLImageElement {
+    //TODO this is a stub
+    var image = new Image(20, 40);
+    return image;
+}
+
 
 //Returns true if the given list contains the given object, else false
 function contains(list, obj): boolean {
