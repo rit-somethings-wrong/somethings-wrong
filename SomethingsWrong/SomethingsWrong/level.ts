@@ -286,20 +286,20 @@ class Level implements ILevel
     
     // Experimental function.
     DrawImageOnViewport(
-        context: CanvasRenderingContext2D, image: HTMLImageElement,
+        context: CanvasRenderingContext2D, imageName: string,
         drawPos : Vector,
         renderX : number, renderY : number,
         renderWidth : number, renderHeight : number
     )
     {
-        image.onload = () => {
+        GetImage(imageName, (image) => {
             this.viewport.DrawImageUsingViewport(
                 context, image,
                 drawPos,
                 renderX, renderY,
                 renderWidth, renderHeight
                 );
-        }
+        });
     }
     
     private DrawEntity( drawingContext : CanvasRenderingContext2D, theEntity : IEntity )
@@ -334,7 +334,7 @@ class Level implements ILevel
         // Render the background image.
         // The viewport wraps around the image clipping functionality.
         this.DrawImageOnViewport(
-            context, GetImage(this.backgroundImageName),
+            context, this.backgroundImageName,
             new Vector( 0, 0 ),
             renderX, renderY,
             renderWidth, renderHeight

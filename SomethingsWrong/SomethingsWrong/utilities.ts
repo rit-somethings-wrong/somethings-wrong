@@ -17,10 +17,13 @@ function RegisterLevel(levelConfig: ILevelConfig) {
 }
 
 
-function GetImage(name: string): HTMLImageElement {
-    //TODO this is a stub
-    var image = new Image(20, 40);
-    return image;
+//Gets the given image and calls onload with the loaded image
+function GetImage(name: string, onload: (image: HTMLImageElement) => void): void {
+    var image = new Image();
+    image.onload = () => {
+        onload(image);
+    };
+    image.src = name;
 }
 
 
