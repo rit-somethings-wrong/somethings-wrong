@@ -25,9 +25,9 @@ function contains(list, obj): boolean {
 
 
 //Ingame location data
-interface Vector {
+//interface Vector {
     //TODO extract info from the vector file
-}
+//}
 
 //Things that can be drawn on the canvas
 interface IDrawable {

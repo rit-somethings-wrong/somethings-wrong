@@ -45,14 +45,19 @@ class GameEngine {
             };
             console.log("click input: ", this._click.x, this._click.y);
         }
-        canvas.onkeypress = (ev: KeyboardEvent): void => {
-        //canvas.onkeydown = (ev: KeyboardEvent): void => {
+        window.addEventListener("keyup", (ev: KeyboardEvent) => {
             if (this._chars === null) {
-                this._chars = ev.char;
+                this._chars = String.fromCharCode(ev.keyCode);
             } else {
-                this._chars = this._chars.concat(ev.char);
+                this._chars = this._chars.concat(String.fromCharCode(ev.keyCode));
             }
+<<<<<<< HEAD
         }
+=======
+
+            console.log("keyboard input: ", this._chars);
+        });
+>>>>>>> 7767e085b7f57449ebaf822b3bc53f5d46090134
 
         var ctx = canvas.getContext('2d');
 
@@ -94,7 +99,7 @@ class GameEngine {
         this._nextInteraction = null;
         this._curLevelId = null;
         this._nextLevelId = GameEngine.StartingLevel;
-        this.player = new Player(NextId(), playerName);
+        this.player = new Player(NextId(), playerName, "./TODO/playerImageURL");
 
         this._gameLoopId = setInterval(this.genGameLoop(), 1000 / 1);  //TODO make the game loop better
     }

@@ -180,10 +180,10 @@ class NavRoute
             
             // Construct the collision line for the nearest match.
             var collBeginPoint = proxyPoint.add(
-                vectorNormalNav.multiply( -infinity )
+                vectorNormalNav.multiply( -Infinity )
             );
             var collEndPoint = proxyPoint.add(
-                vectorNormalNav.multiply( infinity )
+                vectorNormalNav.multiply( Infinity )
             );
             
             // Get a collision result.
@@ -279,6 +279,17 @@ class BoundingRectangle
                 this.position.getX() <= thePoint.getX() && this.position.getX() + this.width > thePoint.getX() &&
                 this.position.getY() <= thePoint.getY() && this.position.getY() + this.height > thePoint.getY()
             );
+    }
+    
+    getLocalCoordinates( thePoint : Vector ) : Vector
+    {
+        // If the point is not inside our bounding rectangle.
+        if ( intersectWithPoint( thePoint ) == false )
+        {
+            return null;
+        }
+        
+        return thePoint:substract( this.position );
     }
 };
 

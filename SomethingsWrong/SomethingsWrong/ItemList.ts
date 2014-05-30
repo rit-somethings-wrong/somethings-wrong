@@ -4,10 +4,10 @@
 
 class ItemList
 {
-    private ourEngine : Engine;
+    private ourEngine : GameEngine;
     private gameItemCallbacks : any;
     
-    constructor( theEngine : Engine )
+    constructor( theEngine : GameEngine )
     {
         this.ourEngine = theEngine;
         this.gameItemCallbacks = [];

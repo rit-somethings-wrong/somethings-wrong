@@ -122,7 +122,7 @@ class Level
 {
     private isInitialized : boolean;
     
-    private ourEngine : Engine;
+    private ourEngine : GameEngine;
     private ourPlayer : Player;
     private id : string; 
     private backgroundImage : any;  // JS image file (background)
@@ -134,7 +134,7 @@ class Level
     private levelItems : any;
     
     // Constructor.
-    constructor( theEngine : Engine, thePlayer : Player )
+    constructor( theEngine : GameEngine, thePlayer : Player )
     {
         this.isInitialized = false;
         
