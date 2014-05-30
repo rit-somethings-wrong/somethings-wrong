@@ -217,6 +217,35 @@ class NavRoute
     }
 };
 
+class BoundingSphere
+{
+    private position : Vector;
+    private radius : number;
+    
+    constructor( position : Vector, radius : number )
+    {
+        this.position = position;
+        this.radius = radius;
+    }
+    
+    getPosition() : Vector
+    {
+        return this.position;
+    }
+    
+    getRadius() : number
+    {
+        return this.radius;
+    }
+    
+    intersectWithPoint( thePoint : Vector ) : boolean
+    {
+        return ( thePoint.subtract( this.position ).length() < this.radius );
+    }
+};
+
+// Random integrity tests start here.
+// Can be transformed into unit tests.
 function intersectionTest()
 {
     var route = new NavRoute();

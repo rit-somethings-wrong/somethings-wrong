@@ -2,10 +2,10 @@
 
 // Class that specifies a teleport spot on a map.
 // It makes the player switch maps.
+// EntryExit stays immutable across the runtime.
 class EntryExit
 {
-    private entryPos : Vector;
-    private entryRange : number;
+    private entrySphere : BoundingSphere;
     private exitId : string;
     private exitPos : Vector;
     
@@ -14,20 +14,23 @@ class EntryExit
         exitId : string,
         exitX : number, exitY : number )
     {
-        this.entryPos = new Vector( entryX, entryY );
-        this.entryRange = entryRange;
+        this.entrySphere =
+            new BoundingSphere(
+                new Vector( entryX, entryY ),
+                entryRange
+            );
         this.exitId = exitId;
         this.exitPos = new Vector( exitX, exitY );
     }
     
     isPointInRange( thePoint : Vector ) : boolean
     {
-        return ( thePoint.subtract( this.pos ).length() < this.range );
+        return this.entrySphere.intersectWithPoint( thePoint );
     }
     
     getEntryPosition() : Vector
     {
-        return this.entryPos;
+        return this.entrySphere.getPosition();
     }
     
     getExitPosition() : Vector
@@ -38,6 +41,79 @@ class EntryExit
     getExitID() : string
     {
         return this.exitId;
+    }
+};
+
+class ViewportTransform
+{
+    private position : Vector;
+    private width : number;
+    private height : number;
+    
+    constructor( width : number, height : number )
+    {
+        this.position = new Vector( 0, 0 );
+        this.width = width;
+        this.height = height;
+    }
+    
+    GetPosition() : Vector
+    {
+        return this.position;
+    }
+    
+    GetWidth() : number
+    {
+        return this.width;
+    }
+    
+    GetHeight() : number
+    {
+        return this.height;
+    }
+    
+    SetWidth( width : number )
+    {
+        this.width = width;
+    }
+    
+    SetHeigth( height : number )
+    {
+        this.height = height;
+    }
+    
+    TransformPos( vecPos : Vector ) : Vector
+    {
+        return vecPos.add( this.position );
+    }
+    
+    InverseTransformPos( vecPos : Vector ) : Vector
+    {
+        return vecPos.subtract( this.position );
+    }
+    
+    // Draws an image that scrolls using viewport properties.
+    DrawImageUsingViewport(
+        context : any, img : any,
+        offsetWorld : Vector,
+        contextDrawX : number, contextDrawY : number,
+        contextDrawWidth : number, contextDrawHeight : number
+    )
+    {
+        var backgroundDrawPos =
+            this.inverseTransformPos(
+                offsetWorld
+            );
+        
+        context.drawImage(
+            img,
+            // drawing settings about the clipped part of the image.
+            backgroundDrawPos.getX(), backgroundDrawPos.getY(),
+            this.getWidth(), this.getHeight(),
+            // drawing settings on the canvas.
+            contextDrawX, contextDrawY,
+            contextDrawWidth, contextDrawHeight
+        );
     }
 };
 
@@ -54,6 +130,8 @@ class Level
     private locationPlayer : Vector;
     private navLineInfo : NavRoute;
     private levelSize : Vector;
+    private viewport : ViewportTransform;
+    private levelItems : any;
     
     // Constructor.
     constructor( theEngine : Engine, thePlayer : Player )
@@ -65,16 +143,32 @@ class Level
         this.id = "";
         this.img = null;
         this.exits = null;
-        this.locationPlayer = createVector( 50, 100 ); // use generic position to see the player sprite
+        this.locationPlayer = new Vector( 50, 100 ); // use generic position to see the player sprite
+        this.viewport = new ViewportTranform();
+        
+        // Set up the scrollable viewport.
+        // This is done by triggering a viewport change.
+        OnViewportChange(
+            theEngine.getViewportWidth(),
+            theEngine.getViewportHeight()
+        );
+    }
+    
+    // Called by the engine when the viewport changes.
+    // The scrollable viewport has to be readjusted.
+    OnViewportChange( newWidth : number, newHeight : number ) : void
+    {
+        this.viewport.SetWidth( newWidth );
+        this.viewport.SetHeight( newHeight );
     }
     
     // Common methods, makes sense.
-    getName() : string
+    GetName() : string
     {
         return this.id;
     }
     
-    getSize() : Vector
+    GetSize() : Vector
     {
         return this.levelSize;
     }
@@ -89,30 +183,62 @@ class Level
             throw "illegal level state: not initialized";
     }
     
-    Draw( context, renderX : number, renderY : number, renderWidth : number, renderHeight : number ) : void
+    // Experimental function.
+    DrawImageOnViewport(
+        context, image,
+        drawPos : Vector,
+        renderX : number, renderY : number,
+        renderWidth : number, renderHeight : number
+    )
+    {
+        this.viewport.DrawImageUsingViewport(
+            context, image,
+            drawPos,
+            renderX, renderY,
+            renderWidth, renderHeight
+        );
+    }
+    
+    private DrawEntity( drawingContext : any, theEntity : Entity )
+    {
+        var drawingPosition =
+            this.viewport.InverseTransformPos( theEntity.location );
+        
+        theEntity.Draw( drawingPosition );
+    }
+    
+    Draw(
+        context : any,
+        renderX : number, renderY : number,
+        renderWidth : number, renderHeight : number
+    ) : void
     {
         checkInitialized();
         
         // Render the background image.
-        context.drawImage(
-            this.backgroundImage,
+        // The viewport wraps around the image clipping functionality.
+        DrawImageOnViewport(
+            context, this.backgroundImage,
+            new Vector( 0, 0 ),
             renderX, renderY,
             renderWidth, renderHeight
         );
         
         // todo: draw player.
-        this.ourPlayer.Draw(
-            this.locationPlayer
-        );
+        DrawEntity( this.ourPlayer );
         
         // probably draw items too?
-        var levelItemsList = this.ourEngine.getActiveItems();
+        var levelItemsList = this.levelItems;
         
-        for ( var n = 0; n < levelItemsList.length; n++ )
+        if ( levelItemsList != null )
         {
-            var anItem = levelItemsList[ n ];
-            
-            anItem.Draw( anItem.location );
+            for ( var n = 0; n < levelItemsList.length; n++ )
+            {
+                var anItem = levelItemsList[ n ];
+                
+                // Transform the item into viewport space.
+                DrawEntity( anItem );
+            }
         }
     }
 
@@ -257,14 +383,14 @@ class Level
         // If we have a triggering entryExit, notify the engine that we want to switch levels.
         if ( anyEntryExit != null )
         {
-            var switchLevelID = anyEntryExit.getExitId();
+            var switchLevelID = anyEntryExit.getExitID();
             var switchLevelTargetLoc = anyEntryExit.getExitPosition();
             
             // Call into the engine so it can perform the unloading and reloading.
             // The engine should keep in mind to switch the level (a boolean?)
             this.ourEngine.notifyLevelSwitch(
                 switchLevelID,
-                switchLevelTargetLoc.getX(), switchLevelTargetLog.getY()
+                switchLevelTargetLoc.getX(), switchLevelTargetLoc.getY()
             );
         }
     }
@@ -274,12 +400,67 @@ class Level
     {
         checkInitialized();
         
-        var pointToMoveTo = new Vector( mx, my );
+        // Has the click been already processed?
+        var hasClickBeenProcessed = false;
         
-        var closestPointToClick = this.navLineInfo.calculateNearestPoint( pointToMoveTo );
+        // The point viewn as Vector.
+        var mouseClickAt = new Vector( mx, my );
         
-        // We want to move to the closest point we clicked to that corresponds to the navigation line.
-        this.ourPlayer.moveTo( closestPointToClick );
+        if ( hasClickBeenProcessed == false )
+        {
+            // Check whether our click lands on any item in the level.
+            var levelItemsList = this.levelItems;
+            
+            var defaultItemRadius = 5.0f;
+            
+            var itemClickedAt = null;
+            
+            // To properly process a click, we must transform the mouse-click to viewport space.
+            var transformedMouseClick =
+                this.viewport.TransformPos(
+                    mouseClickAt
+                );
+            
+            if ( levelItemsList != null )
+            {
+                for ( var n = 0; n < levelItemsList.length; n++ )
+                {
+                    var theItem = levelItemsList[ n ];
+                    
+                    var itemBounds =
+                        new BoundingSphere(
+                            theItem.location,
+                            defaultItemRadius
+                        );
+                    
+                    if ( itemBounds.intersectWithPoint( transformedMouseClick ) )
+                    {
+                        itemClickedAt = theItem;
+                        break;
+                    }
+                }
+            }
+            
+            // If we clicked at any item, we execute an action.
+            if ( itemClickedAt != null )
+            {
+                // TODO: perform the action.
+                
+                // we have processed the click, so turn the flag to true.
+                hasClickBeenProcessed = true;
+            }
+        }
+        
+        // If there has been no click processing, we execute a default move-to action.
+        if ( hasClickBeenProcessed == false )
+        {
+            var pointToMoveTo = mouseClickAt;
+            
+            var closestPointToClick = this.navLineInfo.calculateNearestPoint( pointToMoveTo );
+            
+            // We want to move to the closest point we clicked to that corresponds to the navigation line.
+            this.ourPlayer.moveTo( closestPointToClick );
+        }
     }
 };
 
