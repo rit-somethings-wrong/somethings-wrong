@@ -1,28 +1,7 @@
 /// <reference path="item.ts" />
 
 
-// Inventory
 
-
-//Helper function
-//Returns true if the given list contains the given object, else false
-function contains(list, obj): boolean {
-    var i;
-    for (i = 0; i < list.length; i++) {
-        if (list[i] == obj) {
-            return true;
-        }
-    }
-    return false;
-}
-
-
-interface IInventory {
-    GetAllItems(): IStorable[];
-    Has(item: IStorable): boolean;
-    AddItem(item: IStorable): boolean;
-    RemoveItem(item: IStorable): boolean;
-}
 
 //Manages a weight limited collection of IItems
 class Inventory implements IInventory {

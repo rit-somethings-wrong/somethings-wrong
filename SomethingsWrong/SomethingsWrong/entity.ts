@@ -1,18 +1,5 @@
 ﻿
 
-interface Vector {
-
-}
-
-interface IEntity {
-    location?: Vector;
-    name: string;
-    id: number;
-
-    Place(location: Vector): void;
-    Draw(location: Vector): void;
-}
-
 class Entity implements IEntity {
     private _location: Vector;
     private _name: string;

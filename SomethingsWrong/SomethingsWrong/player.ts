@@ -1,8 +1,6 @@
 /// <reference path="inventory.ts" />
 
-interface IPlayer extends IEntity {
-    inventory: IInventory;
-}
+
 
 //-- movement states
 enum AnimationType {

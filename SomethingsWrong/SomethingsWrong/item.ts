@@ -1,12 +1,6 @@
 /// <reference path="entity.ts" />
 
 
-interface IStorable extends IEntity {
-    weight: number;
-
-    Pickup(): void;
-}
-
 //Represents a generic item in the game
 class Item extends Entity implements IStorable {
     private _weight: number;

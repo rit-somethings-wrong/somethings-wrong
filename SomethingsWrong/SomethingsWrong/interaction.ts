@@ -1,7 +1,8 @@
 ﻿
 
 
-interface IInteraction {
+/*
+interface IInteraction extends IUIHandler, IDrawable {
 
     SetDetails(player: IPlayer, level): void;
 
@@ -15,6 +16,7 @@ interface IInteraction {
     Draw(cxt: CanvasRenderingContext2D): void;
 
 }
+*/
 
 
 //callback() tells Level results of the interaction, clearInteraction()  -> engine calls Leave()
