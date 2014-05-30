@@ -30,6 +30,7 @@ interface IUIHandler {
 //
 interface ILevel extends IUIHandler, IDrawable {
     Enter(player: IPlayer, engine: GameEngine): void;
+    Update(): void;  //called every game step except when entering or leaving the level
     Leave(): void;
 }
 
@@ -79,10 +80,14 @@ interface IInventory {
 
 
 interface IInteraction extends IUIHandler, IDrawable {
-
-    //call the callback function to send results back to the level after the user does something
-    RegisterResult(callback: any): void;
-
     Enter(player: IPlayer, engine: GameEngine, level: ILevel): void;
+    Update(): void;  //called every game step except when entering or leaving the interaction
     Leave(): void;
+}
+
+interface IDialogMsg {
+    id: number;
+    dialog: string;
+    connection: number;
+    type: any;  //TODO this is an enum
 }
