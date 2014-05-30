@@ -11,7 +11,12 @@ var KEYBOARD = {
 
 var IMAGES = 
 {
-	playerImg: "assets/testchar.png"
+	playerImg: "assets/testchar.png",
+    inventoryImg: "assets/screens/Inventory.GIF",
+    pauseMenuImg: "assets/screens/Paused.GIF",
+    buttonImg: "assets/screens/Button.GIF",
+    busStationScene: "assets/scenebg/bus-station.png",
+    jennysHouseScene: "assets/scenebg/jennys-house-outside.png"
 };
 
 
@@ -32,7 +37,12 @@ Modernizr.load(
 			'levelscene.js',
 			'engine.js',
 			
-			IMAGES.playerImg
+			IMAGES.playerImg,
+            IMAGES.inventoryImg,
+            IMAGES.pauseMenuImg,
+            IMAGES.buttonImg,
+            IMAGES.busStationScene,
+            IMAGES.jennysHouseScene
 			// also load other class files here
 		],
 			

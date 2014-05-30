@@ -280,6 +280,17 @@ class BoundingRectangle
                 this.position.getY() <= thePoint.getY() && this.position.getY() + this.height > thePoint.getY()
             );
     }
+    
+    getLocalCoordinates( thePoint : Vector ) : Vector
+    {
+        // If the point is not inside our bounding rectangle.
+        if ( intersectWithPoint( thePoint ) == false )
+        {
+            return null;
+        }
+        
+        return thePoint:substract( this.position );
+    }
 };
 
 // Removes any instances of a value from an array.
