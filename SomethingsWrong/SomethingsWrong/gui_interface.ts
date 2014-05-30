@@ -1,3 +1,4 @@
+/// <reference path="engine.ts" />
 // gui_interface.ts - classes for drawing and managing the GUI layer of our game.
 
 function loadImage( imageIdentifier : string )
@@ -29,7 +30,7 @@ class GUIPanel
     }
     
     // Set the background image to draw for this panel.
-    LoadBackgroundImage( filePath : string ) : void
+    LoadBackgroundImage( filePath : string ) : any
     {
         var image = new Image();
         var guiPanelObject = this;
@@ -69,10 +70,12 @@ class GUIPanel
 
 class GUIInventoryScreen extends GUIPanel
 {
-    constructor()
+    constructor( theEngine : GameEngine )
     {
-        SetBackgroundImage(
-            loadImage( IMAGES.inventoryImg )
+        super( theEngine );
+
+        this.LoadBackgroundImage(
+            IMAGES.inventoryImg
         );
     }
     

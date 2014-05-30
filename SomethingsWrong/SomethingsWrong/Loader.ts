@@ -11,7 +11,16 @@ var KEYBOARD = {
 
 var IMAGES = 
 {
-	playerImg: "assets/testchar.png",
+    playerImg: "assets/testchar.png",
+    // general scenes.
+    inventoryImg: "assets/screens/Inventory.GIF",
+    pausedMenuImg: "assets/screens/Paused.GIF",
+    itemIconGenericImg: "assets/screens/Item_icon.GIF",
+    buttonImg: "assets/screens/Button.GIF",
+    // scene backgrounds.
+    busStationBackImg: "assets/scenebg/bus-station.png",
+    jennysHouseOutsideBackImg: "assets/scenebg/jennys-house-outside.png",
+    toolshedBackImg: "assets/scenebg/toolshed.png"
 };
 
 
@@ -35,8 +44,16 @@ Modernizr.load(
 			'levelscene.js',
 			'engine.js',
 			
-			IMAGES.playerImg,
-
+            IMAGES.playerImg,
+            // general scenes.
+            IMAGES.inventoryImg,
+            IMAGES.pausedMenuImg,
+            IMAGES.itemIconGenericImg,
+            IMAGES.buttonImg,
+            // background level scenes.
+            IMAGES.busStationBackImg,
+            IMAGES.jennysHouseOutsideBackImg,
+            IMAGES.toolshedBackImg
 			// also load other class files here
 		],
 			
