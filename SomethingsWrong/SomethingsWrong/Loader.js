@@ -22,6 +22,16 @@ Modernizr.load(
 		[
 			'http://code.createjs.com/soundjs-0.5.2.min.js',
 			'SoundLoader.js',
+			'utilities.js',
+			'entity.js',
+			'item.js',
+			'inventory.js',
+			'player.js',
+			'interaction.js',
+			'level.js',
+			'levelscene.js',
+			'engine.js',
+			
 			IMAGES.playerImg
 			// also load other class files here
 		],
