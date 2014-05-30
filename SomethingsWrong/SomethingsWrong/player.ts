@@ -1,7 +1,5 @@
 /// <reference path="inventory.ts" />
 
-
-
 //-- movement states
 enum AnimationType {
     IDLE,

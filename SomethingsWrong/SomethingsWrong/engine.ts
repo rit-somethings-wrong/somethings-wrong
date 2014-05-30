@@ -3,6 +3,7 @@
 
 
 
+
 //TODO the HUD can be implemented as an Interaction?  Or does the HUD button trigger the Inventory Interaction?
 
 
@@ -27,23 +28,30 @@ class GameEngine {
     private _click: { x: number; y: number } = null;
     private _chars: string = null;
 
+    private _gameLoopId: number;
+    private _gameSteps = 0;
+    private static MaxGameSteps = 15;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
+
+    //-----  -----//
+
     constructor() {
         var canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('gameCanvas');
 
         //listen for ui events
         canvas.onclick = (ev: MouseEvent): void => {
             this._click = {
-                x: ev.x,
-                y: ev.y
+                x: ev.clientX,
+                y: ev.clientY
             };
+            console.log("click input: ", this._click.x, this._click.y);
         }
         canvas.onkeypress = (ev: KeyboardEvent): void => {
+        //canvas.onkeydown = (ev: KeyboardEvent): void => {
             if (this._chars === null) {
                 this._chars = ev.char;
-                return;
+            } else {
+                this._chars = this._chars.concat(ev.char);
             }
-
-            this._chars = this._chars.concat(ev.char);
         }
         
 
@@ -90,10 +98,23 @@ class GameEngine {
         this._nextLevelId = GameEngine.StartingLevel;
         this.player = new Player(NextId(), playerName);
 
-        this.gameStep();
+        this._gameLoopId = setInterval(this.genGameLoop(), 1000 / 1);  //TODO make the game loop better
+    }
+
+    genGameLoop(): any {
+        return () => {
+            return this.gameStep();
+        }
     }
 
     gameStep(): void {
+        if (this._gameSteps > GameEngine.MaxGameSteps) {
+            clearInterval(this._gameLoopId);
+            return;
+        }
+        this._gameSteps++;
+        console.log("Starting game step: ", this._gameSteps);
+
         //switch levels if needed
         var level: ILevel = this.GetLevel(this._curLevelId);
         if (this._curLevelId != this._nextLevelId) {
@@ -123,8 +144,15 @@ class GameEngine {
         //--- input ---//
 
         if (this._click !== null || this._chars !== null) {
+            if (this._click !== null) {
+                console.log("game step: click input: ", this._click.x, this._click.y);
+            }
+            if (this._chars !== null) {
+                console.log("game step: keyboard input: ", this._chars);
+            }
+
             //configure input layers
-            var uiHandlers: IUIHandler[];
+            var uiHandlers: IUIHandler[] = [];
             if (this._curInteraction !== null) {
                 uiHandlers.push(level);
                 uiHandlers.push(this._curInteraction);
@@ -158,7 +186,7 @@ class GameEngine {
         //--- drawing ---//
 
         //configure graphical levels
-        var gHandlers: IDrawable[];
+        var gHandlers: IDrawable[] = [];
         if (this._curInteraction !== null) {
             gHandlers.push(this._curInteraction);
             gHandlers.push(level);
@@ -182,12 +210,6 @@ class GameEngine {
         }
     }
 
-    //----- Engine helper functions -----//
-
-    private GetLevel(id: number): ILevel {
-        return this.levelMap[id]; //TODO should return null if the id doesn't exist in the map
-    }
-
     //Creates a function which runs an animation specified by the given animation function
     private buildAnimations(animationFn: any) {
         var fn = function () {
@@ -200,6 +222,12 @@ class GameEngine {
         }
 
         return fn
+    }
+
+    //----- Engine helper functions -----//
+
+    private GetLevel(id: number): ILevel {
+        return this.levelMap[id] || null;
     }
 
     //----- Called by a level or interaction to send info to the game engine -----//
