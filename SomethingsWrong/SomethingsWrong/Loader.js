@@ -11,7 +11,7 @@ var KEYBOARD = {
 
 var IMAGES = 
 {
-	sampleImg : "assets/sampleanimation.png"
+	playerImg: "assets/testchar.png"
 };
 
 
@@ -22,6 +22,7 @@ Modernizr.load(
 		[
 			'http://code.createjs.com/soundjs-0.5.2.min.js',
 			'SoundLoader.js',
+			IMAGES.playerImg
 			// also load other class files here
 		],
 			

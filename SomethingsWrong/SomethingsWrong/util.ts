@@ -217,6 +217,96 @@ class NavRoute
     }
 };
 
+class BoundingSphere
+{
+    private position : Vector;
+    private radius : number;
+    
+    constructor( position : Vector, radius : number )
+    {
+        this.position = position;
+        this.radius = radius;
+    }
+    
+    getPosition() : Vector
+    {
+        return this.position;
+    }
+    
+    getRadius() : number
+    {
+        return this.radius;
+    }
+    
+    intersectWithPoint( thePoint : Vector ) : boolean
+    {
+        return ( thePoint.subtract( this.position ).length() < this.radius );
+    }
+};
+
+class BoundingRectangle
+{
+    private position : Vector;
+    private width : number;
+    private height : number;
+    
+    constructor( position : Vector, width : number, height : number )
+    {
+        this.position = position;
+        this.width = width;
+        this.height = height;
+    }
+    
+    getPosition() : Vector
+    {
+        return this.position;
+    }
+    
+    getWidth() : number
+    {
+        return this.width;
+    }
+    
+    getHeight() : number
+    {
+        return this.height;
+    }
+    
+    intersectWithPoint( thePoint : Vector ) : boolean
+    {
+        return
+            (
+                this.position.getX() <= thePoint.getX() && this.position.getX() + this.width > thePoint.getX() &&
+                this.position.getY() <= thePoint.getY() && this.position.getY() + this.height > thePoint.getY()
+            );
+    }
+};
+
+// Removes any instances of a value from an array.
+function ArrayDeleteValue(theArray, theValue)
+{
+    var index;
+    var actualArraySize = theArray.length;
+    
+    for ( index = 0; index < actualArraySize; index++ )
+    {
+        var curValue = theArray[ index ];
+        
+        if ( curValue == theValue )
+        {
+            theArray.splice( index, 1 );
+            
+            // Make sure we account for the shrunken array.
+            index--;
+            actualArraySize--;
+        }
+    }
+    
+    return theArray;
+}
+
+// Random integrity tests start here.
+// Can be transformed into unit tests.
 function intersectionTest()
 {
     var route = new NavRoute();

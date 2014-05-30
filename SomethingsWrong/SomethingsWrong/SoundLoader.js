@@ -17,7 +17,7 @@ function handleFileLoad(e)
 	{
 		console.log("LOADED SHIT");
 		// start the soundtrack
-		createjs.Sound.play("bgm1", {loop:-1, volume:0.3});	
+		//createjs.Sound.play("bgm1", {loop:-1, volume:0.3});	
 	}
 }
 
