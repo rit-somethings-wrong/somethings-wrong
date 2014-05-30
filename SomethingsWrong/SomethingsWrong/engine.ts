@@ -11,6 +11,8 @@
 
 
 class GameEngine {
+    private static engine: GameEngine;
+
     private static StartingLevel = "airport";
     private static CanvasId: string = "gameCanvas";
     private static DefaultPlayerImgUrl: string = "./TODO/playerImgUrl";
@@ -39,6 +41,8 @@ class GameEngine {
     //-----  -----//
 
     constructor() {
+        GameEngine.engine = this;
+
         var canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(GameEngine.CanvasId);
 
         //listen for ui events
@@ -100,8 +104,8 @@ class GameEngine {
             return;
         }
 
-        clearInterval(this._loadCountId);
-        this._gameLoopId = setInterval(this.genGameLoop(), 1000 / 1);  //TODO make the game loop better
+        clearInterval(GameEngine.engine._loadCountId);
+        GameEngine.engine._gameLoopId = setInterval(GameEngine.engine.genGameLoop(), 1000 / 1);  //TODO make the game loop better
     }
 
     startNewGame(playerName: string = "Player 1"): void {

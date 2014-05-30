@@ -124,8 +124,6 @@ class ViewportTransform
             2560, 1000
             */
             );
-
-        console.log("w: " + contextDrawWidth + ", h: " + contextDrawHeight);
     }
 };
 
@@ -137,8 +135,7 @@ class Level implements ILevel
     private ourPlayer: IPlayer = null;
     private ourEngine: GameEngine = null;
     private id : string; 
-    private backgroundImageName: string;  // JS image file (background)
-    private backgroundImage: any;
+    private backgroundImageName: string; // JS image file (background)
     private exits : any;  // list of EntryExit class objects
     private locationPlayer : Vector;
     private navLineInfo : NavRoute;
@@ -288,22 +285,18 @@ class Level implements ILevel
     
     // Experimental function.
     DrawImageOnViewport(
-        context: CanvasRenderingContext2D, imageName: string,
+        context: CanvasRenderingContext2D, image : HTMLImageElement,
         drawPos : Vector,
         renderX : number, renderY : number,
         renderWidth : number, renderHeight : number
     )
     {
-        GetImage(imageName, (image) => {
-            console.log("drawing image: " + imageName);
-
-            this.viewport.DrawImageUsingViewport(
-                context, image,
-                drawPos,
-                renderX, renderY,
-                renderWidth, renderHeight
-                );
-        });
+        this.viewport.DrawImageUsingViewport(
+            context, image,
+            drawPos,
+            renderX, renderY,
+            renderWidth, renderHeight
+            );
     }
     
     private DrawEntity( drawingContext : CanvasRenderingContext2D, theEntity : IEntity )
@@ -335,17 +328,28 @@ class Level implements ILevel
             throw "no context exception";
         }
 
-        // Render the background image.
-        // The viewport wraps around the image clipping functionality.
-        this.DrawImageOnViewport(
-            context, this.backgroundImageName,
-            new Vector(0, 0),
-            renderX, renderY,
-            renderWidth, renderHeight
-        );
+        console.log("image elem: " + this.backgroundImage);
+
+        var backgroundImage = GetImage(this.backgroundImageName);
+
+        if (backgroundImage != null) {
+            // Render the background image.
+            // The viewport wraps around the image clipping functionality.
+            this.DrawImageOnViewport(
+                context, backgroundImage,
+                new Vector(0, 0),
+                renderX, renderY,
+                renderWidth, renderHeight
+            );
+        }
 
         // todo: draw player.
         this.DrawEntity(context, this.ourPlayer);
+
+        // Set some player size that fits the level.
+        // TODO: maybe change the player skin scale depending on level.
+        this.ourPlayer.imageWidth = 25;
+        this.ourPlayer.imageHeight = 40;
         
         // probably draw items too?
         var levelItemsList = this.levelItems;

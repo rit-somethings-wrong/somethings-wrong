@@ -27,7 +27,7 @@ var level_airport =
 {
     name : "airport",
     rectSize : [ 640, 480 ],
-    img :  "./levels/airport/inside-airport_scene.png",
+    img : "./levels/airport/inside-airport_scene.png",
     concurrentLine : [
         [ 0, 200 ],
         [ 200, 200 ],
