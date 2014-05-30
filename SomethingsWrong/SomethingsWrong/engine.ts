@@ -58,9 +58,10 @@ class GameEngine {
         });
 
         this.ctx = canvas.getContext('2d');
+        var ctx = this.ctx;
 
         // Set the fill style for the drawing context.
-        this.ctx.fillStyle = '#210201';
+        ctx.fillStyle = '#210201';
 
         // A variable to store the requestID.
         var requestID;
@@ -71,7 +72,7 @@ class GameEngine {
         var pixelsPerFrame = 5; // How many pixels the box should move per frame.
 
         // Draw the initial box on the canvas.
-        this.ctx.fillRect(posX, 0, boxWidth, canvas.height);
+        ctx.fillRect(posX, 0, boxWidth, canvas.height);
 
 
         // Animate.
@@ -81,8 +82,8 @@ class GameEngine {
             // If the box has not reached the end draw on the canvas.
             // Otherwise stop the animation.
             if (posX <= (canvas.width - boxWidth)) {
-                this.ctx.clearRect((posX - pixelsPerFrame), 0, boxWidth, canvas.height);
-                this.ctx.fillRect(posX, 0, boxWidth, canvas.height);
+                ctx.clearRect((posX - pixelsPerFrame), 0, boxWidth, canvas.height);
+                ctx.fillRect(posX, 0, boxWidth, canvas.height);
                 posX += pixelsPerFrame;
             } else {
                 cancelAnimationFrame(requestID);
