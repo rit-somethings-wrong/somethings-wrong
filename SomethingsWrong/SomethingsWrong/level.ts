@@ -100,20 +100,22 @@ class ViewportTransform
         contextDrawWidth : number, contextDrawHeight : number
     )
     {
-        var backgroundDrawPos =
-            this.InverseTransformPos(
-                offsetWorld
-            );
-        
-        context.drawImage(
-            img,
-            // drawing settings about the clipped part of the image.
-            backgroundDrawPos.getX(), backgroundDrawPos.getY(),
-            this.GetWidth(), this.GetHeight(),
+        if (img != null) {
+            var backgroundDrawPos =
+                this.InverseTransformPos(
+                    offsetWorld
+                    );
+
+            context.drawImage(
+                img,
+                // drawing settings about the clipped part of the image.
+                backgroundDrawPos.getX(), backgroundDrawPos.getY(),
+                this.GetWidth(), this.GetHeight(),
             // drawing settings on the canvas.
-            contextDrawX, contextDrawY,
-            contextDrawWidth, contextDrawHeight
-        );
+                contextDrawX, contextDrawY,
+                contextDrawWidth, contextDrawHeight
+                );
+        }
     }
 };
 
@@ -320,15 +322,18 @@ class Level implements ILevel
         if (context == null) {
             throw "no context exception";
         }
-        
-        // Render the background image.
-        // The viewport wraps around the image clipping functionality.
-        this.DrawImageOnViewport(
-            context, this.backgroundImage,
-            new Vector( 0, 0 ),
-            renderX, renderY,
-            renderWidth, renderHeight
-        );
+
+        // Only render if we have a background image.
+        if (this.backgroundImage != null) {
+            // Render the background image.
+            // The viewport wraps around the image clipping functionality.
+            this.DrawImageOnViewport(
+                context, this.backgroundImage,
+                new Vector(0, 0),
+                renderX, renderY,
+                renderWidth, renderHeight
+                );
+        }
         
         // todo: draw player.
         this.DrawEntity( context, this.ourPlayer );
