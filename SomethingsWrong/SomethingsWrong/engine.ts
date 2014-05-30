@@ -1,9 +1,8 @@
 /// <reference path="Loader.ts" />
 /// <reference path="interfaces.ts" />
-"use strict";
-
 /// <reference path="player.ts" />
 /// <reference path="utilities.ts" />
+"use strict";
 
 
 
@@ -58,10 +57,10 @@ class GameEngine {
             console.log("keyboard input: ", this._chars);
         });
 
-        var ctx = canvas.getContext('2d');
+        this.ctx = canvas.getContext('2d');
 
         // Set the fill style for the drawing context.
-        ctx.fillStyle = '#210201';
+        this.ctx.fillStyle = '#210201';
 
         // A variable to store the requestID.
         var requestID;
@@ -72,7 +71,7 @@ class GameEngine {
         var pixelsPerFrame = 5; // How many pixels the box should move per frame.
 
         // Draw the initial box on the canvas.
-        ctx.fillRect(posX, 0, boxWidth, canvas.height);
+        this.ctx.fillRect(posX, 0, boxWidth, canvas.height);
 
 
         // Animate.
@@ -82,8 +81,8 @@ class GameEngine {
             // If the box has not reached the end draw on the canvas.
             // Otherwise stop the animation.
             if (posX <= (canvas.width - boxWidth)) {
-                ctx.clearRect((posX - pixelsPerFrame), 0, boxWidth, canvas.height);
-                ctx.fillRect(posX, 0, boxWidth, canvas.height);
+                this.ctx.clearRect((posX - pixelsPerFrame), 0, boxWidth, canvas.height);
+                this.ctx.fillRect(posX, 0, boxWidth, canvas.height);
                 posX += pixelsPerFrame;
             } else {
                 cancelAnimationFrame(requestID);

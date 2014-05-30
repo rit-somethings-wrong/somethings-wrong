@@ -124,8 +124,8 @@ class GUIPauseScreen extends GUIPanel {
         super(theEngine);
 
         // TODO: set up the rectangles properly.
-        this.saveQuitArea = new BoundingRectangle(new Vector(30, 30), 100, 40);
-        this.continueArea = new BoundingRectangle(new Vector(30, 150), 100, 40);
+        this.saveQuitArea = new BoundingRectangle(new Vector(11, 22), 120, 20);
+        this.continueArea = new BoundingRectangle(new Vector(11, 51), 120, 20);
     }
 
     Clicked(mx: number, my: number): boolean {

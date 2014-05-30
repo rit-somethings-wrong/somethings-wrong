@@ -302,7 +302,11 @@ class Level implements ILevel
 
     Draw(context: CanvasRenderingContext2D, location?: Vector): void {
         //TODO
-        //if location, then DrawWithSize(context, location.GetX(), location.GetY(), ???, ???);
+        if (location == null) {
+            location = new Vector(0, 0);
+        }
+
+        this.DrawWithSize(context, location.getX(), location.getY(), this.viewport.GetWidth(), this.viewport.GetHeight());
     }
 
     DrawWithSize(
@@ -312,6 +316,10 @@ class Level implements ILevel
     ) : void
     {
         this.checkInitialized();
+
+        if (context == null) {
+            throw "no context exception";
+        }
         
         // Render the background image.
         // The viewport wraps around the image clipping functionality.
