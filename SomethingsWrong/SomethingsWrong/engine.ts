@@ -162,6 +162,10 @@ class GameEngine {
             }
             this._curLevelId = this._nextLevelId;
             console.log("Switched to level: ", this._curLevelId);
+        } else {
+            if (level !== null) {
+                level.Update();
+            }
         }
 
         //switch interactions if needed
@@ -173,6 +177,10 @@ class GameEngine {
             this._curInteraction = this._nextInteraction;
             if (this._nextInteraction !== null) {
                 this._curInteraction.Enter(this.player, this, level);
+            }
+        } else {
+            if (this._curInteraction !== null) {
+                this._curInteraction.Update();
             }
         }
 
