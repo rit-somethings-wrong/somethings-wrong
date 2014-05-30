@@ -21,13 +21,13 @@
 // ]
 // };
 // TODO: ANYTHING else?
-// 
+//
 
 var level_airport =
 {
     name : "airport",
     rectSize : [ 640, 480 ],
-    img : "./TODO/imageBackground",
+    img :  "./levels/airport/inside-airport_scene.png",
     concurrentLine : [
         [ 0, 200 ],
         [ 200, 200 ],
@@ -65,6 +65,7 @@ var level_airport =
     ]
 };
 
+RegisterImage( level_airport.img );
 
 console.log("airport.js");
 RegisterLevel(level_airport);

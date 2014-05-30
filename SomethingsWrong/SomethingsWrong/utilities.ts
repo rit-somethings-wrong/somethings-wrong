@@ -16,17 +16,6 @@ function RegisterLevel(levelConfig: ILevelConfig) {
     console.log("Finished loading level:", level.GetName(), level);
 }
 
-
-//Gets the given image and calls onload with the loaded image
-function GetImage(name: string, onload: (image: HTMLImageElement) => void): void {
-    var image = new Image();
-    image.onload = () => {
-        onload(image);
-    };
-    image.src = name;
-}
-
-
 //Returns true if the given list contains the given object, else false
 function contains(list, obj): boolean {
     var i;
@@ -58,4 +47,29 @@ function ArrayDeleteValue(theArray, theValue) {
     return theArray;
 }
 
+var loadingCount = 0;
+
+var ImageMap: { [id: string]: HTMLImageElement } = { };
+function RegisterImage(imageFile : string, onload?: (image: HTMLImageElement) => void) {
+    loadingCount++;
+
+    var image = new Image();
+    
+    image.onload = () => {
+        ImageMap[imageFile] = image;
+    
+        loadingCount--;
+        
+        if ( onload !== null )
+        {
+            onload(image);
+        }
+    };
+    image.src = imageFile;
+}
+
+//Gets the given image
+function GetImage(name: string): HTMLImageElement {
+    return ImageMap[ name ];
+}
 
