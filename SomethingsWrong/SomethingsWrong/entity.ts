@@ -12,7 +12,7 @@ class Entity implements IEntity {
     constructor(id: string, name: string, imgName: string, location?: Vector, weight?: number) {
         this._id = id;
         this._name = name;
-        this._moveSpeed = 1.0;
+        this._moveSpeed = 25.0;
         this._imgName = imgName;
         this._location = location;
         this._weight = weight;

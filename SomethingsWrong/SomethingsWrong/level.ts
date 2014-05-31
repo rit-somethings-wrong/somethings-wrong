@@ -465,8 +465,6 @@ class Level implements ILevel
             throw "no context exception";
         }
 
-        console.log("image elem: " + this.backgroundImageName);
-
         var backgroundImage = GetImage(this.backgroundImageName);
 
         if (backgroundImage != null) {
@@ -554,9 +552,9 @@ class Level implements ILevel
         this.lastLevelFrameTime = currentSecondsRefValue;
 
         // Process the player tasks.
-        //this.playerTaskManager.Process(this.ourPlayer);
+        this.playerTaskManager.Process(this.ourPlayer, this.lastLevelFrameDuration);
 
-        // Update the camera position, so it is directly at the player.
+        // Update the camera position, so it is directly pointing at the player.
         if (this.locationPlayer != null) {
             this.cameraPosition = this.locationPlayer.clone();
         }
@@ -673,8 +671,16 @@ class Level implements ILevel
                 if (closestPointToClick != null) {
                     console.log("moving player to " + closestPointToClick.getX() + "," + closestPointToClick.getY());
 
-                    // We want to move to the closest point we clicked to that corresponds to the navigation line.
-                    this.playerTaskManager.QueueTask(new MoveToTask(closestPointToClick));
+                    // If the player has not been placed before, place him now.
+                    if (this.ourPlayer.location == null)
+                    {
+                        this.ourPlayer.Place(closestPointToClick);
+                    }
+                    else
+                    {
+                        // We want to move to the closest point we clicked to that corresponds to the navigation line.
+                        this.playerTaskManager.QueueTask(new MoveToTask(closestPointToClick));
+                    }
                 }
                 else {
                     console.log("could not determine collision line");

@@ -10,7 +10,15 @@ class MoveToTask implements IEntityTask {
 
     // frameTime: time in seconds that has passed since last frame.
     // theEntity: the entity to apply this task on.
-    update(theEntity: Entity, frameTime : number) : void {
+    update(theEntity: IEntity, frameTime: number): void {
+        if (theEntity.location == null) {
+            // Wait until the player is placed somewhere.
+            console.log(" move task is waiting for player to join world...");
+            return;
+        }
+
+        console.log("moving entity");
+
         // TODO: move the entity
         var moveDirection = this.moveTarget.getPosition().subtract(theEntity.location);
 
@@ -25,7 +33,7 @@ class MoveToTask implements IEntityTask {
         var nextLocation = theEntity.location.add(moveDirection.multiply(actualEntityMoveLength));
 
         // Set the location to the entity.
-        theEntity.location = nextLocation;
+        theEntity.Place( nextLocation );
     }
 
     isFinished(theEntity : Entity): boolean {
@@ -38,7 +46,7 @@ class MoveToTask implements IEntityTask {
 }
 
 class EntityTaskManager {
-    private activeTasks: any;
+    private activeTasks: IEntityTask[];
 
     constructor() {
         this.activeTasks = [];
@@ -50,7 +58,7 @@ class EntityTaskManager {
     }
 
     // Processes a task in the queue.
-    Process( theEntity : Entity ): void {
+    Process( theEntity : IEntity, frameTime : number ): void {
         if (this.activeTasks.length == 0) {
             return;
         }
@@ -61,11 +69,13 @@ class EntityTaskManager {
         // Has the task finished execution?
         if (!activeTask.isFinished(theEntity)) { 
             // If not, update it, so it will hopefully finish.
-            activeTask.update(theEntity);
+            activeTask.update(theEntity, frameTime);
         }
         else {
+            console.log("removed task from shedule");
+
             // Remove the task from the queue and dispose it.
-            this.activeTasks.slice(0, 1);
+            this.activeTasks.splice(0, 1);
 
             activeTask.dispose();
         }

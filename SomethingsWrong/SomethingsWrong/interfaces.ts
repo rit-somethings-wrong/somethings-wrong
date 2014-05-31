@@ -48,6 +48,7 @@ interface IEntity extends IDrawable {
     name: string;
     id: string;
     weight?: number;
+    moveSpeed: number;
 
     Place(location: Vector): void;
 }
@@ -87,8 +88,8 @@ interface IDialogMsg {
 }
 
 interface IEntityTask {
-    update( theEntity : Entity, frameTime : number ): void;
-    isFinished( theEntity : Entity ): boolean;
+    update( theEntity : IEntity, frameTime : number ): void;
+    isFinished( theEntity : IEntity ): boolean;
     dispose(): void;
 };
 
