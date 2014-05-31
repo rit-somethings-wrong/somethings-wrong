@@ -253,22 +253,24 @@ class Level implements ILevel
     private lastLevelFrameDuration: number;
     private lastLevelFrameTime: number;
     private playerTaskManager: EntityTaskManager;
+    private scalingReferenceHeight: number;
     
     // Constructor.
     constructor( levelConfig: ILevelConfig )
     {
         this.isInitialized = false;
-        
+
         ////this.ourEngine = theEngine
         this.id = levelConfig.name;
         this.backgroundImageName = levelConfig.img;
         this.exits = null;
-        this.locationPlayer = new Vector( 50, 100 ); // DEBUG: use generic position to see the player sprite
+        this.locationPlayer = null;
         this.navLineInfo = null;
         this.levelSize = null;
         this.lastLevelFrameDuration = 0;
         this.lastLevelFrameTime = GetCurrentTimeSeconds();
         this.playerTaskManager = new EntityTaskManager();
+        this.scalingReferenceHeight = 150;  // scale entities on the basis of 150px height
 
         // Set up the scrollable viewport.
         // This is done by triggering a viewport change.
@@ -414,7 +416,7 @@ class Level implements ILevel
             throw "illegal level state: not initialized";
     }
     
-    // Experimental function.
+    // Experimental function. Here.
     DrawImageOnViewport(
         context: CanvasRenderingContext2D, image : HTMLImageElement,
         drawPos : Vector,
@@ -464,8 +466,6 @@ class Level implements ILevel
         if (context == null) {
             throw "no context exception";
         }
-
-        console.log("image elem: " + this.backgroundImageName);
 
         var backgroundImage = GetImage(this.backgroundImageName);
 
@@ -554,9 +554,9 @@ class Level implements ILevel
         this.lastLevelFrameTime = currentSecondsRefValue;
 
         // Process the player tasks.
-        //this.playerTaskManager.Process(this.ourPlayer);
+        this.playerTaskManager.Process(this.ourPlayer, this.lastLevelFrameDuration);
 
-        // Update the camera position, so it is directly at the player.
+        // Update the camera position, so it is directly pointing at the player.
         if (this.locationPlayer != null) {
             this.cameraPosition = this.locationPlayer.clone();
         }
@@ -600,7 +600,15 @@ class Level implements ILevel
     }
 
     Typed(chars: string): boolean {
-        return false; // We don't do anything with keyboard input yet
+        // Open up a GUI inventory panel if pressing "i".
+        if (chars === "I") {
+            console.log("opening inventory");
+
+            this.ourEngine.NextInteraction(new GUIInventoryScreen(this.ourEngine, this.ourPlayer));
+        }
+
+        console.log("testinput: " + chars);
+        return true; // We don't do anything with keyboard input yet
     }
 
     // Clicked somewhere in the level - check to see if something is there?
@@ -673,8 +681,16 @@ class Level implements ILevel
                 if (closestPointToClick != null) {
                     console.log("moving player to " + closestPointToClick.getX() + "," + closestPointToClick.getY());
 
-                    // We want to move to the closest point we clicked to that corresponds to the navigation line.
-                    this.playerTaskManager.QueueTask(new MoveToTask(closestPointToClick));
+                    // If the player has not been placed before, place him now.
+                    if (this.ourPlayer.location == null)
+                    {
+                        this.ourPlayer.Place(closestPointToClick);
+                    }
+                    else
+                    {
+                        // We want to move to the closest point we clicked to that corresponds to the navigation line.
+                        this.playerTaskManager.QueueTask(new MoveToTask(closestPointToClick));
+                    }
                 }
                 else {
                     console.log("could not determine collision line");

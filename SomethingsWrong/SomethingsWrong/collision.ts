@@ -144,6 +144,7 @@ function distPoints(point1, point2)
     return ( point1.subtract( point2 ) ).length();
 }
 
+// Connected lines of 2D points that are used for navigation.
 class NavRoute
 {
     private infinity : number;
@@ -203,16 +204,16 @@ class NavRoute
             
             // Get a collision result.
             var collResult = checkLineIntersection(
-                // line nav
+                // line nav (line 1)
                 beginPoint.getX(), beginPoint.getY(),
                 endPoint.getX(), endPoint.getY(),
-                // line test
+                // line test (line 2)
                 collBeginPoint.getX(), collBeginPoint.getY(),
                 collEndPoint.getX(), collEndPoint.getY()
             );
             
             if (collResult != null && collResult.x != null && collResult.y != null &&
-                !isNaN(collResult.x) && !isNaN(collResult.y))
+                !isNaN(collResult.x) && !isNaN(collResult.y) && collResult.onLine1 == true)
             {
                 var resultPoint = new Vector(
                     collResult.x,
@@ -275,19 +276,19 @@ class BoundingRectangle
     }
 
     get left(): number {
-        return this.position.getX();
+        return this.getPosition().getX();
     }
 
     get top(): number {
-        return this.position.getY();
+        return this.getPosition().getY();
     }
 
     get right(): number {
-        return this.left + this.size.getX();
+        return this.left + this.getWidth();
     }
 
     get bottom(): number {
-        return this.top + this.size.getY();
+        return this.top + this.getHeight();
     }
     
     getPosition() : Vector
@@ -307,14 +308,17 @@ class BoundingRectangle
     
     intersectWithPoint( thePoint : Vector ) : boolean
     {
-        if (!thePoint) {
+        if (thePoint == null) {
             return false;
         }
-        return
-            (
-                this.left <= thePoint.getX() && this.right > thePoint.getX() &&
-                this.top <= thePoint.getY() && this.bottom > thePoint.getY()
-            );
+        if (
+            this.left <= thePoint.getX() && this.right > thePoint.getX() &&
+            this.top <= thePoint.getY() && this.bottom > thePoint.getY()
+            ) {
+            return true;
+        }
+
+        return false;
     }
     
     getLocalCoordinates( thePoint : Vector ) : Vector

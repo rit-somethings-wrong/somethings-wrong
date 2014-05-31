@@ -1,6 +1,8 @@
 // Sample level based on our starting scenario idea.
 
 
+console.log("test javascript thing");
+
 // levelconfig PARAM REQUIREMENTS:
 // - has to be a JSON
 // {
@@ -27,10 +29,13 @@ var level_airport =
 {
     name : "airport",
     rectSize : [ 400, 180 ],
-    img : "./assets/scenebg/inside-airport_scenev2.png",
+    img : "./assets/Scenes/inside-airport_scenev3.png",
     concurrentLine : [
         [ 0, 200 ],
-        [ 400, 200 ]
+        [400, 200],
+        [300, 150],
+        [100, 150],
+        [ 0, 200 ]
     ],
     entryExits : [
         {
@@ -70,7 +75,7 @@ var level_airport =
             y: 20,
             //TODO add in image scaling
         }
-    ],
+    ]
 };
 
 
@@ -95,7 +100,6 @@ EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, lev
     console.log("airport-key-1 callback 2");
     player.Pickup(entity.id, level.GetInventory());
 });
-
 
 
 //TODO is the load count properly updated if an image fails to load?

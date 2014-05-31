@@ -13,14 +13,14 @@ var IMAGES =
 {
     playerImg: "assets/testchar.png",
     // general scenes.
-    inventoryImg: "assets/screens/Inventory.GIF",
-    pausedMenuImg: "assets/screens/Paused.GIF",
-    itemIconGenericImg: "assets/screens/Item_icon.GIF",
-    buttonImg: "assets/screens/Button.GIF",
+    inventoryImg: "assets/GUI/Inventory.GIF",
+    pausedMenuImg: "assets/GUI/Paused.GIF",
+    itemIconGenericImg: "assets/GUI/Item_icon.GIF",
+    buttonImg: "assets/GUI/Button.GIF",
     // scene backgrounds.
-    busStationBackImg: "assets/scenebg/bus-station.png",
-    jennysHouseOutsideBackImg: "assets/scenebg/jennys-house-outside.png",
-    toolshedBackImg: "assets/scenebg/toolshed.png"
+    busStationBackImg: "assets/Scenes/bus-station.png",
+    jennysHouseOutsideBackImg: "assets/Scenes/jennys-house-outside.png",
+    toolshedBackImg: "assets/Scenes/toolshed.png"
 };
 
 
@@ -44,7 +44,7 @@ Modernizr.load(
             'interaction.js',
             'chat.js',
             'level.js',
-            'levelscene.js',
+            'gui_interface.js',
 
             // level definitions - must be loaded after the core code files
             './levels/airport/airport.js',
@@ -69,6 +69,14 @@ Modernizr.load(
         complete: function()
         {
             console.log("Loading complete with Modernizr.");
+			
+            /*
+			// Fix width/height problems (hopefully)
+			/*document.querySelector('canvas').getContext("2d").imageSmoothingEnabled = false;
+			document.querySelector('canvas').width = document.querySelector('canvas').style.width;
+			document.querySelector('canvas').height = document.querySelector('canvas').style.height;
+			*/
+			
             var engine = new GameEngine();
             engine.startNewGame("You");
             
