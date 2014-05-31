@@ -4,33 +4,45 @@
 console.log("test javascript thing");
 
 
-var level_bedroom =
+var level_bath =
 {
-    name : "bedroom",
+    name : "bath",
     rectSize : [ 320, 180 ],
-    img : "./assets/scenes/bedroom.png",
+    img : "./assets/scenes/bath.png",
     concurrentLine : [
         [ 0, 180 ],
-        [150, 320],
-        [50, 135],
-        [120, 180],
+        [320, 180],
+        [290, 140],
+        [35, 140],
     ],
+    entryExits : [
+        {
+            entryX: 65,
+            entryY: 100,
+            entryRange: 25,
+            exitId: "bathdoor",
+            exitX: 100,
+            exitY: 100
+        },
+  
+    ],
+
 
     levelItems : [
         {
-            itemID: "Laptop",
-            name: "Laptop",
-			radius: 15,
-            x: 235,
-            y: 110,
-			// dialogue ID 61 initially.  when searching for possible destination: ID 67
-        }
+            itemID: "Sink",
+            name: "Sink",
+            x: 130,
+            y: 80,
+			radius: 25,
+			//triggers dialogue ID 54
+        },
+   
     ] 
-	
 };
 
 
-/*display dialog when reaching/clicking on wash room
+//display dialog when reaching/clicking on wash room
 EntityList.RegisterEntityCallback("airport-wc", function (entity, player, level, engine) {
     console.log("airport-wc callback");
     console.log("airport-wc callback 1");
@@ -42,7 +54,7 @@ EntityList.RegisterEntityCallback("airport-wc", function (entity, player, level,
 
     console.log("Setting an engine interaction", this);
     engine.NextInteraction(new Chat(3));
-}); 
+});
 
 //TODO remove key after testing as it isn't in the story write-up
 EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, level, engine) {
@@ -50,18 +62,18 @@ EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, lev
     console.log("airport-key-1 callback 1", this);
     console.log("airport-key-1 callback 2");
     player.Pickup(entity.id, level.GetInventory());
-});*/
+});
 
 
 //TODO is the load count properly updated if an image fails to load?
 
-RegisterImage("assets/chars/main.png");  //TODO this needs to be done elsewhere
+RegisterImage("assets/testchar.png");  //TODO this needs to be done elsewhere
 
 RegisterImage("./TODO/keyImgUrl");
-RegisterImage("./assets/scenes/bedroom.png");
-RegisterImage("./assets/Quest/PC.png");
-RegisterImage(level_bedroom.img);
-RegisterLevel(level_bedroom);
+RegisterImage("./assets/test1.png");
+RegisterImage("./assets/test2.png");
+RegisterImage(level_bath.img);
+RegisterLevel(level_bath);
 
 
 

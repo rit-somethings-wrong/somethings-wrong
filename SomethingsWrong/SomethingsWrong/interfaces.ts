@@ -94,4 +94,5 @@ interface IItem {
     itemWeight?: number;  //Note: things without a weight cannot be picked up  //TODO code this limitation
     x: number;
     y: number;
+    drawingScale: number;
 }

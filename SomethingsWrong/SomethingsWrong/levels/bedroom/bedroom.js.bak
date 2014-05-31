@@ -20,7 +20,6 @@ var level_bedroom =
         {
             itemID: "Laptop",
             name: "Laptop",
-			radius: 15,
             x: 235,
             y: 110,
 			// dialogue ID 61 initially.  when searching for possible destination: ID 67

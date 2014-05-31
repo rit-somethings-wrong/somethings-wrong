@@ -227,12 +227,9 @@ class ViewportTransform
 
             context.drawImage(
                 img,
-            // drawing settings about the clipped part of the image.
-                left, top, //backgroundDrawPos.getX(), backgroundDrawPos.getY(),
-               img.width, img.height, //this.GetWidth(), this.GetHeight(),
-            // drawing settings on the canvas.
+                // drawing settings on the canvas.
                 cDrawX, cDrawY,
-                thisWidth, thisHeight //960, 540
+                thisWidth, thisHeight
                 );
         }
     }

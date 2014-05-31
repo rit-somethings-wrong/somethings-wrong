@@ -8,6 +8,7 @@ class Entity implements IEntity {
     private _imgName: string;
     private _location: Vector;
     private _weight: number;
+    private _drawingScale: number;
 
     constructor(id: string, name: string, imgName: string, location?: Vector, weight?: number) {
         this._id = id;
@@ -16,6 +17,15 @@ class Entity implements IEntity {
         this._imgName = imgName;
         this._location = location;
         this._weight = weight;
+        this._drawingScale = 1.0;
+    }
+
+    set drawingScale(theScale: number) {
+        this._drawingScale = theScale;
+    }
+
+    get drawingScale(): number {
+        return this._drawingScale;
     }
 
     get name(): string {
@@ -38,6 +48,20 @@ class Entity implements IEntity {
         return this._weight;
     }
 
+    getEntityImage(): HTMLImageElement {
+        return GetImage(this._imgName);
+    }
+
+    getDrawingDimensions(): Vector {
+        var entityImage = this.getEntityImage();
+
+        if (entityImage != null) {
+            return new Vector(entityImage.width * this._drawingScale, entityImage.height * this._drawingScale);
+        }
+
+        return null;
+    }
+
     //Moves this entity to the given location.  Use 'null' to clear the location.
     Place(location: Vector) {
         this._location = location;
@@ -49,11 +73,16 @@ class Entity implements IEntity {
             location = this._location || new Vector(0, 0);
         }
 
-        var image: HTMLImageElement = GetImage(this._imgName);
-        if (!image) {
-            return;
+        var drawDimm = this.getDrawingDimensions();
+
+        if (drawDimm != null) {
+            var bgImg = this.getEntityImage();
+
+            if (bgImg != null)
+            {
+                cxt.drawImage(bgImg, location.getX(), location.getY(), drawDimm.getX(), drawDimm.getY());
+            }
         }
-        cxt.drawImage(image, location.getX(), location.getY());
     }
 
 }
