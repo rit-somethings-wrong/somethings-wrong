@@ -51,8 +51,9 @@ class GameEngine {
         this.ctx = canvas.getContext('2d');
         var ctx = this.ctx;
         this.canvas = canvas;
-        this.canvas.width = canvas.clientWidth;
-        this.canvas.height = canvas.clientHeight;
+        this.canvas.width = 960;
+        this.canvas.height = 540;
+
         (<any>this.ctx).imageSmoothingEnabled = false;
         (<any>this.ctx).mozImageSmoothingEnabled = false; // for firefox
         
@@ -86,14 +87,7 @@ class GameEngine {
             console.log("resize");
 
         });
-        /*
-        var ccc = document.getElementById('gameCanvas');
-        ccc.clientWidth = 1280;
-        ccc.clientHeight = 720;*/
-        /*
-        this._loadingScreen = new Image();
-        this._loadingScreen.src = "assets/GUI/splash.gif";
-        */
+
 
 
     }

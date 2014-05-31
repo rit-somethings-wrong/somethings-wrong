@@ -29,7 +29,7 @@ var level_airport =
 {
     name : "airport",
     rectSize : [ 400, 180 ],
-    img : "./assets/Scenes/inside-airport_scenev3.png",
+    img : "./assets/Scenes/inside-airport_scene_new.png",
     concurrentLine : [
         [ 0, 200 ],
         [400, 200],
