@@ -19,7 +19,7 @@ class GameEngine {
     private static MaxGameSteps = 20;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
 
     private ctx: CanvasRenderingContext2D;
-
+    private canvas: any;
 
     private player: IPlayer;   //represents the human user's avatar
 
@@ -39,6 +39,8 @@ class GameEngine {
     private _canW = 0;
     private _canH = 0;
 
+    private _loadingScreen: any;
+
     //-----  -----//
 
     constructor() {
@@ -48,7 +50,9 @@ class GameEngine {
         
         this.ctx = canvas.getContext('2d');
         var ctx = this.ctx;
-
+        this.canvas = canvas;
+        this.canvas.width = canvas.clientWidth;
+        this.canvas.height = canvas.clientHeight;
         (<any>this.ctx).imageSmoothingEnabled = false;
         (<any>this.ctx).mozImageSmoothingEnabled = false; // for firefox
         
@@ -61,6 +65,8 @@ class GameEngine {
                 x: ( ev.clientX - canvasBounds.left ) / canvas.clientWidth * canvas.width,
                 y: ( ev.clientY - canvasBounds.top ) / canvas.clientHeight * canvas.height
             };
+            console.log("client shit: " + canvas.clientWidth + "," + canvas.clientHeight);
+            console.log("actual: " + this.canvas.width + ", " + this.canvas.height);
             console.log("click input: ", this._click.x, this._click.y);
         }
         window.addEventListener("keyup", (ev: KeyboardEvent) => {
@@ -80,10 +86,14 @@ class GameEngine {
             console.log("resize");
 
         });
-
+        /*
         var ccc = document.getElementById('gameCanvas');
         ccc.clientWidth = 1280;
-        ccc.clientHeight = 720;
+        ccc.clientHeight = 720;*/
+        /*
+        this._loadingScreen = new Image();
+        this._loadingScreen.src = "assets/GUI/splash.gif";
+        */
 
 
     }
@@ -113,6 +123,12 @@ class GameEngine {
 
         //pause until everything has been loaded
         this._loadCountId = setInterval(this.actuallyStartNewGame(), 1000 / 5);
+
+        // draw intro screen. why not. 
+
+
+
+
     }
 
     // The "update" function AKA the game loop

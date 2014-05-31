@@ -416,7 +416,7 @@ class Level implements ILevel
             throw "illegal level state: not initialized";
     }
     
-    // Experimental function.
+    // Experimental function. Here.
     DrawImageOnViewport(
         context: CanvasRenderingContext2D, image : HTMLImageElement,
         drawPos : Vector,
