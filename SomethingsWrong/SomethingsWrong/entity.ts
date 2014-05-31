@@ -5,11 +5,13 @@ class Entity implements IEntity {
     private _location: Vector;
     private _name: string;
     private _id: number;
+    private _moveSpeed: number; // how many level coordinates this unit can move per second.
 
     constructor(id: number, name: string) {
         this._id = id;
         this._name = name;
         this._location = null;
+        this._moveSpeed = 1.0f;
     }
 
     get name(): string {
@@ -22,6 +24,10 @@ class Entity implements IEntity {
 
     get location(): Vector {
         return this._location;
+    }
+
+    get moveSpeed(): number {
+        return this._moveSpeed;
     }
 
     //Moves this entity to the given location.  Use 'null' to clear the location.

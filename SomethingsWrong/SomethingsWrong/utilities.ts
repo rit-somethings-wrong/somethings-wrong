@@ -1,4 +1,6 @@
-﻿
+﻿/// <reference path="level.ts" />
+/// <reference path="interfaces.ts" />
+
 
 
 //Generates all IDs used in the game?
@@ -71,4 +73,9 @@ function RegisterImage(imageFile : string, onload?: (image: HTMLImageElement) =>
 //Gets the given image
 function GetImage(name: string): HTMLImageElement {
     return ImageMap[ name ];
+}
+
+// Returns a continuos time reference value in seconds.
+function GetCurrentTimeSeconds(): number {
+    return new Date().getTime() / 1000;
 }

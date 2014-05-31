@@ -87,8 +87,8 @@ interface IDialogMsg {
 }
 
 interface IEntityTask {
-    update( theEntity : Entity ): void;
-    isFinished(): boolean;
+    update( theEntity : Entity, frameTime : number ): void;
+    isFinished( theEntity : Entity ): boolean;
     dispose(): void;
 };
 
