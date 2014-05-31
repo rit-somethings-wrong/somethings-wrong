@@ -37,6 +37,7 @@ Modernizr.load(
             'collision.js',
             'ItemList.js',
             'utilities.js',
+            'entity_tasks.js',
             'entity.js',
             'inventory.js',
             'player.js',
