@@ -31,10 +31,11 @@ var level_bedroom =
     rectSize : [ 320, 180 ],
     img : "./assets/scenes/bedroom.png",
     concurrentLine : [
-        [ 0, 180 ],
-        [150, 320],
-        [50, 135],
-        [120, 180],
+        [ 0, 200 ],
+        [400, 200],
+        [300, 150],
+        [100, 150],
+        [ 0, 200 ]
     ],
     entryExits : [
         {
