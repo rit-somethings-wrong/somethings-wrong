@@ -254,7 +254,20 @@ class Level implements ILevel
     private lastLevelFrameTime: number;
     private playerTaskManager: EntityTaskManager;
     private scalingReferenceHeight: number;
+    private npcs: NPC[]; // array of NPCs
     
+    // Draw all NPCs in the level 
+    // and pass in a context plz
+    DrawNPCs(context : any)
+    {
+        for(var i = 0; i < this.npcs.length; i++)
+        {
+            context.drawImage(npcs[i].img, npcs[i].x, npcs[i].y);
+        }
+    }
+
+
+
     // Constructor.
     constructor( levelConfig: ILevelConfig )
     {
