@@ -16,7 +16,7 @@ class GameEngine {
     private static StartingLevel = "airport";
     private static CanvasId: string = "gameCanvas";
     private static DefaultPlayerImgUrl: string = "./TODO/playerImgUrl";
-    private static MaxGameSteps = 30000;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
+    private static MaxGameSteps = 20;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
 
     private ctx: CanvasRenderingContext2D;
 
@@ -179,6 +179,7 @@ class GameEngine {
             if (this._nextInteraction !== null) {
                 this._curInteraction.Enter(this.player, this, level);
             }
+                console.log("Switched to interaction: ", this._curInteraction);
         } else {
             if (this._curInteraction !== null) {
                 this._curInteraction.Update();
@@ -198,11 +199,11 @@ class GameEngine {
             //configure input layers
             var uiHandlers: IUIHandler[] = [];
             if (this._curInteraction !== null) {
-                uiHandlers.push(level);
                 uiHandlers.push(this._curInteraction);
-            } else {
                 uiHandlers.push(level);
+            } else {
                 //TODO uiHandlers.push(inventoryBagButton);
+                uiHandlers.push(level);
             }
 
             //send input to all the ui handlers until one of them does something with it
@@ -232,11 +233,11 @@ class GameEngine {
         //configure graphical levels
         var gHandlers: IDrawable[] = [];
         if (this._curInteraction !== null) {
+            gHandlers.push(level);
             gHandlers.push(this._curInteraction);
-            gHandlers.push(level);
         } else {
-            //TODO gHandlers.push(inventoryBagButton);
             gHandlers.push(level);
+            //TODO gHandlers.push(inventoryBagButton);
         }
 
         //draw all the layers
