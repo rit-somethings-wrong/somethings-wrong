@@ -465,7 +465,7 @@ class Level implements ILevel
             throw "no context exception";
         }
 
-        //console.log("image elem: " + this.backgroundImageName);
+        console.log("image elem: " + this.backgroundImageName);
 
         var backgroundImage = GetImage(this.backgroundImageName);
 
@@ -547,13 +547,14 @@ class Level implements ILevel
             this.locationPlayer = null;
         }
 
-        // todo: add more sofisticated effects?
-
         // Update frame duration logic.
         var currentSecondsRefValue = GetCurrentTimeSeconds();
 
         this.lastLevelFrameDuration = currentSecondsRefValue - this.lastLevelFrameTime;
         this.lastLevelFrameTime = currentSecondsRefValue;
+
+        // Process the player tasks.
+        //this.playerTaskManager.Process(this.ourPlayer);
 
         // Update the camera position, so it is directly at the player.
         if (this.locationPlayer != null) {
@@ -673,7 +674,7 @@ class Level implements ILevel
                     console.log("moving player to " + closestPointToClick.getX() + "," + closestPointToClick.getY());
 
                     // We want to move to the closest point we clicked to that corresponds to the navigation line.
-                    this.ourPlayer.Place(closestPointToClick);
+                    this.playerTaskManager.QueueTask(new MoveToTask(closestPointToClick));
                 }
                 else {
                     console.log("could not determine collision line");
