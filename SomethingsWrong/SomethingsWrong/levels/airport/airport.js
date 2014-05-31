@@ -56,7 +56,7 @@ var level_airport =
         {
             itemID: "airport-key-1",
             name: "The Key",
-            imgName: "./TODO/keyImgUrl",
+            imgName: "./assets/test2.png",
             itemWeight: 5,
             x: 0,
             y: 0,
@@ -64,7 +64,7 @@ var level_airport =
         {
             itemID: "airport-wc",
             name: "Men's WC",
-            imgName: "./assets/sink.png",
+            imgName: "./assets/test1.png",
             itemWeight: 4,
             x: 20,
             y: 20,
@@ -103,7 +103,8 @@ EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, lev
 RegisterImage("./assets/testchar.png");
 
 RegisterImage("./TODO/keyImgUrl");
-RegisterImage("./assets/sink.png");
+RegisterImage("./assets/test1.png");
+RegisterImage("./assets/test2.png");
 RegisterImage(level_airport.img);
 RegisterLevel(level_airport);
 

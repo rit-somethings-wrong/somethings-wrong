@@ -195,8 +195,8 @@ class ViewportTransform
             //console.log("contextDrawX: " + contextDrawX + ", contextDrawY: " + contextDrawY +
             //    ", this.width: " + this.GetWidth() + ", this.height: " + this.GetHeight() +
             //    ", img.width: " + img.width + ", img.height: " + img.height);
-            console.log("rectLeft: " + viewportRectangle.left + ", rectTop: " + viewportRectangle.top + ", rectRight: " + viewportRectangle.right +
-                ", rectBottom: " + viewportRectangle.bottom);
+         //   console.log("rectLeft: " + viewportRectangle.left + ", rectTop: " + viewportRectangle.top + ", rectRight: " + viewportRectangle.right +
+         //       ", rectBottom: " + viewportRectangle.bottom);
         }
     }
 
@@ -458,7 +458,7 @@ class Level implements ILevel
             throw "no context exception";
         }
 
-        console.log("image elem: " + this.backgroundImageName);
+        //console.log("image elem: " + this.backgroundImageName);
 
         var backgroundImage = GetImage(this.backgroundImageName);
 

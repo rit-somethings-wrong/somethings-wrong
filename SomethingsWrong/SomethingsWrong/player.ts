@@ -81,7 +81,7 @@ class Player extends Entity implements IPlayer {
     //Draws this player at the given screen location
     Draw(context: CanvasRenderingContext2D, location?: Vector): void {
         if (!this.spriteImg) {
-            console.log("Player has no sprintImg, so can't draw it.", this);
+            //console.log("Player has no sprintImg, so can't draw it.", this);
             return;
         }
 
@@ -89,7 +89,7 @@ class Player extends Entity implements IPlayer {
             location = this.location || new Vector(0, 0);
         }
 
-        console.log(this.spriteImg, this, "sprintImg");
+        //console.log(this.spriteImg, this, "sprintImg");
         if (this.animationType === AnimationType.IDLE) {
         
             //Draw the idling animation in the appropriate direction http://www.w3schools.com/tags/canvas_drawimage.asp
