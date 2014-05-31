@@ -19,7 +19,7 @@ class Player extends Entity implements IPlayer {
     private animationType: AnimationType = AnimationType.IDLE;
     
     private spriteWidth : number = 32; // for testchar
-    private spriteHeight : number = 44; // for testchar 
+    private spriteHeight : number = 32; // for testchar 
     
     private imgWidth : number;
     private imgHeight : number; // these should scale off of the canvas/scene (actual drawing size in pixels)
