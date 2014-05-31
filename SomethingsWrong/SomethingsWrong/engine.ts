@@ -35,8 +35,8 @@ class GameEngine {
     private _chars: string = null;
 
     private _loadCountId: number;
-    private _gameLoopId: number;
-    private _gameSteps = 0;
+    //private _gameLoopId: number; // you shouldn't need to use this :)
+    // private _gameSteps = 0; // or this
 
     private _canW = 0;
     private _canH = 0;
@@ -47,7 +47,12 @@ class GameEngine {
         GameEngine.engine = this;
 
         var canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(GameEngine.CanvasId);
-
+		
+		this.ctx = canvas.getContext('2d');
+        var ctx = this.ctx;
+		ctx.imageSmoothingEnabled = false;
+		ctx.mozImageSmoothingEnabled = false; // for firefox
+		
         //listen for ui events
         canvas.onclick = (ev: MouseEvent): void => {
             // Readjust mouse coordinates to canvas space.
@@ -68,8 +73,7 @@ class GameEngine {
             console.log("keyboard input: ", this._chars);
         });
 
-        this.ctx = canvas.getContext('2d');
-        var ctx = this.ctx;
+
 
         // Set the fill style for the drawing context.
         ctx.fillStyle = '#210201';
@@ -121,8 +125,9 @@ class GameEngine {
         }
 
         clearInterval(GameEngine.engine._loadCountId);
-        GameEngine.engine._gameLoopId = setInterval(GameEngine.engine.genGameLoop(), 1000 / 1);  //TODO make the game loop better
-    }
+        //GameEngine.engine._gameLoopId = setInterval(GameEngine.engine.genGameLoop(), 1000 / 1);  //TODO make the game loop better
+		this.gameStep(); // will keep running once called ONCE
+	}
 
     startNewGame(playerName: string = "Player 1"): void {
         this._curInteraction = null;
@@ -142,13 +147,8 @@ class GameEngine {
         }
     }
 
+	// The "update" function AKA the game loop
     gameStep(): void {
-        if (this._gameSteps > GameEngine.MaxGameSteps) {
-            clearInterval(this._gameLoopId);
-            return;
-        }
-        this._gameSteps++;
-        console.log("Starting game step: ", this._gameSteps);
 
         //switch levels if needed
         var level: ILevel = this.GetLevel(this._curLevelId);
@@ -156,7 +156,6 @@ class GameEngine {
             if (level !== null) {
                 level.Leave();
             }
-
             level = this.GetLevel(this._nextLevelId);
             if (level !== null) {
                 level.Enter(this.player, this);
@@ -245,14 +244,15 @@ class GameEngine {
             if (gHandlers[i] === null) {
                 continue;
             }
-
             gHandlers[i].Draw(this.ctx);
         }
 
         //display any dynamic animations //TODO support multiple animations in the future
-        if (this._animationFn != null) {
+        /*if (this._animationFn != null) {
             requestAnimationFrame(this.buildAnimations(this._animationFn));
-        }
+        }*/
+		
+		requestAnimationFrame(gameStep);
     }
 
     //Creates a function which runs an animation specified by the given animation function
@@ -312,34 +312,3 @@ class GameEngine {
     }
 }
 
-
-/*
-
-
-document.querySelector('canvas').onclick = doCLick; canvas; ctx; ctx = canvas.getContext('2d');
-
-function doClick() {
-
-    //getMousePos().x =
-
-}
-
-function getMousePos(canvas, evt) {
-
-    var rect = canvas.getBoundingClientRect(); return {
-
-        x: evt.clientX - rect.left, y: evt.clientY - rect.top
-
-    };
-
-}
-
-var img = new Image(); img.src = "myimg.png"; canvas.drawImage(img, x, y);
-
-function gameloop() {
-
-    kldjaldkadlfsfl)_' requestAnimationFrame(gameLoop);
-
-}
-
-*/
