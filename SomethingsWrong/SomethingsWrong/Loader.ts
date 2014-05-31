@@ -13,14 +13,14 @@ var IMAGES =
 {
     playerImg: "assets/testchar.png",
     // general scenes.
-    inventoryImg: "assets/screens/Inventory.GIF",
-    pausedMenuImg: "assets/screens/Paused.GIF",
-    itemIconGenericImg: "assets/screens/Item_icon.GIF",
-    buttonImg: "assets/screens/Button.GIF",
+    inventoryImg: "assets/GUI/Inventory.GIF",
+    pausedMenuImg: "assets/GUI/Paused.GIF",
+    itemIconGenericImg: "assets/GUI/Item_icon.GIF",
+    buttonImg: "assets/GUI/Button.GIF",
     // scene backgrounds.
-    busStationBackImg: "assets/scenebg/bus-station.png",
-    jennysHouseOutsideBackImg: "assets/scenebg/jennys-house-outside.png",
-    toolshedBackImg: "assets/scenebg/toolshed.png"
+    busStationBackImg: "assets/Scenes/bus-station.png",
+    jennysHouseOutsideBackImg: "assets/Scenes/jennys-house-outside.png",
+    toolshedBackImg: "assets/Scenes/toolshed.png"
 };
 
 
