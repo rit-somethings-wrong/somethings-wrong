@@ -54,10 +54,6 @@ var Chat = (function () {
         ctx.fillStyle = 'white';
 
         var img = new Image();
-        img.onload = function () {
-            ctx.drawImage(img, 100, 10, 860, 540);
-        };
-
         img.src = "assets/GUI/text.GIF";
         ctx.drawImage(img, 100, 440, 760, 100);
 
