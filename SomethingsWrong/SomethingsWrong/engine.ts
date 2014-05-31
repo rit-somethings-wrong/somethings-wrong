@@ -16,7 +16,7 @@ class GameEngine {
     private static StartingLevel = "airport";
     private static CanvasId: string = "gameCanvas";
     private static DefaultPlayerImgUrl: string = "./TODO/playerImgUrl";
-    private static MaxGameSteps = 30;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
+    private static MaxGameSteps = 30000;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
 
     private ctx: CanvasRenderingContext2D;
 
@@ -38,6 +38,9 @@ class GameEngine {
     private _gameLoopId: number;
     private _gameSteps = 0;
 
+    private _canW = 0;
+    private _canH = 0;
+
     //-----  -----//
 
     constructor() {
@@ -47,9 +50,12 @@ class GameEngine {
 
         //listen for ui events
         canvas.onclick = (ev: MouseEvent): void => {
+            // Readjust mouse coordinates to canvas space.
+            var canvasBounds = canvas.getBoundingClientRect();
+
             this._click = {
-                x: ev.clientX,
-                y: ev.clientY
+                x: ( ev.clientX - canvasBounds.left ) / canvas.clientWidth * canvas.width,
+                y: ( ev.clientY - canvasBounds.top ) / canvas.clientHeight * canvas.height
             };
             console.log("click input: ", this._click.x, this._click.y);
         }
@@ -67,6 +73,15 @@ class GameEngine {
 
         // Set the fill style for the drawing context.
         ctx.fillStyle = '#210201';
+
+        console.log("client-w: " + canvas.clientWidth + ", h: " + canvas.clientHeight);
+
+        document.querySelector('canvas').addEventListener("resize", function () {
+            GameEngine.engine._canW = GameEngine.engine.size.width;
+            GameEngine.engine._canH = GameEngine.engine.size.height;
+            console.log("resize");
+
+        });
 
         // A variable to store the requestID.
         var requestID;
@@ -327,6 +342,3 @@ function gameloop() {
 }
 
 */
-
-var engine = new GameEngine();
-engine.startNewGame("You");

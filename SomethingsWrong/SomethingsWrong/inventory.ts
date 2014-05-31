@@ -1,6 +1,3 @@
-/// <reference path="item.ts" />
-
-
 
 
 //Manages a weight limited collection of IItems

@@ -62,8 +62,6 @@ class Player extends Entity implements IPlayer {
     }
 
     set imageWidth(newWidth: number) {
-        console.log("setting new width");
-
         this.imgWidth = newWidth;
     }
 
@@ -92,8 +90,8 @@ class Player extends Entity implements IPlayer {
             0 , /* height to start clipping for idle */
             this.spriteWidth,
             this.spriteHeight,
-            location.getX(),
-            location.getY(),
+            location.getX() - (.5 * this.imgWidth),
+            location.getY() - (.8 * this.imgHeight),
             this.imgWidth, /* stretch or reduce */
             this.imgHeight /* stretch or reduce */
             );
@@ -104,8 +102,8 @@ class Player extends Entity implements IPlayer {
             0 + (this.spriteWidth *1) , /* height to start clipping for walkleft */
             this.spriteWidth,
             this.spriteHeight,
-            location.getX(),
-            location.getY(),
+            location.getX() - (.5 * this.imgWidth),
+            location.getY() - (.8 * this.imgHeight),
             this.imgWidth, /* stretch or reduce */
             this.imgHeight /* stretch or reduce */
             );
@@ -116,8 +114,8 @@ class Player extends Entity implements IPlayer {
             0 + (this.spriteWidth *2) , /* height to start clipping for walkleft */
             this.spriteWidth,
             this.spriteHeight,
-            location.getX(),
-            location.getY(),
+            location.getX() - (.5 * this.imgWidth),
+            location.getY() - (.8 * this.imgHeight),
             this.imgWidth, /* stretch or reduce */
             this.imgHeight /* stretch or reduce */
             );
