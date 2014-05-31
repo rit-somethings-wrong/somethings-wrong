@@ -1,13 +1,14 @@
-/// <reference path="inventory.ts" />
+"use strict";
 
 game = game || {};
 
 game.player = {
 
 //-- movement states
-var ANIMATION_WALKLEFT = 0;
-var ANIMATION_WALK_RIGHT = 1;
-var ANIMATION_IDLE = 2;
+
+this.ANIMATION_WALKLEFT = 0,
+this.ANIMATION_WALK_RIGHT = 1,
+this.ANIMATION_IDLE = 2,
 
 
 this._inventory: 0,
@@ -24,77 +25,96 @@ this.spriteHeight :  44, // for testchar
 this.imgWidth : 0,
 this.imgHeight : 0, // these should scale off of the canvas/scene (actual drawing size in pixels)
 
-var spriteImg : HTMLImageElement;
+this.spriteImg : 0;
 
-    constructor(id: string, name: string, imgUrl : string) {
-        super(id, name, imgUrl);
+this._id: "",
+this._name: "",
+this._moveSpeed: 2, // how many level coordinates this unit can move per second.
+this._imgName: string,
+this._location: {x: 0, y: 0},
+this._weight : 0,
 
-        this.spriteImg = GetImage(imgUrl);
-        
-        this.imgWidth = this.spriteWidth * 3; // for testing
-        this.imgHeight = this.spriteHeight * 3; // for testing
-        
-        this._inventory = new Inventory();
-    }
+	this.init : function(id /*string*/, name /*string*/, imgUrl /*string*/) 
+	{
+			super(id, name, imgUrl);
+			
+			this._id = id;
+			this._name = name;
+			this._imgName = imgName;
+    
+			this.spriteImg = GetImage(imgUrl);
+			
+			this.imgWidth = this.spriteWidth * 3; // for testing
+			this.imgHeight = this.spriteHeight * 3; // for testing
+			
+			this._inventory = new Inventory();
+	},
 
     //Gets the inventory of this player
-    GetInventory(): IInventory {
+    this.GetInventory : function(){
         return this._inventory;
-    }
+    },
 
-    Pickup(id: string, fromInv: IInventory): boolean {
+    this.Pickup : function(id /*string*/, fromInv /*bool*/) 
+	{
         if (fromInv === null || id === null) {
             return false;
         } else if (!fromInv.Has(id)) {
             return false;
         }
-
+		
         //attempt to add the item to the player
         var entity = fromInv.GetItem(id);
         var added: boolean = this._inventory.AddItem(entity);
         if (!added) {
             return false;
         }
-
         //don't forget the other store no longer has the item
         fromInv.RemoveItem(id);
         return true;
-    }
+    },
 
-    set imageWidth(newWidth: number) {
+    this.SetImageWidth : function(newWidth /*number*/) 
+	{
         this.imgWidth = newWidth;
-    }
+    },
 
-    set imageHeight(newHeight: number) {
+    this.SetImageHeight :function(newHeight/*number*/) 
+	{
         this.imgHeight = newHeight;
-    }
+    },
 
-    get imageWidth(): number {
+    this.GetImageWidth : function()
+	{
         return this.imgWidth;
-    }
+    },
 
-    get imageHeight(): number {
+    this.GetImageHeight : function()
+	{
         return this.imgHeight;
-    }
+    },
     
     
     //Draws this player at the given screen location
-    Draw(context: CanvasRenderingContext2D, location?: Vector): void {
+    this.Draw : function(context /* of the canvas*/, location /*vector obj*/)
+	{
         if (!this.spriteImg) {
             //console.log("Player has no sprintImg, so can't draw it.", this);
             return;
         }
 
         if (!location) {
-            location = this.location || new Vector(0, 0);
+            location = this.location || {x:0,y:0};
         }
 
         //console.log(this.spriteImg, this, "sprintImg");
-        if (this.animationType === AnimationType.IDLE) {
+        if (this.animationType === this.ANIMATION_IDLE) 
+		{
         
             //Draw the idling animation in the appropriate direction http://www.w3schools.com/tags/canvas_drawimage.asp
             
-            context.drawImage(this.spriteImg, 
+            context.drawImage(
+			this.spriteImg, 
             0 + (this.animationFrame * this.spriteWidth), /* width to start clipping for current idling frame */
             0 , /* height to start clipping for idle */
             this.spriteWidth,
@@ -105,7 +125,8 @@ var spriteImg : HTMLImageElement;
             this.imgHeight /* stretch or reduce */
             );
             
-        } else if (this.animationType === AnimationType.WALKLEFT) {
+        } 
+		else if (this.animationType === this.ANIMATION_WALKLEFT) {
             context.drawImage(this.spriteImg, 
             0 + (this.animationFrame * this.spriteWidth), /* width to start clipping for current idling frame */
             0 + (this.spriteWidth *1) , /* height to start clipping for walkleft */
@@ -116,9 +137,11 @@ var spriteImg : HTMLImageElement;
             this.imgWidth, /* stretch or reduce */
             this.imgHeight /* stretch or reduce */
             );
-        } else if (this.animationType === AnimationType.WALKRIGHT) {
+        } 
+		else if (this.animationType === this.ANIMATION_WALKRIGHT) {
         
-            context.drawImage(this.spriteImg, 
+            context.drawImage(
+			this.spriteImg, 
             0 + (this.animationFrame * this.spriteWidth), /* width to start clipping for current idling frame */
             0 + (this.spriteWidth *2) , /* height to start clipping for walkleft */
             this.spriteWidth,
@@ -128,17 +151,16 @@ var spriteImg : HTMLImageElement;
             this.imgWidth, /* stretch or reduce */
             this.imgHeight /* stretch or reduce */
             );
-        
-        
-            //TODO
-        } else {
+
+        } 
+		else {
             //TODO handle error
-            console.log("Error with character animation states");
-        }
+            console.log("Error with character animation states");	}
         
         /* Increment animationCounter, which will trigger a change of animationFrame upon reaching animationCounterMax */
         this.animationCounter++;
-        if(this.animationCounter > this.animationCounterMax){
+        if(this.animationCounter > this.animationCounterMax)
+		{
             // Increment animation frame and reset counter
             this.animationFrame++; if(this.animationFrame >= 3){ this.animationFrame = 0; } // assumes everything has 4 frames of animation
             this.animationCounter = 0;

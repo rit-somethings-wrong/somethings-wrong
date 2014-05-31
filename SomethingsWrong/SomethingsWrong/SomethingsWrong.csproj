@@ -47,10 +47,8 @@
     <TypeScriptCompile Include="interaction.ts" />
     <TypeScriptCompile Include="interfaces.ts" />
     <TypeScriptCompile Include="inventory.ts" />
-    <TypeScriptCompile Include="item.ts" />
     <TypeScriptCompile Include="ItemList.ts" />
     <TypeScriptCompile Include="level.ts" />
-    <TypeScriptCompile Include="levelscene.ts" />
     <TypeScriptCompile Include="player.ts" />
     <TypeScriptCompile Include="collision.ts" />
     <TypeScriptCompile Include="utilities.ts" />
