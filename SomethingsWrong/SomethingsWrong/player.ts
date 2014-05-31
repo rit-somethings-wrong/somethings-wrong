@@ -71,7 +71,7 @@ class Player extends Entity implements IPlayer {
             this.spriteWidth,
             this.spriteHeight,
             location.getX() - (.5 * this.imgWidth),
-            location.getY() + (.8 * this.imgHeight),
+            location.getY() - (.8 * this.imgHeight),
             this.imgWidth, /* stretch or reduce */
             this.imgHeight /* stretch or reduce */
             );
@@ -83,7 +83,7 @@ class Player extends Entity implements IPlayer {
             this.spriteWidth,
             this.spriteHeight,
             location.getX() - (.5 * this.imgWidth),
-            location.getY() + (.8 * this.imgHeight),
+            location.getY() - (.8 * this.imgHeight),
             this.imgWidth, /* stretch or reduce */
             this.imgHeight /* stretch or reduce */
             );
@@ -95,7 +95,7 @@ class Player extends Entity implements IPlayer {
             this.spriteWidth,
             this.spriteHeight,
             location.getX() - (.5 * this.imgWidth),
-            location.getY() + (.8 * this.imgHeight),
+            location.getY() - (.8 * this.imgHeight),
             this.imgWidth, /* stretch or reduce */
             this.imgHeight /* stretch or reduce */
             );
