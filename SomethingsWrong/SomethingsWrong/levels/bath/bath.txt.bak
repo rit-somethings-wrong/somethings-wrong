@@ -28,8 +28,8 @@ console.log("test javascript thing");
 var level_airport =
 {
     name : "airport",
-    rectSize : [ 400, 180 ],
-    img : "./assets/Scenes/Airport__.png",
+    rectSize : [ , ],
+    img : "./assets/scenes/airport.png",
     concurrentLine : [
         [ 0, 200 ],
         [400, 200],

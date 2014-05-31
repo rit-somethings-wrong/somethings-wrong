@@ -25,11 +25,11 @@ console.log("test javascript thing");
 // TODO: ANYTHING else?
 //
 
-var level_airport =
+var level_bath =
 {
-    name : "airport",
-    rectSize : [ 400, 180 ],
-    img : "./assets/Scenes/Airport__.png",
+    name : "bath",
+    rectSize : [ , ],
+    img : "./assets/scenes/bath.png",
     concurrentLine : [
         [ 0, 200 ],
         [400, 200],
@@ -56,7 +56,7 @@ var level_airport =
         }
     ],
 
-    //TODO split into a separate items registration and this turns into the id of the item and it's position
+    /*
     levelItems : [
         {
             itemID: "airport-key-1",
@@ -75,7 +75,7 @@ var level_airport =
             y: 20,
             //TODO add in image scaling
         }
-    ]
+    ] */
 };
 
 

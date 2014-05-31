@@ -16,7 +16,20 @@
 
 </div>
 </body>	
-
+	<script>
+        var loadingScreen = new Image();
+        loadingScreen.src = "assets/GUI/load.png";
+		loadingScreen.onload = drawloadscreen;
+        
+		function drawloadscreen()
+		{
+			var c = document.getElementById('gameCanvas');
+			var ctx = c.getContext('2d');
+			c.clientWidth = c.width = 960;
+			c.clientHeight = c.height = 540;
+			ctx.drawImage(loadingScreen, 0, 0, c.width, c.height);
+		}
+	</script>
     <!-- Loader stuff -->
     <script src="modernizr.custom.js"></script>
     <script src="Loader.js"></script>

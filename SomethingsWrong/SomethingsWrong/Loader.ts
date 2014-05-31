@@ -11,14 +11,14 @@ var KEYBOARD = {
 
 var IMAGES = 
 {
-    playerImg: "assets/testchar.png",
+    playerImg: "assets/Chars/main.png",
     // general scenes.
     inventoryImg: "assets/GUI/Inventory.GIF",
     pausedMenuImg: "assets/GUI/Paused.GIF",
     itemIconGenericImg: "assets/GUI/Item_icon.GIF",
     buttonImg: "assets/GUI/Button.GIF",
     // scene backgrounds.
-    busStationBackImg: "assets/Scenes/bus-station.png",
+    busStationBackImg: "assets/Scenes/Bus.png",
     jennysHouseOutsideBackImg: "assets/Scenes/jennys-house-outside.png",
     toolshedBackImg: "assets/Scenes/toolshed.png"
 };
@@ -44,7 +44,6 @@ Modernizr.load(
             'interaction.js',
             'chat.js',
             'level.js',
-            'levelscene.js',
             'gui_interface.js',
 
             // level definitions - must be loaded after the core code files

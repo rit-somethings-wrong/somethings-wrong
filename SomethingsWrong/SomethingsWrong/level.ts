@@ -190,7 +190,7 @@ class ViewportTransform
                 viewportRectangle.getWidth(), viewportRectangle.getHeight(), //this.GetWidth(), this.GetHeight(),
             // drawing settings on the canvas.
                 contextDrawX, contextDrawY,
-                this.GetWidth(), this.GetHeight()
+                960, 540
                 );
 
             //console.log("contextDrawX: " + contextDrawX + ", contextDrawY: " + contextDrawY +
@@ -254,7 +254,20 @@ class Level implements ILevel
     private lastLevelFrameTime: number;
     private playerTaskManager: EntityTaskManager;
     private scalingReferenceHeight: number;
+    private npcs: NPC[]; // array of NPCs
     
+    // Draw all NPCs in the level 
+    // and pass in a context plz
+    DrawNPCs(context : any)
+    {
+        for(var i = 0; i < this.npcs.length; i++)
+        {
+            context.drawImage(npcs[i].img, npcs[i].x, npcs[i].y);
+        }
+    }
+
+
+
     // Constructor.
     constructor( levelConfig: ILevelConfig )
     {
@@ -416,7 +429,7 @@ class Level implements ILevel
             throw "illegal level state: not initialized";
     }
     
-    // Experimental function.
+    // Experimental function. Here.
     DrawImageOnViewport(
         context: CanvasRenderingContext2D, image : HTMLImageElement,
         drawPos : Vector,

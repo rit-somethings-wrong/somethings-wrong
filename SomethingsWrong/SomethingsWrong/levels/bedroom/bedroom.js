@@ -25,11 +25,11 @@ console.log("test javascript thing");
 // TODO: ANYTHING else?
 //
 
-var level_airport =
+var level_bedroom =
 {
-    name : "airport",
-    rectSize : [ 400, 180 ],
-    img : "./assets/Scenes/Airport__.png",
+    name : "bedroom",
+    rectSize : [ 320, 180 ],
+    img : "./assets/scenes/bedroom.png",
     concurrentLine : [
         [ 0, 200 ],
         [400, 200],
@@ -56,7 +56,7 @@ var level_airport =
         }
     ],
 
-    //TODO split into a separate items registration and this turns into the id of the item and it's position
+    /* 
     levelItems : [
         {
             itemID: "airport-key-1",
@@ -75,7 +75,7 @@ var level_airport =
             y: 20,
             //TODO add in image scaling
         }
-    ]
+    ] */
 };
 
 
@@ -104,13 +104,13 @@ EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, lev
 
 //TODO is the load count properly updated if an image fails to load?
 
-RegisterImage("assets/testchar.png");  //TODO this needs to be done elsewhere
+RegisterImage("assets/chars/main.png");  //TODO this needs to be done elsewhere
 
 RegisterImage("./TODO/keyImgUrl");
-RegisterImage("./assets/test1.png");
-RegisterImage("./assets/test2.png");
-RegisterImage(level_airport.img);
-RegisterLevel(level_airport);
+RegisterImage("./assets/scenes/bedroom.png");
+RegisterImage("./assets/Quest/PC.png");
+RegisterImage(level_bedroom.img);
+RegisterLevel(level_bedroom);
 
 
 
