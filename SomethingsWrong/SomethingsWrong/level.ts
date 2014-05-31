@@ -151,7 +151,7 @@ class ViewportTransform
     {
         var clipPos = this.GetLevelClipping().getPosition();
 
-        if (vecPos === null) {
+        if (!vecPos) {
             return clipPos;
         }
         return vecPos.add(clipPos);
@@ -161,7 +161,7 @@ class ViewportTransform
     {
         var clipPos = this.GetLevelClipping().getPosition();
 
-        if (vecPos === null) {
+        if (!vecPos) {
             return clipPos;
         }
         return vecPos.subtract(clipPos);
@@ -195,8 +195,8 @@ class ViewportTransform
             //console.log("contextDrawX: " + contextDrawX + ", contextDrawY: " + contextDrawY +
             //    ", this.width: " + this.GetWidth() + ", this.height: " + this.GetHeight() +
             //    ", img.width: " + img.width + ", img.height: " + img.height);
-            console.log("rectLeft: " + viewportRectangle.left + ", rectTop: " + viewportRectangle.top + ", rectRight: " + viewportRectangle.right +
-                ", rectBottom: " + viewportRectangle.bottom);
+         //   console.log("rectLeft: " + viewportRectangle.left + ", rectTop: " + viewportRectangle.top + ", rectRight: " + viewportRectangle.right +
+         //       ", rectBottom: " + viewportRectangle.bottom);
         }
     }
 
@@ -246,8 +246,8 @@ class Level implements ILevel
     private locationPlayer : Vector;
     private navLineInfo : NavRoute;
     private levelSize : Vector;
-    private viewport : ViewportTransform;
-    private levelItems: any;
+    private viewport: ViewportTransform;
+    private inventory: IInventory = new Inventory();
     private cameraPosition: Vector;
     
     // Constructor.
@@ -259,7 +259,6 @@ class Level implements ILevel
         this.id = levelConfig.name;
         this.backgroundImageName = levelConfig.img;
         this.exits = null;
-        this.levelItems = null;
         this.locationPlayer = new Vector( 50, 100 ); // DEBUG: use generic position to see the player sprite
         this.navLineInfo = null;
         this.levelSize = null;
@@ -275,7 +274,6 @@ class Level implements ILevel
         this.navLineInfo = new NavRoute();
         this.locationPlayer = new Vector(0, 0);
         this.exits = [];
-        this.levelItems = [];
 
         if (false) {
             // Example level details.
@@ -333,28 +331,27 @@ class Level implements ILevel
 
             // Load level items (actual item entities).
             var levelItems = levelConfig.levelItems;
-
             if (levelItems != null) {
-                // Loop through all placed level items and make them active.
+                // Loop through all level items and store them
                 for (var n = 0; n < levelItems.length; n++) {
                     var itemData = levelItems[n];
 
-                    var itemNative =
-                        new Item(
-                            itemData.itemID,
-                            itemData.name,
-                            itemData.itemWeight
-                            );
+                    var location: Vector = null;
+                    if (itemData.x !== null && itemData.y !== null) {
+                        location = new Vector(itemData.x, itemData.y);
+                    }
 
-                    // Position the item in the level.
-                    itemNative.location =
-                    new Vector(
-                        itemData.x,
-                        itemData.y
-                        );
+                    var weight: number = null;
+                    if (itemData.itemWeight !== null) {
+                        weight = itemData.itemWeight;
+                    }
 
-                    // Push it into the active native item entities list.
-                    this.levelItems.push(itemNative);
+                    this.inventory.AddItem(new Entity(
+                        itemData.itemID,
+                        itemData.name,
+                        itemData.imgName,
+                        location,
+                        itemData.itemWeight));
                 }
             }
         }
@@ -461,7 +458,9 @@ class Level implements ILevel
             throw "no context exception";
         }
 
-        var backgroundImage = this.GetBackgroundImage();
+        //console.log("image elem: " + this.backgroundImageName);
+
+        var backgroundImage = GetImage(this.backgroundImageName);
 
         if (backgroundImage != null) {
             // Render the background image.
@@ -483,17 +482,13 @@ class Level implements ILevel
         this.ourPlayer.imageHeight = 40;
         
         // probably draw items too?
-        var levelItemsList = this.levelItems;
-        
-        if ( levelItemsList != null )
+        var levelItemsList = this.inventory.GetAllItems();
+        for ( var n = 0; n < levelItemsList.length; n++ )
         {
-            for ( var n = 0; n < levelItemsList.length; n++ )
-            {
-                var anItem = levelItemsList[ n ];
-                
-                // Transform the item into viewport space.
-                this.DrawEntity( context, anItem );
-            }
+            var anItem = levelItemsList[ n ];
+            
+            // Transform the item into viewport space.
+            this.DrawEntity( context, anItem );
         }
     }
 
@@ -616,31 +611,29 @@ class Level implements ILevel
 
             if (hasClickBeenProcessed == false) {
                 // Check whether our click lands on any item in the level.
-                var levelItemsList = this.levelItems;
+                var levelItemsList = this.inventory.GetAllItems();
 
                 var defaultItemRadius = 5.0;
 
                 var itemClickedAt = null;
                 var itemComesFromLevelList = false;
 
-                if (levelItemsList != null) {
-                    for (var n = 0; n < levelItemsList.length; n++) {
-                        var theItem = levelItemsList[n];
-                        var itemLocation = theItem.location;
+                for (var n = 0; n < levelItemsList.length; n++) {
+                    var theItem = levelItemsList[n];
+                    var itemLocation = theItem.location;
 
-                        // Is the item added to world?
-                        if (itemLocation != null) {
-                            var itemBounds =
-                                new BoundingSphere(
-                                    itemLocation,
-                                    defaultItemRadius
-                                    );
+                    // Is the item added to world?
+                    if (itemLocation != null) {
+                        var itemBounds =
+                            new BoundingSphere(
+                                itemLocation,
+                                defaultItemRadius
+                                );
 
-                            if (itemBounds.intersectWithPoint(transformedMouseClick)) {
-                                itemClickedAt = theItem;
-                                itemComesFromLevelList = true;
-                                break;
-                            }
+                        if (itemBounds.intersectWithPoint(transformedMouseClick)) {
+                            itemClickedAt = theItem;
+                            itemComesFromLevelList = true;
+                            break;
                         }
                     }
                 }
@@ -648,13 +641,7 @@ class Level implements ILevel
                 // If we clicked at any item, we execute an action.
                 if (itemClickedAt != null) {
                     // TODO: perform the action.
-                    itemClickedAt.Pickup();
-
-                    // If we clicked on an item that comes from the level items list.
-                    if (levelItemsList != null && itemComesFromLevelList) {
-                        // Remove the item from our list of active item entities.
-                        ArrayDeleteValue(levelItemsList, itemClickedAt);
-                    }
+                    EntityList.TriggerEntityAction(itemClickedAt.id, itemClickedAt, this.ourPlayer, this, this.ourEngine);
 
                     // we have processed the click, so turn the flag to true.
                     hasClickBeenProcessed = true;
@@ -682,6 +669,10 @@ class Level implements ILevel
         }
 
         return true;
+    }
+
+    GetInventory(): IInventory {
+        return this.inventory;
     }
 };
 
