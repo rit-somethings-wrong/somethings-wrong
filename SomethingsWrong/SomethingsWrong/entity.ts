@@ -2,26 +2,34 @@
 
 
 class Entity implements IEntity {
-    private _location: Vector;
+    private _id: string;
     private _name: string;
-    private _id: number;
+    private _imgName: string;
+    private _location: Vector;
+    private _weight: number;
 
-    constructor(id: number, name: string) {
+    constructor(id: string, name: string, imgName: string, location?: Vector, weight?: number) {
         this._id = id;
         this._name = name;
-        this._location = null;
+        this._imgName = imgName;
+        this._location = location;
+        this._weight = weight;
     }
 
     get name(): string {
         return this._name;
     }
 
-    get id(): number {
+    get id(): string {
         return this._id;
     }
 
     get location(): Vector {
         return this._location;
+    }
+
+    get weight(): number {
+        return this._weight;
     }
 
     //Moves this entity to the given location.  Use 'null' to clear the location.

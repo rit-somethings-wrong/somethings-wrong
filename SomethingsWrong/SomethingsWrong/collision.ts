@@ -133,7 +133,7 @@ function distPoints(point1, point2)
 class NavRoute
 {
     private infinity : number;
-    private points : any;
+    private points : Vector[];
         
     constructor()
     {
@@ -154,7 +154,7 @@ class NavRoute
     
     calculateNearestPoint(proxyPoint : Vector)
     {
-        // If there are not atleast two points, this test will always return null
+        // If there are not at least two points, this test will always return null
         if ( this.points.length < 2 )
         {
             return null;
@@ -171,8 +171,9 @@ class NavRoute
             // This one is the navigation line.
             var beginPoint = this.points[ index ];
             var endPoint = this.points[ index + 1 ];
-            
+
             // Get the directional vector of the line and construct a vector normal.
+            console.log(beginPoint, endPoint, this, "calculateNearestPoint()");
             var navLineDir = beginPoint.subtract( endPoint );
             navLineDir.normalize();
             
@@ -240,6 +241,9 @@ class BoundingSphere
     
     intersectWithPoint( thePoint : Vector ) : boolean
     {
+        if (!thePoint) {
+            return false;
+        }
         return ( thePoint.subtract( this.position ).length() < this.radius );
     }
 };
@@ -274,6 +278,9 @@ class BoundingRectangle
     
     intersectWithPoint( thePoint : Vector ) : boolean
     {
+        if (!thePoint) {
+            return false;
+        }
         return
             (
                 this.position.getX() <= thePoint.getX() && this.position.getX() + this.width > thePoint.getX() &&

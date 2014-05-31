@@ -10,7 +10,7 @@
 // img : any, // background image information
 // levelItems : [
 //      {
-//          itemID : any, // not sure which type we need
+//          itemID : string,
 //          name : string, // in-game display friendly name of the item
 //          itemWeight : number, // weight number for Inventory logic
 //          x : number,
@@ -56,18 +56,51 @@ var level_airport =
     //TODO split into a separate items registration and this turns into the id of the item and it's position
     levelItems : [
         {
-            itemID: 1,
+            itemID: "airport-key-1",
             name: "The Key",
+            imgName: "./TODO/keyImgUrl",
             itemWeight: 10,
             x: 20,
-            y: 10
+            y: 10,
+        },
+        {
+            itemID: "airport-wc",
+            name: "Men's WC",
+            imgName: "./TODO/airport-wc.png",
+            x: 30,
+            y: 10,
+
         }
-    ]
+    ],
 };
 
-RegisterImage( level_airport.img );
 
-console.log("airport.js");
+//display dialog when reaching/clicking on wash room
+EntityList.RegisterEntityCallback("airport-wc", function (entity, player, level, engine) {
+    console.log("airport-wc callback");
+    if (player.GetInventory().Has("airport-key-1")) {
+        console.log("The wash room key doesn't fit!  Oh No!");
+        return;
+    }
+
+    engine.SetInteraction(new Chat(3));
+});
+
+//TODO remove key after testing as it isn't in the story write-up
+EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, level, engine) {
+    console.log("airport-key-1 callback");
+    player.Pickup(entity.id, level.GetInventory());
+});
+
+
+
+//TODO is the load count properly updated if an image fails to load?
+
+RegisterImage("./assets/testchar.png");
+
+RegisterImage("./TODO/keyImgUrl");
+RegisterImage("./TODO/airport-wc.png");
+RegisterImage(level_airport.img);
 RegisterLevel(level_airport);
 
 

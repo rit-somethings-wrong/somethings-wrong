@@ -11,12 +11,12 @@
 
 
 class GameEngine {
-    private static engine: GameEngine;
+    private static engine: GameEngine;  //TODO fix this static hack
 
     private static StartingLevel = "airport";
     private static CanvasId: string = "gameCanvas";
     private static DefaultPlayerImgUrl: string = "./TODO/playerImgUrl";
-    private static MaxGameSteps = 5;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
+    private static MaxGameSteps = 30;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
 
     private ctx: CanvasRenderingContext2D;
 
@@ -101,6 +101,7 @@ class GameEngine {
     //Doesn't start the game loop until everything that's pending loading has been loaded
     private actuallyStartNewGame(): void {
         if (loadingCount > 0) {
+            console.log("Waiting on loading count: ", loadingCount);
             return;
         }
 
@@ -113,7 +114,7 @@ class GameEngine {
         this._nextInteraction = null;
         this._curLevelId = null;
         this._nextLevelId = GameEngine.StartingLevel;
-        this.player = new Player(NextId(), playerName, IMAGES.playerImg);
+        this.player = new Player("player-"+NextId(), playerName, IMAGES.playerImg);
 
 
         //pause until everything has been loaded
