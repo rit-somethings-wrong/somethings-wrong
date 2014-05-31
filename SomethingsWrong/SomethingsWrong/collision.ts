@@ -276,19 +276,19 @@ class BoundingRectangle
     }
 
     get left(): number {
-        return this.position.getX();
+        return this.getPosition().getX();
     }
 
     get top(): number {
-        return this.position.getY();
+        return this.getPosition().getY();
     }
 
     get right(): number {
-        return this.left + this.size.getX();
+        return this.left + this.getWidth();
     }
 
     get bottom(): number {
-        return this.top + this.size.getY();
+        return this.top + this.getHeight();
     }
     
     getPosition() : Vector
@@ -308,14 +308,17 @@ class BoundingRectangle
     
     intersectWithPoint( thePoint : Vector ) : boolean
     {
-        if (!thePoint) {
+        if (thePoint == null) {
             return false;
         }
-        return
-            (
-                this.left <= thePoint.getX() && this.right > thePoint.getX() &&
-                this.top <= thePoint.getY() && this.bottom > thePoint.getY()
-            );
+        if (
+            this.left <= thePoint.getX() && this.right > thePoint.getX() &&
+            this.top <= thePoint.getY() && this.bottom > thePoint.getY()
+            ) {
+            return true;
+        }
+
+        return false;
     }
     
     getLocalCoordinates( thePoint : Vector ) : Vector
