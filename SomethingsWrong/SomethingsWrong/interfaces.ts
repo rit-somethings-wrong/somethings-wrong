@@ -91,3 +91,9 @@ interface IDialogMsg {
     connection: number;
     type: any;  //TODO this is an enum
 }
+
+interface IEntityTask {
+    update( theEntity : Entity ): void;
+    isFinished(): boolean;
+    dispose(): void;
+};

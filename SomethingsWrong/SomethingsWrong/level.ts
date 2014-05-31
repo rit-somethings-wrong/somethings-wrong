@@ -379,7 +379,7 @@ class Level implements ILevel
     }
 
     GetWorldDimensions(): Vector {
-        return this.levelSize;
+        return this.GetSize();
     }
     
     // Called by the engine when the viewport changes.
@@ -575,7 +575,7 @@ class Level implements ILevel
             // If we have a triggering entryExit, notify the engine that we want to switch levels.
             if (anyEntryExit != null) {
                 var switchLevelID = anyEntryExit.getExitID();
-                //var switchLevelTargetLoc = anyEntryExit.getExitPosition();
+                var switchLevelTargetLoc = anyEntryExit.getExitPosition();
 
                 // Call into the engine so it can perform the unloading and reloading.
                 // The engine should keep in mind to switch the level (a boolean?)
@@ -583,6 +583,9 @@ class Level implements ILevel
                     switchLevelID
                 //, switchLevelTargetLoc.getX(), switchLevelTargetLoc.getY()
                     );
+
+                // Pre-change the location of the player for the next level.
+                this.ourPlayer.location = switchLevelTargetLoc;
             }
         }
     }
