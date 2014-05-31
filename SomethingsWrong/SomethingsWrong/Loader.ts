@@ -49,10 +49,7 @@ Modernizr.load(
             // level definitions - must be loaded after the core code files
             './levels/airport/airport.js',
 
-            // game start - must be loaded last
-            'engine.js',
-            
-            IMAGES.playerImg,
+            //IMAGES.playerImg,
             // general scenes.
             IMAGES.inventoryImg,
             IMAGES.pausedMenuImg,
@@ -61,8 +58,11 @@ Modernizr.load(
             // background level scenes.
             IMAGES.busStationBackImg,
             IMAGES.jennysHouseOutsideBackImg,
-            IMAGES.toolshedBackImg
+            IMAGES.toolshedBackImg,
             // also load other class files here
+
+            // game start - must be loaded last
+            'engine.js',
         ],
             
             // on complete
