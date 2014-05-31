@@ -75,10 +75,11 @@ var level_bedroom =
             //TODO add in image scaling
         }
     ] */
+	
 };
 
 
-//display dialog when reaching/clicking on wash room
+/*display dialog when reaching/clicking on wash room
 EntityList.RegisterEntityCallback("airport-wc", function (entity, player, level, engine) {
     console.log("airport-wc callback");
     console.log("airport-wc callback 1");
@@ -90,7 +91,7 @@ EntityList.RegisterEntityCallback("airport-wc", function (entity, player, level,
 
     console.log("Setting an engine interaction", this);
     engine.NextInteraction(new Chat(3));
-});
+}); 
 
 //TODO remove key after testing as it isn't in the story write-up
 EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, level, engine) {
@@ -98,7 +99,7 @@ EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, lev
     console.log("airport-key-1 callback 1", this);
     console.log("airport-key-1 callback 2");
     player.Pickup(entity.id, level.GetInventory());
-});
+});*/
 
 
 //TODO is the load count properly updated if an image fails to load?

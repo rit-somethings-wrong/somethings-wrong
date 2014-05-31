@@ -28,53 +28,37 @@ console.log("test javascript thing");
 var level_bath =
 {
     name : "bath",
-    rectSize : [ , ],
+    rectSize : [ 320, 180 ],
     img : "./assets/scenes/bath.png",
     concurrentLine : [
-        [ 0, 200 ],
-        [400, 200],
-        [300, 150],
-        [100, 150],
-        [ 0, 200 ]
+        [ 0, 180 ],
+        [320, 180],
+        [290, 140],
+        [35, 140],
     ],
     entryExits : [
         {
-            entryX: 640,
-            entryY: 400,
+            entryX: 65,
+            entryY: 100,
             entryRange: 25,
-            exitId: "terminal",
+            exitId: "bathdoor",
             exitX: 100,
             exitY: 100
         },
-        {
-            entryX: 250,
-            entryY: 300,
-            entryRange: 10,
-            exitId: "secret",
-            exitX: 255,
-            exitY: 127
-        }
+  
     ],
 
-    /*
+
     levelItems : [
         {
-            itemID: "airport-key-1",
-            name: "The Key",
-            imgName: "./assets/test2.png",
-            itemWeight: 5,
-            x: 0,
-            y: 0,
+            itemID: "Sink",
+            name: "Sink",
+            x: 130,
+            y: 80,
+			radius: 25,
+			//triggers dialogue ID 54
         },
-        {
-            itemID: "airport-wc",
-            name: "Men's WC",
-            imgName: "./assets/test1.png",
-            itemWeight: 4,
-            x: 20,
-            y: 20,
-            //TODO add in image scaling
-        }
+   
     ] */
 };
 
@@ -109,8 +93,8 @@ RegisterImage("assets/testchar.png");  //TODO this needs to be done elsewhere
 RegisterImage("./TODO/keyImgUrl");
 RegisterImage("./assets/test1.png");
 RegisterImage("./assets/test2.png");
-RegisterImage(level_airport.img);
-RegisterLevel(level_airport);
+RegisterImage(level_bath.img);
+RegisterLevel(level_bath);
 
 
 
