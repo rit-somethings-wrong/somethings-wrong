@@ -8,11 +8,9 @@ enum AnimationType {
     WALKBACK
 };
 
-
-
 class Player extends Entity implements IPlayer {
     private _inventory: IInventory;
-
+    
     private animationFrame: number = 0;
     private animationCounter: number = 0;
     private animationCounterMax: number = 10; // so that animation doesn't move too fast
