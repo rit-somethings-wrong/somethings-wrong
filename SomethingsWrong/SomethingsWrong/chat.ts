@@ -71,7 +71,7 @@ class Chat implements IInteraction {
 
         //ctx.fillText(this.msg.dialog, location.getX(), location.getY());
         ctx.textAlign = "center";
-        ctx.fillText("Yay, some stubbed chat text!", 480, 500);
+        if (!this.msg.dialog) { ctx.fillText(this.msg.dialog, 480, 500); }
     }
 
 }
