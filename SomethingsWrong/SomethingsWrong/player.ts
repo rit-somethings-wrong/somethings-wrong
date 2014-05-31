@@ -26,10 +26,10 @@ class Player extends Entity implements IPlayer {
     
     private spriteImg : HTMLImageElement;
 
-    constructor(id: number, name: string, imgUrl : string) {
-        super(id, name);
-        this.spriteImg = new Image(); 
-        this.spriteImg.src = imgUrl;
+    constructor(id: string, name: string, imgUrl : string) {
+        super(id, name, imgUrl);
+
+        this.spriteImg = GetImage(imgUrl);
         
         this.imgWidth = this.spriteWidth * 3; // for testing
         this.imgHeight = this.spriteHeight * 3; // for testing
@@ -38,8 +38,27 @@ class Player extends Entity implements IPlayer {
     }
 
     //Gets the inventory of this player
-    get inventory(): IInventory {
+    GetInventory(): IInventory {
         return this._inventory;
+    }
+
+    Pickup(id: string, fromInv: IInventory): boolean {
+        if (fromInv === null || id === null) {
+            return false;
+        } else if (!fromInv.Has(id)) {
+            return false;
+        }
+
+        //attempt to add the item to the player
+        var entity = fromInv.GetItem(id);
+        var added: boolean = this._inventory.AddItem(entity);
+        if (!added) {
+            return false;
+        }
+
+        //don't forget the other store no longer has the item
+        fromInv.RemoveItem(id);
+        return true;
     }
 
     set imageWidth(newWidth: number) {
@@ -61,6 +80,16 @@ class Player extends Entity implements IPlayer {
     
     //Draws this player at the given screen location
     Draw(context: CanvasRenderingContext2D, location?: Vector): void {
+        if (!this.spriteImg) {
+            //console.log("Player has no sprintImg, so can't draw it.", this);
+            return;
+        }
+
+        if (!location) {
+            location = this.location || new Vector(0, 0);
+        }
+
+        //console.log(this.spriteImg, this, "sprintImg");
         if (this.animationType === AnimationType.IDLE) {
         
             //Draw the idling animation in the appropriate direction http://www.w3schools.com/tags/canvas_drawimage.asp

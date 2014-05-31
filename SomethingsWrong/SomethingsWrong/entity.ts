@@ -2,26 +2,40 @@
 
 
 class Entity implements IEntity {
-    private _location: Vector;
+    private _id: string;
     private _name: string;
-    private _id: number;
+    private _moveSpeed: number; // how many level coordinates this unit can move per second.
+    private _imgName: string;
+    private _location: Vector;
+    private _weight: number;
 
-    constructor(id: number, name: string) {
+    constructor(id: string, name: string, imgName: string, location?: Vector, weight?: number) {
         this._id = id;
         this._name = name;
-        this._location = null;
+        this._moveSpeed = 1.0;
+        this._imgName = imgName;
+        this._location = location;
+        this._weight = weight;
     }
 
     get name(): string {
         return this._name;
     }
 
-    get id(): number {
+    get id(): string {
         return this._id;
     }
 
     get location(): Vector {
         return this._location;
+    }
+
+    get moveSpeed(): number {
+        return this._moveSpeed;
+    }
+
+    get weight(): number {
+        return this._weight;
     }
 
     //Moves this entity to the given location.  Use 'null' to clear the location.
@@ -31,7 +45,15 @@ class Entity implements IEntity {
 
     //Draws this entity at the given location.
     Draw(cxt: CanvasRenderingContext2D, location?: Vector): void {
-        //TODO draw this entity at the given location.  Note: We're not using our this._location because we might be getting drawn on an overlay or in a list.
+        if (!location) {
+            location = this._location || new Vector(0, 0);
+        }
+
+        var image: HTMLImageElement = GetImage(this._imgName);
+        if (!image) {
+            return;
+        }
+        cxt.drawImage(image, location.getX(), location.getY());
     }
 
 }

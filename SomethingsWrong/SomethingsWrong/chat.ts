@@ -35,7 +35,6 @@ class Chat implements IInteraction {
 
     Leave(): void {
         this.engine = null;
-
     }
 
     //----- IUIHandler methods -----//
@@ -52,16 +51,21 @@ class Chat implements IInteraction {
 
     //----- IDrawable methods -----//
 
-    Draw(cxt: CanvasRenderingContext2D, location?: Vector) {
-        if (location === null) {
+    Draw(ctx: CanvasRenderingContext2D, location?: Vector) {
+        if (!location) {
             location = new Vector(0, 0);
         }
 
-        //TODO draw partially transparent background to enhance text contrast
-        //TODO adjust location and display based on type of message (thinking, other person, yelling, etc...)
+        //TODO draw partially transparent background to enhance text contrast?
+        //TODO adjust location and display based on type of message (thinking, other person, yelling, etc...)?
 
         //draw main message text
-        cxt.fillText(this.msg.dialog, location.getX(), location.getY());
+        ctx.fillStyle = '#005259'
+        ctx.fillRect(0, 0, 10, 10);
+        ctx.font = "20pt Arial";
+        ctx.fillStyle = '#990000'
+        //ctx.fillText(this.msg.dialog, location.getX(), location.getY());
+        ctx.fillText("Yay, some stubbed chat text!", location.getX() + 10, location.getY() + 10);
     }
 
 }

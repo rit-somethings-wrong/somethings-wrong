@@ -11,12 +11,12 @@
 
 
 class GameEngine {
-    private static engine: GameEngine;
+    private static engine: GameEngine;  //TODO fix this static hack
 
     private static StartingLevel = "airport";
     private static CanvasId: string = "gameCanvas";
     private static DefaultPlayerImgUrl: string = "./TODO/playerImgUrl";
-    private static MaxGameSteps = 30000;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
+    private static MaxGameSteps = 20;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
 
     private ctx: CanvasRenderingContext2D;
 
@@ -35,8 +35,6 @@ class GameEngine {
     private _chars: string = null;
 
     private _loadCountId: number;
-    private _gameLoopId: number;
-    private _gameSteps = 0;
 
     private _canW = 0;
     private _canH = 0;
@@ -47,7 +45,13 @@ class GameEngine {
         GameEngine.engine = this;
 
         var canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(GameEngine.CanvasId);
+        
+        this.ctx = canvas.getContext('2d');
+        var ctx = this.ctx;
 
+        (<any>this.ctx).imageSmoothingEnabled = false;
+        (<any>this.ctx).mozImageSmoothingEnabled = false; // for firefox
+        
         //listen for ui events
         canvas.onclick = (ev: MouseEvent): void => {
             // Readjust mouse coordinates to canvas space.
@@ -68,12 +72,6 @@ class GameEngine {
             console.log("keyboard input: ", this._chars);
         });
 
-        this.ctx = canvas.getContext('2d');
-        var ctx = this.ctx;
-
-        // Set the fill style for the drawing context.
-        ctx.fillStyle = '#210201';
-
         console.log("client-w: " + canvas.clientWidth + ", h: " + canvas.clientHeight);
 
         document.querySelector('canvas').addEventListener("resize", function () {
@@ -82,45 +80,21 @@ class GameEngine {
             console.log("resize");
 
         });
-
-        // A variable to store the requestID.
-        var requestID;
-
-        // Variables to for the drawing position and object.
-        var posX = 0;
-        var boxWidth = 50;
-        var pixelsPerFrame = 5; // How many pixels the box should move per frame.
-
-        // Draw the initial box on the canvas.
-        ctx.fillRect(posX, 0, boxWidth, canvas.height);
-
-
-        // Animate.
-        function animate() {
-            requestID = requestAnimationFrame(animate);
-
-            // If the box has not reached the end draw on the canvas.
-            // Otherwise stop the animation.
-            if (posX <= (canvas.width - boxWidth)) {
-                ctx.clearRect((posX - pixelsPerFrame), 0, boxWidth, canvas.height);
-                ctx.fillRect(posX, 0, boxWidth, canvas.height);
-                posX += pixelsPerFrame;
-            } else {
-                cancelAnimationFrame(requestID);
-            }
-        }
-
-        requestID = requestAnimationFrame(animate);
     }
 
     //Doesn't start the game loop until everything that's pending loading has been loaded
-    private actuallyStartNewGame(): void {
-        if (loadingCount > 0) {
-            return;
-        }
+    private actuallyStartNewGame(): any {
+        var engine: GameEngine = this;
 
-        clearInterval(GameEngine.engine._loadCountId);
-        GameEngine.engine._gameLoopId = setInterval(GameEngine.engine.genGameLoop(), 1000 / 1);  //TODO make the game loop better
+        return () => {
+            if (loadingCount > 0) {
+                console.log("Waiting on loading count: ", loadingCount);
+                return;
+            }
+
+            clearInterval(engine._loadCountId);
+            engine.gameStep()(); // will keep running once called ONCE
+        }
     }
 
     startNewGame(playerName: string = "Player 1"): void {
@@ -128,128 +102,114 @@ class GameEngine {
         this._nextInteraction = null;
         this._curLevelId = null;
         this._nextLevelId = GameEngine.StartingLevel;
-        this.player = new Player(NextId(), playerName, IMAGES.playerImg);
+        this.player = new Player("player-"+NextId(), playerName, IMAGES.playerImg);
 
 
         //pause until everything has been loaded
-        this._loadCountId = setInterval(this.actuallyStartNewGame, 1000 / 5);
+        this._loadCountId = setInterval(this.actuallyStartNewGame(), 1000 / 5);
     }
 
-    genGameLoop(): any {
+    // The "update" function AKA the game loop
+    gameStep(): any {
         return () => {
-            return this.gameStep();
-        }
-    }
-
-    gameStep(): void {
-        if (this._gameSteps > GameEngine.MaxGameSteps) {
-            clearInterval(this._gameLoopId);
-            return;
-        }
-        this._gameSteps++;
-        console.log("Starting game step: ", this._gameSteps);
-
-        //switch levels if needed
-        var level: ILevel = this.GetLevel(this._curLevelId);
-        if (this._curLevelId != this._nextLevelId) {
-            if (level !== null) {
-                level.Leave();
-            }
-
-            level = this.GetLevel(this._nextLevelId);
-            if (level !== null) {
-                level.Enter(this.player, this);
-            }
-            this._curLevelId = this._nextLevelId;
-            console.log("Switched to level: ", this._curLevelId);
-        } else {
-            if (level !== null) {
-                level.Update();
-            }
-        }
-
-        //switch interactions if needed
-        if (this._curInteraction != this._nextInteraction) {
-            if (this._curInteraction !== null) {
-                this._curInteraction.Leave();
-            }
-
-            this._curInteraction = this._nextInteraction;
-            if (this._nextInteraction !== null) {
-                this._curInteraction.Enter(this.player, this, level);
-            }
-        } else {
-            if (this._curInteraction !== null) {
-                this._curInteraction.Update();
-            }
-        }
-
-        //--- input ---//
-
-        if (this._click !== null || this._chars !== null) {
-            if (this._click !== null) {
-                console.log("game step: click input: ", this._click.x, this._click.y);
-            }
-            if (this._chars !== null) {
-                console.log("game step: keyboard input: ", this._chars);
-            }
-
-            //configure input layers
-            var uiHandlers: IUIHandler[] = [];
-            if (this._curInteraction !== null) {
-                uiHandlers.push(level);
-                uiHandlers.push(this._curInteraction);
+            //switch levels if needed
+            var level: ILevel = this.GetLevel(this._curLevelId);
+            if (this._curLevelId != this._nextLevelId) {
+                if (level !== null) {
+                    level.Leave();
+                }
+                level = this.GetLevel(this._nextLevelId);
+                if (level !== null) {
+                    level.Enter(this.player, this);
+                }
+                this._curLevelId = this._nextLevelId;
+                console.log("Switched to level: ", this._curLevelId);
             } else {
-                uiHandlers.push(level);
-                //TODO uiHandlers.push(inventoryBagButton);
+                if (level !== null) {
+                    level.Update();
+                }
             }
 
-            //send input to all the ui handlers until one of them does something with it
-            var handled: boolean = false;
-            for (var i = 0; i < uiHandlers.length; ++i) {
-                if (uiHandlers[i] === null) {
+            //switch interactions if needed
+            if (this._curInteraction != this._nextInteraction) {
+                if (this._curInteraction !== null) {
+                    this._curInteraction.Leave();
+                }
+
+                this._curInteraction = this._nextInteraction;
+                if (this._nextInteraction !== null) {
+                    this._curInteraction.Enter(this.player, this, level);
+                }
+                console.log("Switched to interaction: ", this._curInteraction);
+            } else {
+                if (this._curInteraction !== null) {
+                    this._curInteraction.Update();
+                }
+            }
+
+            //--- input ---//
+
+            if (this._click !== null || this._chars !== null) {
+                if (this._click !== null) {
+                    console.log("game step: click input: ", this._click.x, this._click.y);
+                }
+                if (this._chars !== null) {
+                    console.log("game step: keyboard input: ", this._chars);
+                }
+
+                //configure input layers
+                var uiHandlers: IUIHandler[] = [];
+                if (this._curInteraction !== null) {
+                    uiHandlers.push(this._curInteraction);
+                    uiHandlers.push(level);
+                } else {
+                    //TODO uiHandlers.push(inventoryBagButton);
+                    uiHandlers.push(level);
+                }
+
+                //send input to all the ui handlers until one of them does something with it
+                var handled: boolean = false;
+                for (var i = 0; i < uiHandlers.length; ++i) {
+                    if (uiHandlers[i] === null) {
+                        continue;
+                    }
+
+                    if (this._chars !== null) {
+                        handled = handled || uiHandlers[i].Typed(this._chars);
+                    }
+                    if (this._click !== null) {
+                        handled = uiHandlers[i].Clicked(this._click.x, this._click.y);
+                    }
+
+                    if (handled) {
+                        this._click = null;
+                        this._chars = null;
+                        break;
+                    }
+                }
+            }
+
+            //--- drawing ---//
+
+            //configure graphical levels
+            var gHandlers: IDrawable[] = [];
+            if (this._curInteraction !== null) {
+                gHandlers.push(level);
+                gHandlers.push(this._curInteraction);
+            } else {
+                gHandlers.push(level);
+                //TODO gHandlers.push(inventoryBagButton);
+            }
+
+            //draw all the layers
+            for (var i = 0; i < gHandlers.length; ++i) {
+                if (gHandlers[i] === null) {
                     continue;
                 }
-
-                if (this._chars !== null) {
-                    handled = handled || uiHandlers[i].Typed(this._chars);
-                }
-                if (this._click !== null) {
-                    handled = uiHandlers[i].Clicked(this._click.x, this._click.y);
-                }
-
-                if (handled) {
-                    this._click = null;
-                    this._chars = null;
-                    break;
-                }
-            }
-        }
-
-        //--- drawing ---//
-
-        //configure graphical levels
-        var gHandlers: IDrawable[] = [];
-        if (this._curInteraction !== null) {
-            gHandlers.push(this._curInteraction);
-            gHandlers.push(level);
-        } else {
-            //TODO gHandlers.push(inventoryBagButton);
-            gHandlers.push(level);
-        }
-
-        //draw all the layers
-        for (var i = 0; i < gHandlers.length; ++i) {
-            if (gHandlers[i] === null) {
-                continue;
+                gHandlers[i].Draw(this.ctx);
             }
 
-            gHandlers[i].Draw(this.ctx);
-        }
-
-        //display any dynamic animations //TODO support multiple animations in the future
-        if (this._animationFn != null) {
-            requestAnimationFrame(this.buildAnimations(this._animationFn));
+            requestAnimationFrame(this.gameStep());
         }
     }
 
@@ -310,34 +270,3 @@ class GameEngine {
     }
 }
 
-
-/*
-
-
-document.querySelector('canvas').onclick = doCLick; canvas; ctx; ctx = canvas.getContext('2d');
-
-function doClick() {
-
-    //getMousePos().x =
-
-}
-
-function getMousePos(canvas, evt) {
-
-    var rect = canvas.getBoundingClientRect(); return {
-
-        x: evt.clientX - rect.left, y: evt.clientY - rect.top
-
-    };
-
-}
-
-var img = new Image(); img.src = "myimg.png"; canvas.drawImage(img, x, y);
-
-function gameloop() {
-
-    kldjaldkadlfsfl)_' requestAnimationFrame(gameLoop);
-
-}
-
-*/

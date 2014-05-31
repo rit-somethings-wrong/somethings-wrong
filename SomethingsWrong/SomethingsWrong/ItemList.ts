@@ -4,18 +4,16 @@
 
 class ItemList
 {
-    private ourEngine : GameEngine;
-    private gameItemCallbacks : any;
+    private gameItemCallbacks : any;  //TODO refactor this into a map instead of a list
     
-    constructor( theEngine : GameEngine )
+    constructor()
     {
-        this.ourEngine = theEngine;
         this.gameItemCallbacks = [];
     }
     
-    // Called by game designers to register logic to an item that is reconized by it's ID.
+    // Called by game designers to register logic to an entity that is reconized by it's ID.
     // Multiple callbacks can be registered for a single item, if necessary.
-    RegisterItemCallback( itemID : any, callback : any )
+    RegisterEntityCallback( itemID : string, callback : any )
     {
         if ( itemID == null || callback == null )
         {
@@ -27,21 +25,20 @@ class ItemList
         );
     }
     
-    // Called when an item is picked up by the player.
+    // Called when an entity is triggered by the player.
     // Since game designers have registered (!) their callbacks into this container,
-    // the appropriate logic for an item is called through here.
-    TriggerItemAction( itemID : any, theItem : Item, thePlayer : Player )
+    // the appropriate logic for an entity is called through here.
+    TriggerEntityAction( entityId : string, theEntity : IItem, thePlayer : IPlayer, level: ILevel, engine: GameEngine )
     {
+        console.log("TriggerEntityAction", entityId, theEntity, thePlayer, level, engine);
         for ( var n = 0; n < this.gameItemCallbacks.length; n++ )
         {
             var itemRegister = this.gameItemCallbacks[ n ];
             
-            if ( itemRegister.itemID == itemID )
+            if ( itemRegister.itemID == entityId )
             {
                 // Execute the registered action.
-                itemRegister.callback(
-                    theItem, thePlayer
-                );
+                itemRegister.callback(theEntity, thePlayer, level, engine);
             }
         }
     }
