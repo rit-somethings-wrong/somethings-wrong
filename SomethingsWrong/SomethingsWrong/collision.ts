@@ -173,17 +173,18 @@ class NavRoute
             var endPoint = this.points[ index + 1 ];
             
             // Get the directional vector of the line and construct a vector normal.
-            var navLineDir = beginPoint.subtract( endPoint );
-            navLineDir.normalize();
+            var navLineDir = endPoint.subtract( beginPoint );
+            //navLineDir.normalize();
             
             var vectorNormalNav = navLineDir.normal();
+            vectorNormalNav.normalize();
             
             // Construct the collision line for the nearest match.
             var collBeginPoint = proxyPoint.add(
-                vectorNormalNav.multiply( -Infinity )
+                vectorNormalNav.multiply( -this.infinity )
             );
             var collEndPoint = proxyPoint.add(
-                vectorNormalNav.multiply( Infinity )
+                vectorNormalNav.multiply( this.infinity )
             );
             
             // Get a collision result.
@@ -196,7 +197,8 @@ class NavRoute
                 collEndPoint.getX(), collEndPoint.getY()
             );
             
-            if ( collResult != null && collResult.x != null && collResult.y != null )
+            if (collResult != null && collResult.x != null && collResult.y != null &&
+                !isNaN(collResult.x) && !isNaN(collResult.y))
             {
                 var resultPoint = new Vector(
                     collResult.x,

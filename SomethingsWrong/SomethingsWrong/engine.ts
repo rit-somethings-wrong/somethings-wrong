@@ -11,10 +11,12 @@
 
 
 class GameEngine {
+    private static engine: GameEngine;
+
     private static StartingLevel = "airport";
     private static CanvasId: string = "gameCanvas";
     private static DefaultPlayerImgUrl: string = "./TODO/playerImgUrl";
-    private static MaxGameSteps = 5;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
+    private static MaxGameSteps = 30000;  //TODO remove this as the game should continue until forever until the user closes the browser tab.  Beating the game should return you to the main screen.
 
     private ctx: CanvasRenderingContext2D;
 
@@ -36,16 +38,24 @@ class GameEngine {
     private _gameLoopId: number;
     private _gameSteps = 0;
 
+    private _canW = 0;
+    private _canH = 0;
+
     //-----  -----//
 
     constructor() {
+        GameEngine.engine = this;
+
         var canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(GameEngine.CanvasId);
 
         //listen for ui events
         canvas.onclick = (ev: MouseEvent): void => {
+            // Readjust mouse coordinates to canvas space.
+            var canvasBounds = canvas.getBoundingClientRect();
+
             this._click = {
-                x: ev.clientX,
-                y: ev.clientY
+                x: ( ev.clientX - canvasBounds.left ) / canvas.clientWidth * canvas.width,
+                y: ( ev.clientY - canvasBounds.top ) / canvas.clientHeight * canvas.height
             };
             console.log("click input: ", this._click.x, this._click.y);
         }
@@ -63,6 +73,15 @@ class GameEngine {
 
         // Set the fill style for the drawing context.
         ctx.fillStyle = '#210201';
+
+        console.log("client-w: " + canvas.clientWidth + ", h: " + canvas.clientHeight);
+
+        document.querySelector('canvas').addEventListener("resize", function () {
+            GameEngine.engine._canW = GameEngine.engine.size.width;
+            GameEngine.engine._canH = GameEngine.engine.size.height;
+            console.log("resize");
+
+        });
 
         // A variable to store the requestID.
         var requestID;
@@ -100,8 +119,8 @@ class GameEngine {
             return;
         }
 
-        clearInterval(this._loadCountId);
-        this._gameLoopId = setInterval(this.genGameLoop(), 1000 / 1);  //TODO make the game loop better
+        clearInterval(GameEngine.engine._loadCountId);
+        GameEngine.engine._gameLoopId = setInterval(GameEngine.engine.genGameLoop(), 1000 / 1);  //TODO make the game loop better
     }
 
     startNewGame(playerName: string = "Player 1"): void {
@@ -143,6 +162,10 @@ class GameEngine {
             }
             this._curLevelId = this._nextLevelId;
             console.log("Switched to level: ", this._curLevelId);
+        } else {
+            if (level !== null) {
+                level.Update();
+            }
         }
 
         //switch interactions if needed
@@ -154,6 +177,10 @@ class GameEngine {
             this._curInteraction = this._nextInteraction;
             if (this._nextInteraction !== null) {
                 this._curInteraction.Enter(this.player, this, level);
+            }
+        } else {
+            if (this._curInteraction !== null) {
+                this._curInteraction.Update();
             }
         }
 
@@ -314,6 +341,3 @@ function gameloop() {
 }
 
 */
-
-var engine = new GameEngine();
-engine.startNewGame("You");

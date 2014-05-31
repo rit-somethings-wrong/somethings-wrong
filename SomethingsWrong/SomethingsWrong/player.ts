@@ -18,7 +18,7 @@ class Player extends Entity implements IPlayer {
     
     private animationType: AnimationType = AnimationType.IDLE;
     
-    private spriteWidth : number = 23; // for testchar
+    private spriteWidth : number = 32; // for testchar
     private spriteHeight : number = 44; // for testchar 
     
     private imgWidth : number;
@@ -41,12 +41,26 @@ class Player extends Entity implements IPlayer {
     get inventory(): IInventory {
         return this._inventory;
     }
+
+    set imageWidth(newWidth: number) {
+        this.imgWidth = newWidth;
+    }
+
+    set imageHeight(newHeight: number) {
+        this.imgHeight = newHeight;
+    }
+
+    get imageWidth(): number {
+        return this.imgWidth;
+    }
+
+    get imageHeight(): number {
+        return this.imgHeight;
+    }
     
     
     //Draws this player at the given screen location
     Draw(context: CanvasRenderingContext2D, location?: Vector): void {
-        console.log("drawing player");
-
         if (this.animationType === AnimationType.IDLE) {
         
             //Draw the idling animation in the appropriate direction http://www.w3schools.com/tags/canvas_drawimage.asp
@@ -56,8 +70,8 @@ class Player extends Entity implements IPlayer {
             0 , /* height to start clipping for idle */
             this.spriteWidth,
             this.spriteHeight,
-            location.getX(),
-            location.getY(),
+            location.getX() - (.5 * this.imgWidth),
+            location.getY() - (.8 * this.imgHeight),
             this.imgWidth, /* stretch or reduce */
             this.imgHeight /* stretch or reduce */
             );
@@ -68,8 +82,8 @@ class Player extends Entity implements IPlayer {
             0 + (this.spriteWidth *1) , /* height to start clipping for walkleft */
             this.spriteWidth,
             this.spriteHeight,
-            location.getX(),
-            location.getY(),
+            location.getX() - (.5 * this.imgWidth),
+            location.getY() - (.8 * this.imgHeight),
             this.imgWidth, /* stretch or reduce */
             this.imgHeight /* stretch or reduce */
             );
@@ -80,8 +94,8 @@ class Player extends Entity implements IPlayer {
             0 + (this.spriteWidth *2) , /* height to start clipping for walkleft */
             this.spriteWidth,
             this.spriteHeight,
-            location.getX(),
-            location.getY(),
+            location.getX() - (.5 * this.imgWidth),
+            location.getY() - (.8 * this.imgHeight),
             this.imgWidth, /* stretch or reduce */
             this.imgHeight /* stretch or reduce */
             );

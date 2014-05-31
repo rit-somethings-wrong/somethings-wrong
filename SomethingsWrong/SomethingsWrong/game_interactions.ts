@@ -96,7 +96,11 @@ class DoorOpenInteraction implements IInteraction
         this.ourPlayer = player;
         this.ourLevel = level;
     }
-    
+
+    Update(): void {
+
+    }
+
     Leave() : void
     {
         // nothing to clean up.
@@ -137,6 +141,10 @@ class ItemPickupInteraction implements IInteraction
         this.ourLevel = level;
     }
     
+    Update(): void {
+
+    }
+
     Leave() : void
     {
         
@@ -171,6 +179,10 @@ class KonversationInteraction implements IInteraction
         this.ourEngine = engine;
         this.ourPlayer = player;
         this.ourLevel = level;
+    }
+
+    Update(): void {
+
     }
 
     Leave(): void {

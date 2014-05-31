@@ -17,7 +17,6 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="app.css" />
     <Content Include="assets\css\skeleton.css" />
     <Content Include="assets\css\styles.css" />
     <Content Include="assets\music\Kai_Engel_-_02_-_Calls_and_Echoes.mp3" />
@@ -40,10 +39,8 @@
     <TypeScriptCompile Include="Loader.ts" />
     <Content Include="modernizr.custom.js" />
     <Content Include="SoundLoader.js" />
-    <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="app.ts" />
     <TypeScriptCompile Include="engine.ts" />
     <TypeScriptCompile Include="entity.ts" />
     <TypeScriptCompile Include="game_interactions.ts" />
@@ -61,12 +58,6 @@
   <ItemGroup>
     <Content Include="assets\music\TheWind.ogg" />
     <Content Include="assets\music\VintageFrames.ogg" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

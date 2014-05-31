@@ -66,8 +66,10 @@ Modernizr.load(
             // on complete
         complete: function()
         {
-            
             console.log("Loading complete with Modernizr.");
+            var engine = new GameEngine();
+            engine.startNewGame("You");
+            
             // and other stuff you might need upon everything having been loaded
             window.onblur = function()
             {
@@ -81,7 +83,12 @@ Modernizr.load(
                 //game.paused = false;
                 //game.update(); // resume game play
             };
-            
+
+            window.onload = function () {
+                //debugger;
+                console.log("event fired");
+            }
+
             //------- event listeners
             
             window.addEventListener("keydown",function(e){
