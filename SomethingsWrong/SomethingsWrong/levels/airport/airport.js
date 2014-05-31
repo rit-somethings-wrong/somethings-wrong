@@ -100,7 +100,7 @@ EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, lev
 
 //TODO is the load count properly updated if an image fails to load?
 
-RegisterImage("./assets/testchar.png");
+RegisterImage("assets/testchar.png");  //TODO this needs to be done elsewhere
 
 RegisterImage("./TODO/keyImgUrl");
 RegisterImage("./assets/test1.png");
