@@ -71,6 +71,7 @@ Modernizr.load(
         {
             console.log("Loading complete with Modernizr.");
 			
+            /*
 			// Fix width/height problems (hopefully)
 			/*document.querySelector('canvas').getContext("2d").imageSmoothingEnabled = false;
 			document.querySelector('canvas').width = document.querySelector('canvas').style.width;

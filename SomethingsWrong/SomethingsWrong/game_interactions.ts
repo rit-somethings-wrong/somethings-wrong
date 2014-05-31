@@ -1,11 +1,8 @@
-function drawGameText( drawingContext, theText, x, y, width, height )
+function drawGameText( drawingContext, theText, x, y, textAlignment : string )
 {
-    // TODO: draw text using game font.
-}
-
-function getGameTextLength( theText : string )
-{
-    return 0;
+    drawingContext.font = "30px Arial";
+    drawingContext.textAlign = textAlignment;
+    drawingContext.fillText(theText, x, y);
 }
 
 function getGameTextHeight( theText : string )
@@ -43,10 +40,10 @@ class CanvasNotification
             this.pos.getX(), this.pos.getY(),
             this.width, this.height
         );
-        
+
         // Get text metrics.
-        var textLength = getGameTextLength( this.text );
-        var textHeight = getGameTextHeight( this.text );
+        var textLength = 0;//GetGameTextLength( this.text ); TODO
+        var textHeight = 0;//GetGameTextHeight( this.text ); TODO
         
         // Draw the notification text.
         // It should be centered on the notification item.
@@ -62,7 +59,7 @@ class CanvasNotification
             drawingContext,
             this.text,
             posCenterX, posCenterY,
-            textLength, textHeight
+            "center"
         );
     }
 };
