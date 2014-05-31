@@ -78,7 +78,7 @@ interface IDialogMsg {
     id: number;
     dialog: string;
     connection: number;
-    type: any;  //TODO this is an enum
+    type: speakingType;
 }
 
 interface IEntityTask {
@@ -94,4 +94,5 @@ interface IItem {
     itemWeight?: number;  //Note: things without a weight cannot be picked up  //TODO code this limitation
     x: number;
     y: number;
+    drawingScale: number;
 }

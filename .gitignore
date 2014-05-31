@@ -17,5 +17,12 @@ SomethingsWrong/SomethingsWrong/inventory.js
 SomethingsWrong/SomethingsWrong/item.js
 SomethingsWrong/SomethingsWrong/level.js
 SomethingsWrong/SomethingsWrong/levelscene.js
+SomethingsWrong/SomethingsWrong/Loader.js
+SomethingsWrong/SomethingsWrong/chat.js
+SomethingsWrong/SomethingsWrong/entity_tasks.js
+SomethingsWrong/SomethingsWrong/gui_interface.js
+SomethingsWrong/SomethingsWrong/player.js
+SomethingsWrong/SomethingsWrong/utilities.js
+
 testpage.html
 SomethingsWrong/SomethingsWrong/util.js
