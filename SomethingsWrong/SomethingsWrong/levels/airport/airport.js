@@ -57,17 +57,18 @@ var level_airport =
             itemID: "airport-key-1",
             name: "The Key",
             imgName: "./TODO/keyImgUrl",
-            itemWeight: 10,
-            x: 20,
-            y: 10,
+            itemWeight: 5,
+            x: 0,
+            y: 0,
         },
         {
             itemID: "airport-wc",
             name: "Men's WC",
-            imgName: "./TODO/airport-wc.png",
-            x: 30,
-            y: 10,
-
+            imgName: "./assets/sink.png",
+            itemWeight: 4,
+            x: 20,
+            y: 20,
+            //TODO add in image scaling
         }
     ],
 };
@@ -76,17 +77,22 @@ var level_airport =
 //display dialog when reaching/clicking on wash room
 EntityList.RegisterEntityCallback("airport-wc", function (entity, player, level, engine) {
     console.log("airport-wc callback");
+    console.log("airport-wc callback 1");
+    console.log("airport-wc callback 2");
     if (player.GetInventory().Has("airport-key-1")) {
         console.log("The wash room key doesn't fit!  Oh No!");
         return;
     }
 
-    engine.SetInteraction(new Chat(3));
+    console.log("Setting an engine interaction", this);
+    engine.NextInteraction(new Chat(3));
 });
 
 //TODO remove key after testing as it isn't in the story write-up
 EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, level, engine) {
     console.log("airport-key-1 callback");
+    console.log("airport-key-1 callback 1", this);
+    console.log("airport-key-1 callback 2");
     player.Pickup(entity.id, level.GetInventory());
 });
 
@@ -97,7 +103,7 @@ EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, lev
 RegisterImage("./assets/testchar.png");
 
 RegisterImage("./TODO/keyImgUrl");
-RegisterImage("./TODO/airport-wc.png");
+RegisterImage("./assets/sink.png");
 RegisterImage(level_airport.img);
 RegisterLevel(level_airport);
 

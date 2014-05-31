@@ -80,6 +80,15 @@ class Player extends Entity implements IPlayer {
     
     //Draws this player at the given screen location
     Draw(context: CanvasRenderingContext2D, location?: Vector): void {
+        if (!this.spriteImg) {
+            console.log("Player has no sprintImg, so can't draw it.", this);
+            return;
+        }
+
+        if (!location) {
+            location = this.location || new Vector(0, 0);
+        }
+
         console.log(this.spriteImg, this, "sprintImg");
         if (this.animationType === AnimationType.IDLE) {
         

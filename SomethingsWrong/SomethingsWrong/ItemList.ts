@@ -13,7 +13,6 @@ class ItemList
     
     // Called by game designers to register logic to an entity that is reconized by it's ID.
     // Multiple callbacks can be registered for a single item, if necessary.
-    //TODO support multiple callbacks
     RegisterEntityCallback( itemID : string, callback : any )
     {
         if ( itemID == null || callback == null )
@@ -31,6 +30,7 @@ class ItemList
     // the appropriate logic for an entity is called through here.
     TriggerEntityAction( entityId : string, theEntity : IItem, thePlayer : IPlayer, level: ILevel, engine: GameEngine )
     {
+        console.log("TriggerEntityAction", entityId, theEntity, thePlayer, level, engine);
         for ( var n = 0; n < this.gameItemCallbacks.length; n++ )
         {
             var itemRegister = this.gameItemCallbacks[ n ];
@@ -38,7 +38,7 @@ class ItemList
             if ( itemRegister.itemID == entityId )
             {
                 // Execute the registered action.
-                itemRegister.callback(theEntity, thePlayer);
+                itemRegister.callback(theEntity, thePlayer, level, engine);
             }
         }
     }

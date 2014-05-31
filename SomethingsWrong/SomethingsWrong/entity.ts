@@ -39,7 +39,15 @@ class Entity implements IEntity {
 
     //Draws this entity at the given location.
     Draw(cxt: CanvasRenderingContext2D, location?: Vector): void {
-        //TODO draw this entity at the given location.  Note: We're not using our this._location because we might be getting drawn on an overlay or in a list.
+        if (!location) {
+            location = this._location || new Vector(0, 0);
+        }
+
+        var image: HTMLImageElement = GetImage(this._imgName);
+        if (!image) {
+            return;
+        }
+        cxt.drawImage(image, location.getX(), location.getY());
     }
 
 }
