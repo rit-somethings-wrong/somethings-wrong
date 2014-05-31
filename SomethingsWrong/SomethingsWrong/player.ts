@@ -4,7 +4,8 @@
 enum AnimationType {
     IDLE,
     WALKLEFT,
-    WALKRIGHT
+    WALKRIGHT,
+    WALKBACK
 };
 
 
@@ -137,6 +138,18 @@ class Player extends Entity implements IPlayer {
         
         
             //TODO
+        } else if (this.animationType === AnimationType.WALKBACK)
+        {
+            context.drawImage(this.spriteImg,
+                0 + (this.animationFrame * this.spriteWidth), /* width to start clipping for current idling frame */
+                0 + (this.spriteWidth * 4), /* height to start clipping for walkleft */
+                this.spriteWidth,
+                this.spriteHeight,
+                location.getX() - (.5 * this.imgWidth),
+                location.getY() - (.8 * this.imgHeight),
+                this.imgWidth, /* stretch or reduce */
+                this.imgHeight /* stretch or reduce */
+                );   
         } else {
             //TODO handle error
             console.log("Error with character animation states");
@@ -146,7 +159,7 @@ class Player extends Entity implements IPlayer {
         this.animationCounter++;
         if(this.animationCounter > this.animationCounterMax){
             // Increment animation frame and reset counter
-            this.animationFrame++; if(this.animationFrame >= 3){ this.animationFrame = 0; } // assumes everything has 4 frames of animation
+            this.animationFrame++; if(this.animationFrame >= 4){ this.animationFrame = 0; } // assumes everything has 4 frames of animation
             this.animationCounter = 0;
         }
     }
