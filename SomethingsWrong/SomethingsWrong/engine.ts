@@ -39,6 +39,8 @@ class GameEngine {
     private _canW = 0;
     private _canH = 0;
 
+    private _loadingScreen: any;
+
     //-----  -----//
 
     constructor() {
@@ -80,10 +82,14 @@ class GameEngine {
             console.log("resize");
 
         });
-
+        /*
         var ccc = document.getElementById('gameCanvas');
         ccc.clientWidth = 1280;
-        ccc.clientHeight = 720;
+        ccc.clientHeight = 720;*/
+        /*
+        this._loadingScreen = new Image();
+        this._loadingScreen.src = "assets/GUI/splash.gif";
+        */
 
 
     }
@@ -113,6 +119,12 @@ class GameEngine {
 
         //pause until everything has been loaded
         this._loadCountId = setInterval(this.actuallyStartNewGame(), 1000 / 5);
+
+        // draw intro screen. why not. 
+
+
+
+
     }
 
     // The "update" function AKA the game loop
