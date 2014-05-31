@@ -123,6 +123,7 @@ class ViewportTransform
     }
 
     GetLevelClipping(): BoundingRectangle {
+        console.log("GetLevvelClipping()", this.GetPosition(), this.GetWidth(), this.GetHeight(), this.linkedLevel.GetSize());
         return this.GetViewportRectangle(
             this.GetPosition(), new Vector(this.GetWidth(), this.GetHeight()), this.linkedLevel.GetSize()
         );
@@ -183,21 +184,56 @@ class ViewportTransform
             // Scale up the selection rectangle.
             viewportRectangle.convertToSpace(this.linkedLevel.GetSize(), this.linkedLevel.GetBackgroundDimensions());
 
+
+            console.log(this.linkedLevel.GetSize().toString(), this.linkedLevel.GetBackgroundDimensions().toString());
+
+            //init values
+            var left = viewportRectangle.left;
+            var top = viewportRectangle.top;
+            var width = viewportRectangle.getWidth();
+            var height = viewportRectangle.getHeight();
+            var cDrawX = contextDrawX;
+            var cDrawY = contextDrawY;
+            var thisWidth = this.GetWidth();
+            var thisHeight = this.GetHeight();
+            console.log("viewpoint img unbound:", left, top, width, height, cDrawX, cDrawY, thisWidth, thisHeight);
+
+            //check lower bounds
+            left = left < 1 ? 0: left;
+            top = top < 1 ? 0: top;
+            width = width < 1 ? 1: width;
+            height = height < 1 ? 1: height;
+            cDrawX = cDrawX < 1 ? 1 : cDrawX;
+            cDrawY = cDrawY < 1 ? 1 : cDrawY;
+            thisWidth = thisWidth < 1 ? 1 : thisWidth;
+            thisHeight = thisHeight < 1 ? 1 : thisHeight;
+
+
+            //check higher bounds
+            var biSize = this.linkedLevel.GetBackgroundDimensions();
+            var max = 100;
+
+            left = left > biSize.getX() ? biSize.getX() : left;
+            top = top > biSize.getY() ? biSize.getY() : top;
+            width = width > max ? max : width;
+            height = height > max ? max : height;
+            cDrawX = cDrawX > max ? max : cDrawX;
+            cDrawY = cDrawY > max ? max : cDrawY;
+            //thisWidth = thisWidth > max ? max : thisWidth;
+            //thisHeight = thisHeight > max ? max : thisHeight;
+
+            console.log("viewpoint img bound:", left, top, width, height, cDrawX, cDrawY, thisWidth, thisHeight);
+
+
             context.drawImage(
                 img,
             // drawing settings about the clipped part of the image.
-                viewportRectangle.left, viewportRectangle.top, //backgroundDrawPos.getX(), backgroundDrawPos.getY(),
-                viewportRectangle.getWidth(), viewportRectangle.getHeight(), //this.GetWidth(), this.GetHeight(),
+                left, top, //backgroundDrawPos.getX(), backgroundDrawPos.getY(),
+               img.width, img.height, //this.GetWidth(), this.GetHeight(),
             // drawing settings on the canvas.
-                contextDrawX, contextDrawY,
-                this.GetWidth(), this.GetHeight()
+                cDrawX, cDrawY,
+                thisWidth, thisHeight
                 );
-
-            //console.log("contextDrawX: " + contextDrawX + ", contextDrawY: " + contextDrawY +
-            //    ", this.width: " + this.GetWidth() + ", this.height: " + this.GetHeight() +
-            //    ", img.width: " + img.width + ", img.height: " + img.height);
-         //   console.log("rectLeft: " + viewportRectangle.left + ", rectTop: " + viewportRectangle.top + ", rectRight: " + viewportRectangle.right +
-         //       ", rectBottom: " + viewportRectangle.bottom);
         }
     }
 
