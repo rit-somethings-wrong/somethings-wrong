@@ -3,27 +3,6 @@
 
 console.log("test javascript thing");
 
-// levelconfig PARAM REQUIREMENTS:
-// - has to be a JSON
-// {
-// concurrentLine : [ [ x, y ], [ x, y, ], [ x, y ], ... , [ x, y ] ], // navigation information
-// name : "level_name", // id of the level
-// rectSize : [ width, height ],
-// img : any, // background image information
-// levelItems : [
-//      {
-//          itemID : string,
-//          name : string, // in-game display friendly name of the item
-//          itemWeight : number, // weight number for Inventory logic
-//          x : number,
-//          y : number
-//      },
-//      { ... },
-//      ...
-// ]
-// };
-// TODO: ANYTHING else?
-//
 
 var level_bedroom =
 {
@@ -36,45 +15,17 @@ var level_bedroom =
         [50, 135],
         [120, 180],
     ],
-    entryExits : [
-        {
-            entryX: 640,
-            entryY: 400,
-            entryRange: 25,
-            exitId: "terminal",
-            exitX: 100,
-            exitY: 100
-        },
-        {
-            entryX: 250,
-            entryY: 300,
-            entryRange: 10,
-            exitId: "secret",
-            exitX: 255,
-            exitY: 127
-        }
-    ],
 
-    /* 
     levelItems : [
         {
-            itemID: "airport-key-1",
-            name: "The Key",
-            imgName: "./assets/test2.png",
-            itemWeight: 5,
-            x: 0,
-            y: 0,
-        },
-        {
-            itemID: "airport-wc",
-            name: "Men's WC",
-            imgName: "./assets/test1.png",
-            itemWeight: 4,
-            x: 20,
-            y: 20,
-            //TODO add in image scaling
+            itemID: "Laptop",
+            name: "Laptop",
+			radius: 15,
+            x: 235,
+            y: 110,
+			// dialogue ID 61 initially.  when searching for possible destination: ID 67
         }
-    ] */
+    ] 
 	
 };
 

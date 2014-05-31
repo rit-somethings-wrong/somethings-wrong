@@ -3,27 +3,6 @@
 
 console.log("test javascript thing");
 
-// levelconfig PARAM REQUIREMENTS:
-// - has to be a JSON
-// {
-// concurrentLine : [ [ x, y ], [ x, y, ], [ x, y ], ... , [ x, y ] ], // navigation information
-// name : "level_name", // id of the level
-// rectSize : [ width, height ],
-// img : any, // background image information
-// levelItems : [
-//      {
-//          itemID : string,
-//          name : string, // in-game display friendly name of the item
-//          itemWeight : number, // weight number for Inventory logic
-//          x : number,
-//          y : number
-//      },
-//      { ... },
-//      ...
-// ]
-// };
-// TODO: ANYTHING else?
-//
 
 var level_bath =
 {
@@ -41,9 +20,9 @@ var level_bath =
             entryX: 65,
             entryY: 100,
             entryRange: 25,
-            exitId: "bathdoor",
-            exitX: 100,
-            exitY: 100
+            exitId: "hallway",
+            exitX: 300,
+            exitY: 150
         },
   
     ],
@@ -59,7 +38,7 @@ var level_bath =
 			//triggers dialogue ID 54
         },
    
-    ] */
+    ] 
 };
 
 
