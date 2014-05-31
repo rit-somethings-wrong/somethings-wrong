@@ -232,7 +232,7 @@ class ViewportTransform
                img.width, img.height, //this.GetWidth(), this.GetHeight(),
             // drawing settings on the canvas.
                 cDrawX, cDrawY,
-                thisWidth, thisHeight
+                thisWidth, thisHeight //960, 540
                 );
         }
     }
@@ -290,7 +290,20 @@ class Level implements ILevel
     private lastLevelFrameTime: number;
     private playerTaskManager: EntityTaskManager;
     private scalingReferenceHeight: number;
+    private npcs: any[]; // array of NPCs
     
+    // Draw all NPCs in the level 
+    // and pass in a context plz
+    DrawNPCs(context : any)
+    {
+        for(var i = 0; i < this.npcs.length; i++)
+        {
+            context.drawImage(this.npcs[i].img, this.npcs[i].x, this.npcs[i].y);
+        }
+    }
+
+
+
     // Constructor.
     constructor( levelConfig: ILevelConfig )
     {
