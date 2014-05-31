@@ -190,7 +190,7 @@ class ViewportTransform
                 viewportRectangle.getWidth(), viewportRectangle.getHeight(), //this.GetWidth(), this.GetHeight(),
             // drawing settings on the canvas.
                 contextDrawX, contextDrawY,
-                this.GetWidth(), this.GetHeight()
+                960, 540
                 );
 
             //console.log("contextDrawX: " + contextDrawX + ", contextDrawY: " + contextDrawY +
