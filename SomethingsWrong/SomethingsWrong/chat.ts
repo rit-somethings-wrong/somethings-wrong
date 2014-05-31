@@ -65,9 +65,7 @@ class Chat implements IInteraction {
         ctx.font = "16pt Arial";
         ctx.fillStyle = 'white';
         
-        var img = new Image(); 
-        img.onload = function () { ctx.drawImage(img, 100, 10, 860,540); }
-        
+        var img = new Image();        
         img.src = "assets/GUI/text.GIF";
         ctx.drawImage(img, 100, 440, 760, 100);
 
