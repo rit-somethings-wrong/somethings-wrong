@@ -94,9 +94,9 @@ function GetCurrentTimeSeconds(): number {
 }
 
 //Gets a dialog message.  May return null if there is no message with the given id.
-var Dialog: IDialogMsg[] = [];  //TODO init this array, see dialogue.js
+//var Dialog: IDialogMsg[] = [];  //TODO init this array, see dialogue.js
 function GetMessage(id: number): IDialogMsg {
-    return Dialog[id] || null;
+    return dialogue[id] || null;
 }
 
 var EntityList: ItemList = new ItemList();

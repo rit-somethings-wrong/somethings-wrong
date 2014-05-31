@@ -78,7 +78,7 @@ interface IDialogMsg {
     id: number;
     dialog: string;
     connection: number;
-    type: any;  //TODO this is an enum
+    type: speakingType;
 }
 
 interface IEntityTask {
