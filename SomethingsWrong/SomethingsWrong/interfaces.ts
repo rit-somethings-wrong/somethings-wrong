@@ -9,10 +9,6 @@ interface Scene {
     //TODO do we need this?
 }
 
-//Ingame location data
-//interface Vector {
-//TODO extract info from the vector file
-//}
 
 //Things that can be drawn on the canvas
 interface IDrawable {
@@ -32,6 +28,7 @@ interface ILevel extends IUIHandler, IDrawable {
     Enter(player: IPlayer, engine: GameEngine): void;
     Update(): void;  //called every game step except when entering or leaving the level
     Leave(): void;
+    GetInventory(): IInventory;
 }
 
 interface ILevelConfig {
@@ -42,39 +39,36 @@ interface ILevelConfig {
     //TODO type info
     concurrentLine: any[];
     entryExits: any[];
-    levelItems: any[]; //TODO spit this off
+    levelItems: IItem[]; //TODO spit this off?
 }
 
-//Things in the game
+//Things in the game and may be put into an inventory
 interface IEntity extends IDrawable {
     location?: Vector;
     name: string;
-    id: number;
+    id: string;
+    weight?: number;
 
     Place(location: Vector): void;
 }
 
 //Represents the human user's avatar
 interface IPlayer extends IEntity {
-    inventory: IInventory;
+    GetInventory(): IInventory;
+    Pickup(entityId: string, from: IInventory): boolean;
 
     imageWidth: number;
     imageHeight: number;
 }
 
-//Things that can be put into an IInventory
-interface IStorable extends IEntity {
-    weight: number;
 
-    Pickup(): void;
-}
-
-//A collection of IStorables
+//A collection of entities
 interface IInventory {
-    GetAllItems(): IStorable[];
-    Has(item: IStorable): boolean;
-    AddItem(item: IStorable): boolean;
-    RemoveItem(item: IStorable): boolean;
+    GetAllItems(): IEntity[];
+    Has(id: string): boolean;
+    AddItem(id: IEntity): boolean;
+    RemoveItem(id: string): boolean;
+    GetItem(id: string): IEntity;
 }
 
 
@@ -90,4 +84,19 @@ interface IDialogMsg {
     dialog: string;
     connection: number;
     type: any;  //TODO this is an enum
+}
+
+interface IEntityTask {
+    update( theEntity : Entity ): void;
+    isFinished(): boolean;
+    dispose(): void;
+};
+
+interface IItem {
+    itemID: string;
+    name: string;
+    imgName?: string;
+    itemWeight?: number;  //Note: things without a weight cannot be picked up  //TODO code this limitation
+    x: number;
+    y: number;
 }
