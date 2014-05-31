@@ -253,6 +253,7 @@ class Level implements ILevel
     private lastLevelFrameDuration: number;
     private lastLevelFrameTime: number;
     private playerTaskManager: EntityTaskManager;
+    private scalingReferenceHeight: number;
     
     // Constructor.
     constructor( levelConfig: ILevelConfig )
@@ -263,12 +264,13 @@ class Level implements ILevel
         this.id = levelConfig.name;
         this.backgroundImageName = levelConfig.img;
         this.exits = null;
-        this.locationPlayer = new Vector( 50, 100 ); // DEBUG: use generic position to see the player sprite
+        this.locationPlayer = null;
         this.navLineInfo = null;
         this.levelSize = null;
         this.lastLevelFrameDuration = 0;
         this.lastLevelFrameTime = GetCurrentTimeSeconds();
         this.playerTaskManager = new EntityTaskManager();
+        this.scalingReferenceHeight = 150;  // scale entities on the basis of 150px height
 
         // Set up the scrollable viewport.
         // This is done by triggering a viewport change.
@@ -598,7 +600,15 @@ class Level implements ILevel
     }
 
     Typed(chars: string): boolean {
-        return false; // We don't do anything with keyboard input yet
+        // Open up a GUI inventory panel if pressing "i".
+        if (chars === "I") {
+            console.log("opening inventory");
+
+            this.ourEngine.NextInteraction(new GUIInventoryScreen(this.ourEngine));
+        }
+
+        console.log("testinput: " + chars);
+        return true; // We don't do anything with keyboard input yet
     }
 
     // Clicked somewhere in the level - check to see if something is there?

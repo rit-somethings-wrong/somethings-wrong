@@ -45,6 +45,7 @@ Modernizr.load(
             'chat.js',
             'level.js',
             'levelscene.js',
+            'gui_interface.js',
 
             // level definitions - must be loaded after the core code files
             './levels/airport/airport.js',

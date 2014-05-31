@@ -144,6 +144,7 @@ function distPoints(point1, point2)
     return ( point1.subtract( point2 ) ).length();
 }
 
+// Connected lines of 2D points that are used for navigation.
 class NavRoute
 {
     private infinity : number;
@@ -203,16 +204,16 @@ class NavRoute
             
             // Get a collision result.
             var collResult = checkLineIntersection(
-                // line nav
+                // line nav (line 1)
                 beginPoint.getX(), beginPoint.getY(),
                 endPoint.getX(), endPoint.getY(),
-                // line test
+                // line test (line 2)
                 collBeginPoint.getX(), collBeginPoint.getY(),
                 collEndPoint.getX(), collEndPoint.getY()
             );
             
             if (collResult != null && collResult.x != null && collResult.y != null &&
-                !isNaN(collResult.x) && !isNaN(collResult.y))
+                !isNaN(collResult.x) && !isNaN(collResult.y) && collResult.onLine1 == true)
             {
                 var resultPoint = new Vector(
                     collResult.x,

@@ -1,11 +1,16 @@
 /// <reference path="collision.ts" />
+/// <reference path="utilities.ts" />
+/// <reference path="collision.ts" />
 /// <reference path="engine.ts" />
 // gui_interface.ts - classes for drawing and managing the GUI layer of our game.
 
-class GUIPanel implements IUIHandler
+// Register dependent images.
+RegisterImage(IMAGES.inventoryImg);
+
+class GUIPanel implements IInteraction
 {
-    public ourEngine : GameEngine; // engine pointer
-    private bgImage : any;          // background image of this panel
+    public ourEngine : GameEngine;  // engine pointer
+    private bgImageName : any;      // name of the background image of this panel
     private children : any;         // idea: children GUI panel that render afterward?
     private position : Vector;      // position of the GUI panel on the canvas
     private width : number;         // drawing width
@@ -20,58 +25,81 @@ class GUIPanel implements IUIHandler
         this.imageWidth = null;
         this.imageHeight = null;
     }
-    
-    // Set the background image to draw for this panel.
-    LoadBackgroundImage( filePath : string ) : any
-    {
-        var image = new Image();
-        var thisPtr = this;
 
-        // Reset the image dimensions.
-        this.imageWidth = null;
-        this.imageHeight = null;
-        
-        image.onload = function()
-        {
-            thisPtr.imageWidth = this.width;
-            thisPtr.imageHeight = this.height;
-            
-            image.onload = null;
+    SetPosition(thePos: Vector): void {
+        this.position = thePos;
+    }
+
+    GetPosition(): Vector {
+        return this.position;
+    }
+
+    GetWidth(): number {
+        return this.width;
+    }
+
+    GetHeight(): number {
+        return this.height;
+    }
+
+    SetBackgroundImageName(imgName: string) {
+        this.bgImageName = imgName;
+    }
+
+    GetBackgroundImage(): HTMLImageElement {
+        return GetImage( this.bgImageName );
+    }
+
+    GetBackgroundDimensions(): Vector {
+        var bgImg = this.GetBackgroundImage();
+
+        if (bgImg != null) {
+            return new Vector(bgImg.width, bgImg.height);
         }
-        
-        image.src = filePath;
-        
-        return image;
+
+        return null;
     }
 
-    getBackgroundImageWidth(): number {
-        return this.imageWidth;
-    }
-
-    getBackgroundImageHeight(): number {
-        return this.imageHeight;
-    }
-
-    transformMouseToImageCoordinates(mx: number, my: number): Vector {
+    TransformMouseToImageCoordinates(mx: number, my: number): Vector {
         // Get 0..1 scalars based on GUI panel plane.
-        mx /= this.width;
-        my /= this.height;
+        mx /= this.GetWidth();
+        my /= this.GetHeight();
 
-        // Return a vector that is in the image space.
-        return new Vector(mx * this.imageWidth, my * this.imageHeight);
+        var backgroundDimm = this.GetBackgroundDimensions();
+
+        if (backgroundDimm != null) {
+            // Return a vector that is in the image space.
+            return new Vector(mx * backgroundDimm.getX(), my * backgroundDimm.getY());
+        }
+
+        return new Vector(mx, my);
     }
-    
+
+    Enter() {
+
+    }
+
     Draw( context : any ) : void
     {
         // If we have a background image, draw it.
-        if ( this.bgImage != null ) 
+        var backgroundImage = this.GetBackgroundImage();
+
+        if ( backgroundImage != null ) 
         {
             context.drawImage(
-                this.bgImage,
-                this.position.getX(), this.position.getY(),
-                this.width, this.height
+                backgroundImage,
+                this.GetPosition().getX(), this.GetPosition().getY(),
+                this.GetWidth(), this.GetHeight()
             );
         }
+    }
+
+    Leave() {
+
+    }
+
+    Update() {
+        
     }
     
     // GUIPanel can receive clicking events.
@@ -90,25 +118,56 @@ class GUIPanel implements IUIHandler
 
 class GUIInventoryScreen extends GUIPanel
 {
-    private testButtonArea: BoundingRectangle;  // mouse intersection area in image space (pixels)
+    private closeButtonArea: BoundingRectangle;  // mouse intersection area in image space (pixels)
+    private guiScale: number;
 
     constructor( theEngine : GameEngine )
     {
         super( theEngine );
 
-        this.LoadBackgroundImage(
-            IMAGES.inventoryImg
-            );
+        this.SetBackgroundImageName(IMAGES.inventoryImg);
 
-        this.testButtonArea = new BoundingRectangle(new Vector(50, 50), 100, 60);
+        this.closeButtonArea = new BoundingRectangle(new Vector(50, 50), 100, 60);
+
+        this.guiScale = 1;
+    }
+
+    GetPosition(): Vector {
+        var viewportSize = this.ourEngine.size;
+
+        var width = this.GetWidth();
+        var height = this.GetHeight();
+
+        return new Vector(viewportSize.width / 2 - width / 2, viewportSize.height / 2 - height / 2);
+    }
+
+    GetWidth(): number {
+        var bgImg = this.GetBackgroundImage();
+
+        if (bgImg != null) {
+            return bgImg.width * this.guiScale;
+        }
+
+        return 160;
+    }
+
+    GetHeight(): number {
+        var bgImg = this.GetBackgroundImage();
+
+        if (bgImg != null) {
+            return bgImg.height * this.guiScale;
+        }
+        return 130;
     }
 
     Clicked(mx: number, my: number) : boolean
     {
-        // Test: try to click on the given area. if done, output some debug to console.
-        var mouseCoordVector = this.transformMouseToImageCoordinates(mx, my);
+        console.log("clicked on inventory");
 
-        if (this.testButtonArea.intersectWithPoint(mouseCoordVector)) {
+        // Test: try to click on the given area. if done, output some debug to console.
+        var mouseCoordVector = this.TransformMouseToImageCoordinates(mx, my);
+
+        if (this.closeButtonArea.intersectWithPoint(mouseCoordVector)) {
             console.log("clicked successfully!");
         }
         
@@ -130,7 +189,7 @@ class GUIPauseScreen extends GUIPanel {
 
     Clicked(mx: number, my: number): boolean {
         // Get the coordinate in image space.
-        var backgroundClickAt = this.transformMouseToImageCoordinates(mx, my);
+        var backgroundClickAt = this.TransformMouseToImageCoordinates(mx, my);
 
         var hasClickedButton = false;
 
