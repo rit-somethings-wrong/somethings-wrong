@@ -27,10 +27,13 @@ var level_airport =
 {
     name : "airport",
     rectSize : [ 400, 180 ],
-    img : "./assets/scenebg/inside-airport_scenev2.png",
+    img : "./assets/scenebg/inside-airport_scenev3.png",
     concurrentLine : [
         [ 0, 200 ],
-        [ 400, 200 ]
+        [400, 200],
+        [300, 150],
+        [100, 150],
+        [ 0, 200 ]
     ],
     entryExits : [
         {
@@ -71,6 +74,12 @@ var level_airport =
             //TODO add in image scaling
         }
     ],
+        
+    itemUsageSpots : [
+        {
+            x: 
+        }
+    ]
 };
 
 

@@ -80,6 +80,12 @@ class GameEngine {
             console.log("resize");
 
         });
+
+        var ccc = document.getElementById('gameCanvas');
+        ccc.clientWidth = 1280;
+        ccc.clientHeight = 720;
+
+
     }
 
     //Doesn't start the game loop until everything that's pending loading has been loaded

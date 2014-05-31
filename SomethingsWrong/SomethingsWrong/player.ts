@@ -76,6 +76,12 @@ class Player extends Entity implements IPlayer {
     get imageHeight(): number {
         return this.imgHeight;
     }
+
+    UseAnyItem(): void {
+        var playerInventory = this.GetInventory();
+
+        
+    }
     
     
     //Draws this player at the given screen location

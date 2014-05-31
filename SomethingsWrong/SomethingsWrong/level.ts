@@ -367,6 +367,9 @@ class Level implements ILevel
 
         // Make sure we can use methods that require a loaded level.
         this.isInitialized = true;
+
+        // DEBUG: add some random items to test our inventory system.
+        var theInventory = this.ourPlayer.GetInventory();
     }
 
     GetBackgroundImage(): HTMLImageElement {
@@ -604,7 +607,7 @@ class Level implements ILevel
         if (chars === "I") {
             console.log("opening inventory");
 
-            this.ourEngine.NextInteraction(new GUIInventoryScreen(this.ourEngine));
+            this.ourEngine.NextInteraction(new GUIInventoryScreen(this.ourEngine, this.ourPlayer));
         }
 
         console.log("testinput: " + chars);
