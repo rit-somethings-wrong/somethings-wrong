@@ -80,6 +80,10 @@ var Player = (function (_super) {
         configurable: true
     });
 
+    Player.prototype.UseAnyItem = function () {
+        var playerInventory = this.GetInventory();
+    };
+
     //Draws this player at the given screen location
     Player.prototype.Draw = function (context, location) {
         if (!this.spriteImg) {

@@ -259,7 +259,7 @@ class Level implements ILevel
     constructor( levelConfig: ILevelConfig )
     {
         this.isInitialized = false;
-        
+
         ////this.ourEngine = theEngine
         this.id = levelConfig.name;
         this.backgroundImageName = levelConfig.img;
@@ -367,9 +367,6 @@ class Level implements ILevel
 
         // Make sure we can use methods that require a loaded level.
         this.isInitialized = true;
-
-        // DEBUG: add some random items to test our inventory system.
-        var theInventory = this.ourPlayer.GetInventory();
     }
 
     GetBackgroundImage(): HTMLImageElement {

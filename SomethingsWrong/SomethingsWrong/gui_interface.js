@@ -12,12 +12,34 @@ var __extends = this.__extends || function (d, b) {
 // Register dependent images.
 RegisterImage(IMAGES.inventoryImg);
 
+var PanelBoundingRect = (function (_super) {
+    __extends(PanelBoundingRect, _super);
+    function PanelBoundingRect(thePanel) {
+        _super.call(this, null, null, null);
+
+        this.guiPanel = thePanel;
+    }
+    PanelBoundingRect.prototype.getPosition = function () {
+        return this.guiPanel.GetPosition();
+    };
+
+    PanelBoundingRect.prototype.getWidth = function () {
+        return this.guiPanel.GetWidth();
+    };
+
+    PanelBoundingRect.prototype.getHeight = function () {
+        return this.guiPanel.GetHeight();
+    };
+    return PanelBoundingRect;
+})(BoundingRectangle);
+
 var GUIPanel = (function () {
     function GUIPanel(theEngine) {
         this.ourEngine = theEngine;
         this.children = [];
         this.imageWidth = null;
         this.imageHeight = null;
+        this.bounds = new PanelBoundingRect(this);
     }
     GUIPanel.prototype.SetPosition = function (thePos) {
         this.position = thePos;
@@ -54,6 +76,9 @@ var GUIPanel = (function () {
     };
 
     GUIPanel.prototype.TransformMouseToImageCoordinates = function (mx, my) {
+        mx -= this.GetPosition().getX();
+        my -= this.GetPosition().getY();
+
         // Get 0..1 scalars based on GUI panel plane.
         mx /= this.GetWidth();
         my /= this.GetHeight();
@@ -90,6 +115,12 @@ var GUIPanel = (function () {
     GUIPanel.prototype.Clicked = function (mx, my) {
         // this method is meant to be overridden.
         // by default, GUIPanels accepts clicks.
+        var hitSuccess = this.bounds.intersectWithPoint(new Vector(mx, my));
+
+        if (hitSuccess == false) {
+            this.ourEngine.ClearInteraction();
+        }
+
         return true;
     };
 
@@ -102,14 +133,15 @@ var GUIPanel = (function () {
 
 var GUIInventoryScreen = (function (_super) {
     __extends(GUIInventoryScreen, _super);
-    function GUIInventoryScreen(theEngine) {
+    function GUIInventoryScreen(theEngine, thePlayer) {
         _super.call(this, theEngine);
 
         this.SetBackgroundImageName(IMAGES.inventoryImg);
 
-        this.closeButtonArea = new BoundingRectangle(new Vector(50, 50), 100, 60);
+        this.closeButtonArea = new BoundingSphere(new Vector(176, 12), 10);
 
         this.guiScale = 1;
+        this.ourPlayer = thePlayer;
     }
     GUIInventoryScreen.prototype.GetPosition = function () {
         var viewportSize = this.ourEngine.size;
@@ -140,16 +172,43 @@ var GUIInventoryScreen = (function (_super) {
     };
 
     GUIInventoryScreen.prototype.Clicked = function (mx, my) {
-        console.log("clicked on inventory");
-
         // Test: try to click on the given area. if done, output some debug to console.
         var mouseCoordVector = this.TransformMouseToImageCoordinates(mx, my);
 
-        if (this.closeButtonArea.intersectWithPoint(mouseCoordVector)) {
-            console.log("clicked successfully!");
+        console.log("mx: " + mouseCoordVector.getX() + ", my: " + mouseCoordVector.getY());
+
+        if (this.closeButtonArea.intersectWithPoint(mouseCoordVector) == true) {
+            this.ourEngine.ClearInteraction();
         }
 
         return _super.prototype.Clicked.call(this, mx, my);
+    };
+
+    GUIInventoryScreen.prototype.Draw = function (context) {
+        _super.prototype.Draw.call(this, context);
+
+        // todo: draw item list.
+        var itemInventory = this.ourPlayer.GetInventory();
+
+        if (itemInventory != null) {
+            var allPlayerItems = itemInventory.GetAllItems();
+
+            var columnRenderOffX = 10 + this.GetPosition().getX();
+            var columnRenderOffY = 60 + this.GetPosition().getY();
+
+            var columnDefaultHeight = 20;
+
+            for (var n = 0; n < allPlayerItems.length; n++) {
+                var theItem = allPlayerItems[n];
+
+                // draw some dummy rectangle.
+                context.fillStyle = "#FF0000";
+                context.fillRect(columnRenderOffX, columnRenderOffY, 100, columnDefaultHeight);
+
+                // increase the offset.
+                columnRenderOffY += columnDefaultHeight + 5;
+            }
+        }
     };
     return GUIInventoryScreen;
 })(GUIPanel);
@@ -184,9 +243,11 @@ var GUIPauseScreen = (function (_super) {
 
         if (hasClickedButton) {
             this.ourEngine.ClearInteraction();
+
+            return true;
         }
 
-        return true;
+        return _super.prototype.Clicked.call(this, mx, my);
     };
     return GUIPauseScreen;
 })(GUIPanel);

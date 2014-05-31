@@ -1,6 +1,8 @@
 // Sample level based on our starting scenario idea.
 
 
+console.log("test javascript thing");
+
 // levelconfig PARAM REQUIREMENTS:
 // - has to be a JSON
 // {
@@ -73,12 +75,6 @@ var level_airport =
             y: 20,
             //TODO add in image scaling
         }
-    ],
-        
-    itemUsageSpots : [
-        {
-            x: 
-        }
     ]
 };
 
@@ -104,7 +100,6 @@ EntityList.RegisterEntityCallback("airport-key-1", function (entity, player, lev
     console.log("airport-key-1 callback 2");
     player.Pickup(entity.id, level.GetInventory());
 });
-
 
 
 //TODO is the load count properly updated if an image fails to load?
