@@ -1,4 +1,6 @@
-﻿
+﻿/// <reference path="level.ts" />
+/// <reference path="interfaces.ts" />
+
 
 
 //Generates all IDs used in the game?
@@ -86,12 +88,15 @@ function GetImage(name: string): HTMLImageElement {
     return ImageMap[ name ] || null;
 }
 
+// Returns a continuos time reference value in seconds.
+function GetCurrentTimeSeconds(): number {
+    return new Date().getTime() / 1000;
+}
 
 //Gets a dialog message.  May return null if there is no message with the given id.
 var Dialog: IDialogMsg[] = [];  //TODO init this array, see dialogue.js
 function GetMessage(id: number): IDialogMsg {
     return Dialog[id] || null;
 }
-
 
 var EntityList: ItemList = new ItemList();

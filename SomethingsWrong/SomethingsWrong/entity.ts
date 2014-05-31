@@ -4,6 +4,7 @@
 class Entity implements IEntity {
     private _id: string;
     private _name: string;
+    private _moveSpeed: number; // how many level coordinates this unit can move per second.
     private _imgName: string;
     private _location: Vector;
     private _weight: number;
@@ -11,6 +12,7 @@ class Entity implements IEntity {
     constructor(id: string, name: string, imgName: string, location?: Vector, weight?: number) {
         this._id = id;
         this._name = name;
+        this._moveSpeed = 1.0f;
         this._imgName = imgName;
         this._location = location;
         this._weight = weight;
@@ -26,6 +28,10 @@ class Entity implements IEntity {
 
     get location(): Vector {
         return this._location;
+    }
+
+    get moveSpeed(): number {
+        return this._moveSpeed;
     }
 
     get weight(): number {

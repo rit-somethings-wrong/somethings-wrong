@@ -1,3 +1,4 @@
+/// <reference path="entity_tasks.ts" />
 /// <reference path="utilities.ts" />
 
 // Level - just data
@@ -249,6 +250,9 @@ class Level implements ILevel
     private viewport: ViewportTransform;
     private inventory: IInventory = new Inventory();
     private cameraPosition: Vector;
+    private lastLevelFrameDuration: number;
+    private lastLevelFrameTime: number;
+    private playerTaskManager: EntityTaskManager;
     
     // Constructor.
     constructor( levelConfig: ILevelConfig )
@@ -262,6 +266,9 @@ class Level implements ILevel
         this.locationPlayer = new Vector( 50, 100 ); // DEBUG: use generic position to see the player sprite
         this.navLineInfo = null;
         this.levelSize = null;
+        this.lastLevelFrameDuration = 0;
+        this.lastLevelFrameTime = GetCurrentTimeSeconds();
+        this.playerTaskManager = new EntityTaskManager();
 
         // Set up the scrollable viewport.
         // This is done by triggering a viewport change.
@@ -541,6 +548,12 @@ class Level implements ILevel
         }
 
         // todo: add more sofisticated effects?
+
+        // Update frame duration logic.
+        var currentSecondsRefValue = GetCurrentTimeSeconds();
+
+        this.lastLevelFrameDuration = currentSecondsRefValue - this.lastLevelFrameTime;
+        this.lastLevelFrameTime = currentSecondsRefValue;
 
         // Update the camera position, so it is directly at the player.
         if (this.locationPlayer != null) {
