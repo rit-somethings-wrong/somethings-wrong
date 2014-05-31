@@ -4,12 +4,6 @@
 
 
 
-
-interface Scene {
-    //TODO do we need this?
-}
-
-
 //Things that can be drawn on the canvas
 interface IDrawable {
     Draw(cxt: CanvasRenderingContext2D, location?: Vector): void;
