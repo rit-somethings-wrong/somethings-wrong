@@ -36,8 +36,8 @@ class Inventory implements IInventory {
 
         for (var i = 0; i < this.items.length; i++) {
             if (this.items[i].id == id) {
-                this.weight -= this.items[i].weight;
-                this.items.slice(i, 1);  //TODO does the length/index need updated?
+                this.weight -= this.items[i].weight || 0;
+                this.items.splice(i, 1);
             }
         }
 
