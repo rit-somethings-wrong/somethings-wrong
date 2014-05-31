@@ -123,7 +123,7 @@ class ViewportTransform
     }
 
     GetLevelClipping(): BoundingRectangle {
-        console.log("GetLevvelClipping()", this.GetPosition(), this.GetWidth(), this.GetHeight(), this.linkedLevel.GetSize());
+        //console.log("GetLevvelClipping()", this.GetPosition(), this.GetWidth(), this.GetHeight(), this.linkedLevel.GetSize());
         return this.GetViewportRectangle(
             this.GetPosition(), new Vector(this.GetWidth(), this.GetHeight()), this.linkedLevel.GetSize()
         );
@@ -196,7 +196,7 @@ class ViewportTransform
             var cDrawY = contextDrawY;
             var thisWidth = this.GetWidth();
             var thisHeight = this.GetHeight();
-            console.log("viewpoint img unbound:", left, top, width, height, cDrawX, cDrawY, thisWidth, thisHeight);
+            //console.log("viewpoint img unbound:", left, top, width, height, cDrawX, cDrawY, thisWidth, thisHeight);
 
             //check lower bounds
             left = left < 1 ? 0: left;
@@ -222,7 +222,7 @@ class ViewportTransform
             //thisWidth = thisWidth > max ? max : thisWidth;
             //thisHeight = thisHeight > max ? max : thisHeight;
 
-            console.log("viewpoint img bound:", left, top, width, height, cDrawX, cDrawY, thisWidth, thisHeight);
+            // console.log("viewpoint img bound:", left, top, width, height, cDrawX, cDrawY, thisWidth, thisHeight);
 
 
             context.drawImage(
@@ -656,7 +656,7 @@ class Level implements ILevel
             this.ourEngine.NextInteraction(new GUIInventoryScreen(this.ourEngine, this.ourPlayer));
         }
 
-        console.log("testinput: " + chars);
+        //console.log("testinput: " + chars);
         return true; // We don't do anything with keyboard input yet
     }
 
@@ -678,7 +678,7 @@ class Level implements ILevel
             // To properly process a click, we must transform the mouse-click to viewport space.
             var transformedMouseClick = worldMouseClickAt;
 
-            console.log("level received some mouse click");
+            //console.log("level received some mouse click");
 
             if (hasClickBeenProcessed == false) {
                 // Check whether our click lands on any item in the level.
@@ -723,12 +723,12 @@ class Level implements ILevel
             if (hasClickBeenProcessed == false) {
                 var pointToMoveTo = transformedMouseClick;
 
-                console.log("mouseX: " + pointToMoveTo.getX() + ", mouseY: " + pointToMoveTo.getY());
+               // console.log("mouseX: " + pointToMoveTo.getX() + ", mouseY: " + pointToMoveTo.getY());
 
                 var closestPointToClick = this.navLineInfo.calculateNearestPoint(pointToMoveTo);
 
                 if (closestPointToClick != null) {
-                    console.log("moving player to " + closestPointToClick.getX() + "," + closestPointToClick.getY());
+                    //console.log("moving player to " + closestPointToClick.getX() + "," + closestPointToClick.getY());
 
                     // If the player has not been placed before, place him now.
                     if (this.ourPlayer.location == null)
@@ -742,7 +742,7 @@ class Level implements ILevel
                     }
                 }
                 else {
-                    console.log("could not determine collision line");
+                  //  console.log("could not determine collision line");
                 }
             }
         }

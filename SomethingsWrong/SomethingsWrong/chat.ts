@@ -58,19 +58,22 @@ class Chat implements IInteraction {
 
         //TODO draw partially transparent background to enhance text contrast?
         //TODO adjust location and display based on type of message (thinking, other person, yelling, etc...)?
-
+        console.log("should have displayed chat");
         //draw main message text
         ctx.fillStyle = '#005259'
         ctx.fillRect(0, 0, 10, 10);
-        ctx.font = "20pt Arial";
-        ctx.fillStyle = '#990000';
+        ctx.font = "16pt Arial";
+        ctx.fillStyle = 'white';
         
         var img = new Image(); 
-        img.onload = function () { ctx.drawImage(img, location.getX(), location.getY()); }
+        img.onload = function () { ctx.drawImage(img, 100, 10, 860,540); }
+        
         img.src = "assets/GUI/text.GIF";
+        ctx.drawImage(img, 100, 440, 760, 100);
 
         //ctx.fillText(this.msg.dialog, location.getX(), location.getY());
-        ctx.fillText("Yay, some stubbed chat text!", location.getX() + 10, location.getY() + 10);
+        ctx.textAlign = "center";
+        ctx.fillText("Yay, some stubbed chat text!", 480, 500);
     }
 
 }
