@@ -60,10 +60,71 @@ class ViewportTransform
         this.height = height;
         this.linkedLevel = theLevel;
     }
+
+    SetPosition(thePosition: Vector): void {
+        this.position = thePosition;
+    }
     
     GetPosition() : Vector
     {
         return this.position;
+    }
+
+    // Calculates a clamped rectangle in another rectangle.
+    // It must be guarranteed that the client rectangle is smaller than the background/host rectangle.
+    GetViewportRectangle( clientRectPos : Vector, clientRectDimm : Vector, backgroundDimensions : Vector ): BoundingRectangle {
+        if (backgroundDimensions != null) {
+            var referencePos = clientRectPos;
+
+            if (referencePos != null) {
+                var camPos = referencePos;
+
+                var left = camPos.getX();
+                var top = camPos.getY();
+                var right = left + clientRectDimm.getX();
+                var bottom = top + clientRectDimm.getY();
+
+                if (left < 0) {
+                    left = 0;
+                    right = clientRectDimm.getX();
+                }
+                else if (right >= backgroundDimensions.getX()) {
+                    left = backgroundDimensions.getX() - clientRectDimm.getX();
+                    right = backgroundDimensions.getX()
+                }
+
+                if (top < 0) {
+                    top = 0;
+                    bottom = clientRectDimm.getY();
+                }
+                else if (bottom >= backgroundDimensions.getY()) {
+                    top = backgroundDimensions.getY() - clientRectDimm.getY();
+                    bottom = backgroundDimensions.getY();
+                }
+
+                return new BoundingRectangle(new Vector(left, top), right - left, bottom - top);
+            }
+        }
+
+        return null;
+    }
+
+    GetViewportClipping(): BoundingRectangle {
+        return this.GetViewportRectangle(
+            this.GetPosition(), new Vector(this.GetWidth(), this.GetHeight()), this.linkedLevel.GetBackgroundDimensions()
+        );
+    }
+
+    GetImageClipping( image : HTMLImageElement ): BoundingRectangle {
+        return this.GetViewportRectangle(
+            this.GetPosition(), new Vector(this.GetWidth(), this.GetHeight()), new Vector(image.width, image.height)
+        );
+    }
+
+    GetLevelClipping(): BoundingRectangle {
+        return this.GetViewportRectangle(
+            this.GetPosition(), new Vector(this.GetWidth(), this.GetHeight()), this.linkedLevel.GetSize()
+        );
     }
     
     GetWidth() : number
@@ -81,63 +142,74 @@ class ViewportTransform
         this.width = width;
     }
     
-    SetHeigth( height : number )
+    SetHeight( height : number )
     {
         this.height = height;
     }
     
     TransformPos( vecPos : Vector ) : Vector
     {
+        var clipPos = this.GetLevelClipping().getPosition();
+
         if (!vecPos) {
-            return this.position;
+            return clipPos;
         }
-        return vecPos.add(this.position);
+        return vecPos.add(clipPos);
     }
     
     InverseTransformPos( vecPos : Vector ) : Vector
     {
+        var clipPos = this.GetLevelClipping().getPosition();
+
         if (!vecPos) {
-            return this.position;
+            return clipPos;
         }
-        return vecPos.subtract( this.position );
+        return vecPos.subtract(clipPos);
     }
-    
+
     // Draws an image that scrolls using viewport properties.
     DrawImageUsingViewport(
-        context : CanvasRenderingContext2D, img : HTMLImageElement,
-        offsetWorld : Vector,
-        contextDrawX : number, contextDrawY : number,
-        contextDrawWidth : number, contextDrawHeight : number
-    )
+        context: CanvasRenderingContext2D, img: HTMLImageElement,
+        offsetWorld: Vector,
+        contextDrawX: number, contextDrawY: number,
+        contextDrawWidth: number, contextDrawHeight: number
+    ) : void
     {
-        var backgroundDrawPos =
-            this.InverseTransformPos(
-                offsetWorld
+        // Clip the viewport view in the level space.
+        var viewportRectangle = this.GetLevelClipping();
+
+        if (viewportRectangle) {
+            // Scale up the selection rectangle.
+            viewportRectangle.convertToSpace(this.linkedLevel.GetSize(), this.linkedLevel.GetBackgroundDimensions());
+
+            context.drawImage(
+                img,
+            // drawing settings about the clipped part of the image.
+                viewportRectangle.left, viewportRectangle.top, //backgroundDrawPos.getX(), backgroundDrawPos.getY(),
+                viewportRectangle.getWidth(), viewportRectangle.getHeight(), //this.GetWidth(), this.GetHeight(),
+            // drawing settings on the canvas.
+                contextDrawX, contextDrawY,
+                this.GetWidth(), this.GetHeight()
                 );
 
-        context.drawImage(
-            img,
-            // drawing settings about the clipped part of the image.
-            backgroundDrawPos.getX(), backgroundDrawPos.getY(),
-            this.GetWidth(), this.GetHeight()
-            /*,
-            // drawing settings on the canvas.
-            contextDrawX, contextDrawY,
-            2560, 1000
-            */
-            );
+            //console.log("contextDrawX: " + contextDrawX + ", contextDrawY: " + contextDrawY +
+            //    ", this.width: " + this.GetWidth() + ", this.height: " + this.GetHeight() +
+            //    ", img.width: " + img.width + ", img.height: " + img.height);
+            console.log("rectLeft: " + viewportRectangle.left + ", rectTop: " + viewportRectangle.top + ", rectRight: " + viewportRectangle.right +
+                ", rectBottom: " + viewportRectangle.bottom);
+        }
     }
 
     // Viewport vector -> world vector
-    GetWorldVectorFromScreenVector( viewportVec : Vector ): Vector {
-        var backgroundDimensions = this.linkedLevel.GetBackgroundDimensions();
+    GetWorldVectorFromScreenVector(viewportVec: Vector): Vector {
+        var backgroundDimensions = this.linkedLevel.GetSize();
 
         if (backgroundDimensions != null) {
-            var screenScalarX = viewportVec.getX() / this.width;
-            var screenScalarY = viewportVec.getY() / this.height;
+            var clonedVec = viewportVec.clone();
 
-            // Return the new vector in world space.
-            return new Vector(backgroundDimensions.getX() * screenScalarX, backgroundDimensions.getY() * screenScalarY);
+            clonedVec.convertToSpace(new Vector(this.width, this.height), backgroundDimensions);
+
+            return this.TransformPos( clonedVec );
         }
 
         // background has not loaded yet.
@@ -146,13 +218,14 @@ class ViewportTransform
 
     // World vector -> viewport vector
     GetScreenVectorFromWorldVector(worldVector: Vector): Vector {
-        var backgroundDimensions = this.linkedLevel.GetBackgroundDimensions();
+        var backgroundDimensions = this.linkedLevel.GetSize();
 
         if (backgroundDimensions != null) {
-            var worldScalarX = worldVector.getX() / backgroundDimensions.getX();
-            var worldScalarY = worldVector.getY() / backgroundDimensions.getY();
+            var clonedVector = this.InverseTransformPos( worldVector );
 
-            return new Vector(this.width * worldScalarX, this.height * worldScalarY);
+            clonedVector.convertToSpace(backgroundDimensions, new Vector(this.width, this.height));
+
+            return clonedVector;
         }
 
         // background has not loaded yet.
@@ -165,7 +238,7 @@ class Level implements ILevel
 {
     private isInitialized : boolean;
 
-    private ourPlayer: IPlayer = null;
+    public ourPlayer: IPlayer = null;
     private ourEngine: GameEngine = null;
     private id : string; 
     private backgroundImageName: string; // JS image file (background)
@@ -174,8 +247,8 @@ class Level implements ILevel
     private navLineInfo : NavRoute;
     private levelSize : Vector;
     private viewport: ViewportTransform;
-
     private inventory: IInventory = new Inventory();
+    private cameraPosition: Vector;
     
     // Constructor.
     constructor( levelConfig: ILevelConfig )
@@ -301,13 +374,17 @@ class Level implements ILevel
 
         return null;
     }
+
+    GetWorldDimensions(): Vector {
+        return this.levelSize;
+    }
     
     // Called by the engine when the viewport changes.
     // The scrollable viewport has to be readjusted.
     OnViewportChange( newWidth : number, newHeight : number ) : void
     {
         this.viewport.SetWidth( newWidth );
-        this.viewport.SetHeigth( newHeight );
+        this.viewport.SetHeight( newHeight );
     }
     
     // Common methods, makes sense.
@@ -348,11 +425,16 @@ class Level implements ILevel
     
     private DrawEntity( drawingContext : CanvasRenderingContext2D, theEntity : IEntity )
     {
-        var drawingPosition =
-            //this.viewport.InverseTransformPos( theEntity.location );
-            theEntity.location;
-        
-        theEntity.Draw(drawingContext, drawingPosition);
+        var entityLocation = theEntity.location;
+
+        if (entityLocation != null) {
+            var drawingPosition =
+                this.viewport.GetScreenVectorFromWorldVector(entityLocation);
+
+            if (drawingPosition != null) {
+                theEntity.Draw(drawingContext, drawingPosition);
+            }
+        }
     }
 
     Draw(context: CanvasRenderingContext2D, location?: Vector): void {
@@ -457,35 +539,46 @@ class Level implements ILevel
         } else {
             this.locationPlayer = null;
         }
-        
+
         // todo: add more sofisticated effects?
-        
-        // Check whether the player is in reaching distance to any entryExit
-        var anyEntryExit = null;
-        
-        for ( var n = 0; n < this.exits.length; n++ )
-        {
-            var theExit = this.exits[ n ];
-            
-            if ( theExit.isPointInRange( this.locationPlayer ) )
-            {
-                anyEntryExit = theExit;
-                break;
-            }
+
+        // Update the camera position, so it is directly at the player.
+        if (this.locationPlayer != null) {
+            this.cameraPosition = this.locationPlayer.clone();
         }
-        
-        // If we have a triggering entryExit, notify the engine that we want to switch levels.
-        if ( anyEntryExit != null )
-        {
-            var switchLevelID = anyEntryExit.getExitID();
-            //var switchLevelTargetLoc = anyEntryExit.getExitPosition();
-            
-            // Call into the engine so it can perform the unloading and reloading.
-            // The engine should keep in mind to switch the level (a boolean?)
-            this.ourEngine.NextLevel(
-                switchLevelID
+
+        if (this.locationPlayer != null) {
+            // Set the viewport, so it is centered on the camera position.
+            var viewportDimm = new Vector(this.viewport.GetWidth(), this.viewport.GetHeight());
+            var viewportCenterOffset = viewportDimm.multiply(-0.5);
+
+            this.viewport.SetPosition(viewportCenterOffset.add(this.cameraPosition));
+                
+
+            // Check whether the player is in reaching distance to any entryExit
+            var anyEntryExit = null;
+
+            for (var n = 0; n < this.exits.length; n++) {
+                var theExit = this.exits[n];
+
+                if (theExit.isPointInRange(this.locationPlayer)) {
+                    anyEntryExit = theExit;
+                    break;
+                }
+            }
+
+            // If we have a triggering entryExit, notify the engine that we want to switch levels.
+            if (anyEntryExit != null) {
+                var switchLevelID = anyEntryExit.getExitID();
+                //var switchLevelTargetLoc = anyEntryExit.getExitPosition();
+
+                // Call into the engine so it can perform the unloading and reloading.
+                // The engine should keep in mind to switch the level (a boolean?)
+                this.ourEngine.NextLevel(
+                    switchLevelID
                 //, switchLevelTargetLoc.getX(), switchLevelTargetLoc.getY()
-            );
+                    );
+            }
         }
     }
 
@@ -505,14 +598,11 @@ class Level implements ILevel
         var mouseClickAt = new Vector(mx, my);
 
         //var worldMouseClickAt = this.viewport.GetWorldVectorFromScreenVector(mouseClickAt);
-        var worldMouseClickAt = mouseClickAt;
+        var worldMouseClickAt = this.viewport.GetWorldVectorFromScreenVector( mouseClickAt );
 
         if (worldMouseClickAt != null) {
             // To properly process a click, we must transform the mouse-click to viewport space.
-            var transformedMouseClick =
-                this.viewport.TransformPos(
-                    worldMouseClickAt
-                    );
+            var transformedMouseClick = worldMouseClickAt;
 
             console.log("level received some mouse click");
 
@@ -557,11 +647,11 @@ class Level implements ILevel
 
             // If there has been no click processing, we execute a default move-to action.
             if (hasClickBeenProcessed == false) {
-                var pointToMoveTo = worldMouseClickAt;
+                var pointToMoveTo = transformedMouseClick;
 
                 console.log("mouseX: " + pointToMoveTo.getX() + ", mouseY: " + pointToMoveTo.getY());
 
-                var closestPointToClick = this.navLineInfo.calculateNearestPoint(pointToMoveTo).subtract(new Vector(0, 100));
+                var closestPointToClick = this.navLineInfo.calculateNearestPoint(pointToMoveTo);
 
                 if (closestPointToClick != null) {
                     console.log("moving player to " + closestPointToClick.getX() + "," + closestPointToClick.getY());

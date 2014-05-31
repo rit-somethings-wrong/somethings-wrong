@@ -78,10 +78,24 @@ class Vector
             this.x
         );
     }
+
+    convertToSpace(clientDimensions: Vector, targetDimensions: Vector) {
+        // Create the local scale coordinates.
+        var clientScaleX = this.getX() / clientDimensions.getX();
+        var clientScaleY = this.getY() / clientDimensions.getY();
+
+        // Set the new coordinates to be scaled across the target dimensions.
+        this.setX(clientScaleX * targetDimensions.getX());
+        this.setY(clientScaleY * targetDimensions.getY());
+    }
     
     toString()
     {
         return "x: " + this.x + ", y: " + this.y;
+    }
+
+    clone(): Vector {
+        return new Vector(this.getX(), this.getY());
     }
 };
 
@@ -252,14 +266,28 @@ class BoundingSphere
 class BoundingRectangle
 {
     private position : Vector;
-    private width : number;
-    private height : number;
+    private size: Vector;
     
     constructor( position : Vector, width : number, height : number )
     {
         this.position = position;
-        this.width = width;
-        this.height = height;
+        this.size = new Vector(width, height);
+    }
+
+    get left(): number {
+        return this.position.getX();
+    }
+
+    get top(): number {
+        return this.position.getY();
+    }
+
+    get right(): number {
+        return this.left + this.size.getX();
+    }
+
+    get bottom(): number {
+        return this.top + this.size.getY();
     }
     
     getPosition() : Vector
@@ -269,12 +297,12 @@ class BoundingRectangle
     
     getWidth() : number
     {
-        return this.width;
+        return this.size.getX();
     }
     
     getHeight() : number
     {
-        return this.height;
+        return this.size.getY();
     }
     
     intersectWithPoint( thePoint : Vector ) : boolean
@@ -284,8 +312,8 @@ class BoundingRectangle
         }
         return
             (
-                this.position.getX() <= thePoint.getX() && this.position.getX() + this.width > thePoint.getX() &&
-                this.position.getY() <= thePoint.getY() && this.position.getY() + this.height > thePoint.getY()
+                this.left <= thePoint.getX() && this.right > thePoint.getX() &&
+                this.top <= thePoint.getY() && this.bottom > thePoint.getY()
             );
     }
     
@@ -297,6 +325,12 @@ class BoundingRectangle
             return null;
         }
         
-        return thePoint.subtract( this.position );
+        return thePoint.subtract( this.getPosition() );
+    }
+
+    convertToSpace(clientDimensions: Vector, targetDimensions: Vector): void {
+        // Transform to different spaces.
+        this.position.convertToSpace(clientDimensions, targetDimensions);
+        this.size.convertToSpace(clientDimensions, targetDimensions);
     }
 };
