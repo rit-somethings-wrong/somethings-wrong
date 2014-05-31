@@ -90,7 +90,7 @@ EntityList.RegisterEntityCallback("airport-wc", function (entity, player, level,
     }
 
     console.log("Setting an engine interaction", this);
-    engine.NextInteraction(new Chat(3));
+    engine.NextInteraction(new Chat(9));
 });
 
 //TODO remove key after testing as it isn't in the story write-up

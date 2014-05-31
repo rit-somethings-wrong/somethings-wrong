@@ -63,6 +63,9 @@ class Chat implements IInteraction {
         ctx.fillStyle = '#005259'
         ctx.fillRect(0, 0, 10, 10);
         ctx.font = "16pt Arial";
+       /* if (msg.type == speakingType.PC_SPEAKING) {
+
+        }*/
         ctx.fillStyle = 'white';
         
         var img = new Image();        
@@ -71,7 +74,7 @@ class Chat implements IInteraction {
 
         //ctx.fillText(this.msg.dialog, location.getX(), location.getY());
         ctx.textAlign = "center";
-        if (!this.msg.dialog) { ctx.fillText(this.msg.dialog, 480, 500); }
+        if (this.msg && this.msg.dialog ) { ctx.fillText(this.msg.dialog, 480, 500); }
     }
 
 }
